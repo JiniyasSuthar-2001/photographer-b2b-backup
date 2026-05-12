@@ -46,12 +46,14 @@ const getSessionInitialState = () => {
     analyticsTimeframe: '1M',
 
     
-    // Dynamic data
-    jobs: [],
-    jobRequests: [],
-    jobTasks: [],
-    notifications: [],
-    unreadCount: 0,
+    // --- DYNAMIC DATA SYNC ---
+    // We initialize with baseState (which contains mock data for Admin)
+    // The useEffect will then overwrite this with real data from the DB.
+    jobs: baseState.jobs || [],
+    jobRequests: baseState.jobRequests || [],
+    jobTasks: baseState.jobTasks || [],
+    notifications: baseState.notifications || [],
+    unreadCount: (baseState.notifications || []).filter(n => !n.read).length,
   };
 };
 
@@ -81,14 +83,24 @@ export function AppProvider({ children }) {
         dispatch({ type: 'SET_TEAM', payload: team });
         dispatch({ type: 'SET_TASKS', payload: tasks });
 
-        // Fetch requests based on role
-        if (state.user.mode === 'freelancer' || state.user.user_type === 'freelancer') {
-          const [invites, accepted] = await Promise.all([
-            requestService.getInvites(),
-            requestService.getAcceptedJobs()
-          ]);
-          dispatch({ type: 'SET_JOB_REQUESTS', payload: [...invites, ...accepted] });
-        }
+        // --- DUAL ROLE SYNC ---
+        // Always fetch requests where the user is the receiver (Freelancer side)
+        // regardless of their active mode, so switching views is seamless.
+        const [invites, accepted] = await Promise.all([
+          requestService.getInvites(),
+          requestService.getAcceptedJobs()
+        ]);
+        
+        // Map these to the standard job_title/job_date format if needed
+        const processedRequests = [...invites, ...accepted].map(r => ({
+          ...r,
+          id: r.request_id || r.assignment_id || r.id,
+          jobTitle: r.job_title || r.title,
+          job_date: r.job_date || r.date,
+          sentBy: r.sender_name || r.owner_name
+        }));
+
+        dispatch({ type: 'SET_JOB_REQUESTS', payload: processedRequests });
 
       } catch (err) {
         console.error('Initial data sync failed:', err);
@@ -96,6 +108,12 @@ export function AppProvider({ children }) {
     };
 
     syncBackendData();
+    
+    // --- NOTIFICATION CLEANUP: Auto-remove after 2 hours ---
+    const cleanupInterval = setInterval(() => {
+      const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).getTime();
+      dispatch({ type: 'CLEANUP_EXPIRED_NOTIFICATIONS', payload: twoHoursAgo });
+    }, 60000); // Check every minute
 
     // --- SESSION SAFETY: Handle cross-tab login/logout ---
     const handleStorageChange = (e) => {
@@ -141,7 +159,8 @@ export function usePermission() {
    * Defines what a user can see/do based on their profile.
    * NOTE: Currently most permissions are hardcoded to 'true' for the demo.
    * Modification Impact: Setting 'canPostJob' to false will hide the 
-   * 'Post New Job' button in JobHub.jsx globally.
+   * 'Post New Job' button in Projects.jsx globally.
+
    */
   const { state } = useApp();
   const { user } = state;

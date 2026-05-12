@@ -1,7 +1,8 @@
 # ==================================================================================
 # TEAM ROUTER
 # Purpose: Manages the Studio Owner's photographer directory and work history.
-# Affected Pages: Frontend -> Team.jsx, JobHub.jsx (CollaborationModal)
+# Affected Pages: Frontend -> Team.jsx, Projects.jsx (CollaborationModal)
+
 # ==================================================================================
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -31,14 +32,15 @@ async def get_collaborations(
 ):
     """
     Fetches past jobs shared between the Studio Owner and a specific Photographer.
-    Frontend Impact: Populates the list inside CollaborationModal in JobHub.jsx.
+    Frontend Impact: Populates the list inside CollaborationModal in Projects.jsx.
+
     Modification Risk: If pagination logic changes, the modal's 'Next/Prev' buttons 
     may stop functioning.
     """
     # Only return jobs where member_id = selected photographer AND job belongs to logged-in user
     query = db.query(models.Job, models.Assignment.role).\
         join(models.Assignment, models.Job.id == models.Assignment.job_id).\
-        filter(models.Job.studio_owner_id == current_user.id).\
+        filter(models.Job.user_id == current_user.id).\
         filter(models.Assignment.member_id == member_id).\
         order_by(models.Job.date.desc())
 
@@ -51,11 +53,12 @@ async def get_collaborations(
     data = []
     for job, role in results:
         data.append({
-            "job_id": job.id,
+            "job_id": job.id, # The unique ID of the job
             "title": job.title,
             "date": job.date,
             "role": role,
-            "status": job.status
+            "status": job.status,
+            "owner_user_id": job.user_id # user_id of the owner
         })
 
     return {
@@ -166,11 +169,7 @@ async def respond_to_request(
     team_request.status = status
     
     if status == "accepted":
-        # TEAM LOCKING SYSTEM:
-        # Prevent user from joining multiple teams simultaneously to avoid conflicts.
-        already_joined = db.query(models.Team).filter(models.Team.member_id == current_user.id).first()
-        if already_joined:
-            raise HTTPException(status_code=400, detail="You are already connected to another team. Please leave your current team first.")
+        # TEAM LOCKING REMOVED: Users can now join multiple teams.
 
         # Add to team table with custom display info
 
@@ -234,7 +233,8 @@ async def get_pending_team_requests(
     for r in requests:
         sender = db.query(models.User).filter(models.User.id == r.sender_id).first()
         data.append({
-            "id": r.id,
+            "request_id": r.id,
+            "sender_user_id": r.sender_id,
             "sender_name": sender.full_name,
             "sender_phone": sender.phone,
             "display_name": r.display_name,
@@ -258,7 +258,8 @@ async def get_joined_teams(
     for entry in joined:
         owner = db.query(models.User).filter(models.User.id == entry.owner_id).first()
         data.append({
-            "id": entry.id,
+            "team_entry_id": entry.id,
+            "owner_user_id": owner.id,
             "owner_name": owner.full_name,
             "owner_phone": owner.phone,
             "display_name": entry.display_name,
@@ -337,7 +338,8 @@ async def discover_photographers(
     Public directory of registered freelancers.
     Frontend Impact: Populates the 'Discover' tab in Team.jsx.
     """
-    query = db.query(models.User).filter(models.User.user_type == 'freelancer')
+    # Any user can be discovered regardless of their initial user_type
+    query = db.query(models.User)
 
     
     if category:
@@ -353,7 +355,7 @@ async def discover_photographers(
     photographers = query.limit(50).all()
     
     return [{
-        "id": p.id,
+        "user_id": p.id, # id is user_id here
         "name": p.full_name,
         "city": p.city,
         "category": p.category,

@@ -8,7 +8,8 @@ import './TopBar.css';
 
 const PAGE_TITLES = {
   '/':          'Dashboard',
-  '/job-hub':   'Job Hub',
+  '/projects':  'Projects',
+
   '/calendar':  'Calendar',
   '/analytics': 'Analytics',
   '/profile':   'Profile',
@@ -16,7 +17,8 @@ const PAGE_TITLES = {
 
 const PAGE_TITLES_PHOTOGRAPHER = {
   '/':          'Dashboard',
-  '/job-hub':   'Job Hub',
+  '/projects':  'Projects',
+
   '/calendar':  'My Calendar',
   '/profile':   'Profile',
 };

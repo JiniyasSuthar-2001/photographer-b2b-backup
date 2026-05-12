@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import {
-  ChevronLeft, ChevronRight, Download, Clock, MapPin, X, Plus,
-  Briefcase, AlertTriangle, Check, Info, Calendar as CalendarIcon
+  ChevronLeft, ChevronRight, Download, Clock, X, Plus,
+  Briefcase, AlertTriangle, Check, Calendar as CalendarIcon
 } from 'lucide-react';
 import { ROLE_TYPES } from '../data/mockData';
 import { jobService, requestService } from '../services/api';
 import './Calendar.css';
 
 const AVAIL_COLORS = {
-  available: '#10B981',
-  booked: '#3B82F6',
-  partial: '#F59E0B',
-  blocked: '#F43F5E',
+  available: '#10B981', // Emerald Green
+  booked: '#2563EB',    // Royal Blue
+  blocked: '#F43F5E',   // Rose
 };
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -33,6 +32,7 @@ export default function Calendar() {
   const [showConflictModal, setShowConflictModal] = useState(null);
   const [showNewJobModal, setShowNewJobModal] = useState(false);
   const [myJobsReason, setMyJobsReason] = useState('Unavailable');
+  const [hoveredDay, setHoveredDay] = useState(null);
 
   const [showPicker, setShowPicker] = useState(false); // Month/Year picker
   const [pickerYear, setPickerYear] = useState(currentDate.getFullYear());
@@ -151,17 +151,7 @@ export default function Calendar() {
 
   return (
     <div className="calendar-page">
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-4)', alignItems: 'center' }}>
-        <div>
-          <h1 className="page-title" style={{ margin: 0 }}>Calendar</h1>
-          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 3 }}>Select dates to manage your schedule</div>
-        </div>
-        {selectedDates.length > 0 && (
-          <button className="btn btn-secondary btn-sm" onClick={() => setSelectedDates([])}>
-            <X size={14} /> Clear Selection
-          </button>
-        )}
-      </div>
+
 
       <div className="calendar-layout">
         <div className="calendar-main">
@@ -192,26 +182,81 @@ export default function Calendar() {
               const jobCount = posted.length + acceptedReqs.length;
               const past = isPast(day);
 
+              // Determine cell background colour:
+              //  - past days: no colour override
+              //  - explicit availability set: use that colour
+              //  - has a job booked: blue (booked)
+              //  - free future day: green (available)
+              let cellBg = undefined;
+              let cellBorder = undefined;
+              if (!past) {
+                if (avail) {
+                  cellBg = `${AVAIL_COLORS[avail]}99`; // ~60% opacity
+                  cellBorder = `${AVAIL_COLORS[avail]}cc`;
+                } else if (jobCount > 0) {
+                  cellBg = `${AVAIL_COLORS.booked}bb`; // ~75% opacity (Much stronger blue)
+                  cellBorder = `${AVAIL_COLORS.booked}ff`;
+                } else {
+                  // Default available (green)
+                  cellBg = `${AVAIL_COLORS.available}44`; // ~25% opacity
+                  cellBorder = `${AVAIL_COLORS.available}77`;
+                }
+              }
+
               return (
                 <div key={day}
-                  className={`calendar-cell ${isToday(day) ? 'today' : ''} ${isCellDetail ? 'cell-detail' : ''} ${isSelected ? 'selected' : ''} ${past ? 'past' : ''}`}
-                  onClick={() => {
-                    if (past) return;
-                    if (isSelected) {
-                      setSelectedDates(prev => prev.filter(d => d !== ds));
-                    } else {
-                      setSelectedDates(prev => [...prev, ds]);
-                      setSelectedDate(day);
-                    }
-                  }}
-                  style={{ cursor: past ? 'default' : 'pointer' }}>
-                  <span className="calendar-day-num">{day}</span>
-                  {isSelected && <div className="selected-indicator"><Check size={10} color="white" /></div>}
-                  {avail && (
-                    <div className="calendar-avail-dot" style={{ background: AVAIL_COLORS[avail] }} title={avail} />
-                  )}
-                  {jobCount > 0 && (
-                    <div className="calendar-job-count">{jobCount}</div>
+                  className={`calendar-cell-wrapper`}
+                  onMouseEnter={() => setHoveredDay(day)}
+                  onMouseLeave={() => setHoveredDay(null)}
+                >
+                  <div
+                    className={`calendar-cell ${isToday(day) ? 'today' : ''} ${isCellDetail ? 'cell-detail' : ''} ${isSelected ? 'selected' : ''} ${past ? 'past' : ''}`}
+                    onClick={() => {
+                      if (past) return;
+                      if (isSelected) {
+                        setSelectedDates(prev => prev.filter(d => d !== ds));
+                      } else {
+                        setSelectedDates(prev => [...prev, ds]);
+                        setSelectedDate(day);
+                      }
+                    }}
+                    style={{
+                      cursor: past ? 'default' : 'pointer',
+                      background: cellBg,
+                      borderColor: cellBorder,
+                    }}>
+                    <span className="calendar-day-num">{day}</span>
+                    {isSelected && <div className="selected-indicator"><Check size={10} color="white" /></div>}
+                  </div>
+
+                  {/* ── Speech-bubble tooltip ── */}
+                  {hoveredDay === day && !past && (jobCount > 0 || avail) && (
+                    <div className="cal-tooltip">
+                      <div className="cal-tooltip-date">
+                        {MONTHS[month].slice(0,3)} {day}
+                      </div>
+                      {avail && (
+                        <div className="cal-tooltip-avail" style={{ color: AVAIL_COLORS[avail] }}>
+                          ● {avail.charAt(0).toUpperCase() + avail.slice(1)}
+                        </div>
+                      )}
+                      {posted.map(j => (
+                        <div key={j.id} className="cal-tooltip-job">
+                          <span className="cal-tooltip-dot" style={{ background: '#6366F1' }} />
+                          <span>{j.title}</span>
+                        </div>
+                      ))}
+                      {acceptedReqs.map(r => (
+                        <div key={r.id} className="cal-tooltip-job">
+                          <span className="cal-tooltip-dot" style={{ background: '#10B981' }} />
+                          <span>{r.jobTitle || r.job_title}</span>
+                        </div>
+                      ))}
+                      {jobCount === 0 && !avail && (
+                        <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>No bookings</div>
+                      )}
+                      <div className="cal-tooltip-arrow" />
+                    </div>
                   )}
                 </div>
               );
@@ -223,65 +268,19 @@ export default function Calendar() {
               <span className="calendar-legend-heading">Availability</span>
               {Object.entries(AVAIL_COLORS).map(([key, color]) => (
                 <div key={key} className="calendar-legend-item">
-                  <div className="calendar-legend-dot" style={{ background: color }} />
+                  <div style={{
+                    width: 16,
+                    height: 16,
+                    borderRadius: 4,
+                    background: `${color}22`,
+                    border: `1.5px solid ${color}55`,
+                    flexShrink: 0
+                  }} />
                   <span style={{ textTransform: 'capitalize' }}>{key}</span>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-
-        <div className="calendar-sidebar">
-          {selectedDate ? (
-            <>
-              <div className="calendar-day-detail-header">
-                <h3 className="card-title">{MONTHS[month]} {selectedDate}, {year}</h3>
-              </div>
-
-              {availability[selectedDateStr] && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 'var(--space-3)' }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: AVAIL_COLORS[availability[selectedDateStr]] }} />
-                  <span style={{ fontSize: 13, color: 'var(--text-secondary)', textTransform: 'capitalize' }}>
-                    {availability[selectedDateStr]}
-                  </span>
-                </div>
-              )}
-
-              {selectedPosted.length === 0 && selectedAccepted.length === 0 ? (
-                <div className="empty-state" style={{ paddingTop: 'var(--space-6)' }}>
-                  <div className="empty-state-title">No bookings</div>
-                  <div className="empty-state-desc">No jobs scheduled for this day</div>
-                </div>
-              ) : (
-                <div className="calendar-day-jobs">
-                  {selectedPosted.map(job => (
-                    <div key={job.id} className="calendar-day-job-card">
-                      <div className="calendar-day-job-title">{job.title}</div>
-                      <div className="calendar-day-job-client">{job.client}</div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11.5, color: 'var(--text-muted)', marginTop: 6 }}>
-                        <MapPin size={11} /> {job.venue}
-                      </div>
-                    </div>
-                  ))}
-                  {selectedAccepted.map(req => (
-                    <div key={req.id} className="calendar-day-job-card" style={{ borderLeftColor: 'var(--accent-teal)' }}>
-                      <div className="calendar-day-job-title">{req.jobTitle}</div>
-                      <div className="calendar-day-job-client">From: {req.sentBy}</div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11.5, color: 'var(--text-muted)', marginTop: 6 }}>
-                        <MapPin size={11} /> {req.venue}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="empty-state" style={{ paddingTop: 'var(--space-8)' }}>
-              <div className="empty-state-icon"><Info size={24} /></div>
-              <div className="empty-state-title">Select a date</div>
-              <div className="empty-state-desc">Click any day to view details</div>
-            </div>
-          )}
         </div>
       </div>
 

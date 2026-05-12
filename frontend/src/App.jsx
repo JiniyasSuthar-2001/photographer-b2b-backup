@@ -3,7 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppProvider, usePermission } from './context/AppContext';
 import Layout from './components/layout/Layout';
 import Dashboard from './pages/Dashboard';
-import JobHub from './pages/JobHub';
+import Projects from './pages/Projects';
+
 import Calendar from './pages/Calendar';
 import Analytics from './pages/Analytics';
 import Profile from './pages/Profile';
@@ -11,6 +12,7 @@ import Team from './pages/Team';
 import Notes from './pages/Notes';
 import Pricing from './pages/Pricing';
 import AuthPage from './pages/AuthPage';
+import ScrollToTop from './components/utils/ScrollToTop';
 import { useWebSockets } from './hooks/useWebSockets';
 import './styles/global.css';
 import './styles/components.css';
@@ -19,7 +21,11 @@ const STORAGE_KEY = 'events:v1';
 
 // Real-time connection wrapper
 function RealTimeProvider({ children }) {
-  useWebSockets(); // Establishes connection between users and pages
+  try {
+    useWebSockets(); // Establishes connection between users and pages
+  } catch (e) {
+    console.error("WebSocket initialization failed:", e);
+  }
   return children;
 }
 
@@ -56,13 +62,15 @@ export default function App() {
     <AppProvider>
       <RealTimeProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             {/* Auth Route is separate from Layout */}
             <Route path="/auth" element={<AuthPage />} />
             
             {/* Protected Routes wrapped in RequireAuth */}
             <Route path="/"          element={<RequireAuth><Dashboard /></RequireAuth>} />
-            <Route path="/job-hub"   element={<RequireAuth><JobHub /></RequireAuth>} />
+            <Route path="/projects"  element={<RequireAuth><Projects mode="my-jobs" /></RequireAuth>} />
+            <Route path="/other-projects" element={<RequireAuth><Projects mode="accepted-jobs" /></RequireAuth>} />
             <Route path="/team"      element={<RequireAuth><Team /></RequireAuth>} />
             <Route path="/calendar"  element={<RequireAuth><Calendar /></RequireAuth>} />
             <Route path="/analytics" element={<RequireAuth><AnalyticsGuard /></RequireAuth>} />

@@ -12,7 +12,13 @@
                     "name": "Signup",
                     "request": {
                         "method": "POST",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/auth/signup",
                             "host": [
@@ -24,6 +30,15 @@
                                 "signup"
                             ]
                         },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"username\": \"photographer_test\",\n    \"password\": \"SecurePass@123\",\n    \"phone\": \"+919876543210\",\n    \"full_name\": \"Arjun Mehta\",\n    \"city\": \"Ahmedabad\",\n    \"category\": \"Wedding\",\n    \"user_type\": \"photographer\",\n    \"referral_code_applied\": \"\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
                         "description": "Creates a new user record.\nFrontend Impact: Triggered by the form in Signup.jsx."
                     },
                     "response": []
@@ -32,7 +47,13 @@
                     "name": "Login",
                     "request": {
                         "method": "POST",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/auth/login",
                             "host": [
@@ -44,15 +65,53 @@
                                 "login"
                             ]
                         },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin@001\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
                         "description": "Authenticates user and returns a JWT token.\nFrontend Impact: Populates 'token' and 'user' in localStorage.\nModification Risk: If the response structure changes, authService.login in api.js \nwill fail to save the token correctly."
                     },
-                    "response": []
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "const response = pm.response.json();",
+                                    "",
+                                    "if (response.access_token) {",
+                                    "    pm.collectionVariables.set(\"token\", response.access_token);",
+                                    "",
+                                    "    if (response.refresh_token) {",
+                                    "        pm.collectionVariables.set(\"refresh_token\", response.refresh_token);",
+                                    "    }",
+                                    "",
+                                    "    console.log(\"Tokens saved successfully!\");",
+                                    "} else {",
+                                    "    console.log(\"No access token found in response\");",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
                 },
                 {
                     "name": "Logout",
                     "request": {
                         "method": "POST",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/auth/logout",
                             "host": [
@@ -64,6 +123,15 @@
                                 "logout"
                             ]
                         },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
                         "description": "Logs out user."
                     },
                     "response": []
@@ -72,7 +140,13 @@
                     "name": "Forgot Password",
                     "request": {
                         "method": "POST",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/auth/forgot-password",
                             "host": [
@@ -83,6 +157,15 @@
                                 "auth",
                                 "forgot-password"
                             ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"username\": \"photographer_test\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
                         },
                         "description": "Simulates a password reset request.\nFrontend Impact: Connected to the 'Forgot Password' link in Login.jsx."
                     },
@@ -97,7 +180,13 @@
                     "name": "Get Collaborations",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/team/collaborations/{member_id}",
                             "host": [
@@ -110,7 +199,7 @@
                                 "{member_id}"
                             ]
                         },
-                        "description": "Fetches past jobs shared between the Studio Owner and a specific Photographer.\nFrontend Impact: Populates the list inside CollaborationModal in JobHub.jsx.\nModification Risk: If pagination logic changes, the modal's 'Next/Prev' buttons \nmay stop functioning."
+                        "description": "Fetches past jobs shared between the Studio Owner and a specific Photographer.\nFrontend Impact: Populates the list inside CollaborationModal in Projects.jsx.\n\nModification Risk: If pagination logic changes, the modal's 'Next/Prev' buttons \nmay stop functioning."
                     },
                     "response": []
                 },
@@ -118,7 +207,13 @@
                     "name": "Search User",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/team/users/search",
                             "host": [
@@ -139,7 +234,13 @@
                     "name": "Send Team Request",
                     "request": {
                         "method": "POST",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/team/request",
                             "host": [
@@ -151,6 +252,15 @@
                                 "request"
                             ]
                         },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"phone\": \"+919876543211\",\n    \"display_name\": \"Rohan Shah\",\n    \"display_category\": \"Candid\",\n    \"display_city\": \"Surat\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
                         "description": "Sends a request for a photographer to join the Studio Owner's directory.\nFrontend Impact: Updates the UI state in Team.jsx after successfully adding a member.\nNotification Impact: Alerts the Photographer via the NotificationBell."
                     },
                     "response": []
@@ -159,7 +269,13 @@
                     "name": "Respond To Request",
                     "request": {
                         "method": "PATCH",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/team/request/{id}",
                             "host": [
@@ -172,6 +288,15 @@
                                 "{id}"
                             ]
                         },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
                         "description": "Handles photographer's response to a team invite.\nImpact: If 'accepted', the photographer is added to the 'team' table \nand becomes visible in the Studio Owner's Team.jsx list."
                     },
                     "response": []
@@ -180,7 +305,13 @@
                     "name": "Get Pending Team Requests",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/team/requests/pending",
                             "host": [
@@ -201,7 +332,13 @@
                     "name": "Get Joined Teams",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/team/joined",
                             "host": [
@@ -221,7 +358,13 @@
                     "name": "Get Team",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/team/",
                             "host": [
@@ -240,7 +383,13 @@
                     "name": "Update Team Member",
                     "request": {
                         "method": "PATCH",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/team/{member_id}",
                             "host": [
@@ -252,6 +401,15 @@
                                 "{member_id}"
                             ]
                         },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"display_name\": \"Rohan Shah Updated\",\n    \"display_category\": \"Wedding\",\n    \"display_city\": \"Ahmedabad\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
                         "description": "Allows Studio Owners to edit the 'Alias' information for a team member.\nFrontend Impact: Triggered by 'Edit' action in Team.jsx.\nNote: This does NOT change the Photographer's actual profile, only their \nentry in the owner's directory."
                     },
                     "response": []
@@ -260,7 +418,13 @@
                     "name": "Remove Team Member",
                     "request": {
                         "method": "DELETE",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/team/{member_id}",
                             "host": [
@@ -280,7 +444,13 @@
                     "name": "Discover Photographers",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/team/discover",
                             "host": [
@@ -305,7 +475,13 @@
                     "name": "Get Notifications",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/notifications/",
                             "host": [
@@ -324,7 +500,13 @@
                     "name": "Mark As Read",
                     "request": {
                         "method": "PATCH",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/notifications/{id}/read",
                             "host": [
@@ -337,6 +519,15 @@
                                 "read"
                             ]
                         },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
                         "description": "Marks a single notification as read.\nFrontend Impact: Triggered when a user clicks a notification item in the bell dropdown.\nVisual Impact: Removes the 'unread' highlight and reduces the badge count in the navbar."
                     },
                     "response": []
@@ -345,7 +536,13 @@
                     "name": "Mark All As Read",
                     "request": {
                         "method": "PATCH",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/notifications/read-all",
                             "host": [
@@ -356,6 +553,15 @@
                                 "notifications",
                                 "read-all"
                             ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
                         },
                         "description": "Marks all notifications for the user as read.\nFrontend Impact: Triggered by the 'Mark all as read' link in the bell dropdown."
                     },
@@ -370,7 +576,13 @@
                     "name": "Send Job Request",
                     "request": {
                         "method": "POST",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/requests/",
                             "host": [
@@ -380,6 +592,15 @@
                                 "api",
                                 "requests"
                             ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"job_id\": 1,\n    \"receiver_id\": 1,\n    \"role\": \"test_role\",\n    \"budget\": 1\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
                         },
                         "description": "Studio Owner sends an invite to a Photographer.\nFrontend Impact: Triggered from Team.jsx when clicking 'Send Request' on a member.\nNotification Impact: Creates a bell notification for the Photographer.\nModification Risk: Changing 'redirect_to' will break where the bell takes the user."
                     },
@@ -389,7 +610,13 @@
                     "name": "Get My Requests",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/requests/",
                             "host": [
@@ -400,7 +627,7 @@
                                 "requests"
                             ]
                         },
-                        "description": "Main feed for requests/invites.\nFrontend Impact: \n- role=receiver & status=pending -> 'Invites' tab.\n- role=receiver & status=declined -> 'Declined Jobs' tab."
+                        "description": "Main feed for requests/invites.\nFrontend Impact: \n- role=receiver & status=pending -> 'Invites' tab.\n- role=receiver & status=declined -> 'Declined Projects' tab."
                     },
                     "response": []
                 },
@@ -408,7 +635,13 @@
                     "name": "Respond To Job Request",
                     "request": {
                         "method": "PATCH",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/requests/{id}",
                             "host": [
@@ -420,7 +653,16 @@
                                 "{id}"
                             ]
                         },
-                        "description": "Photographer accepts or declines an invite.\nFrontend Impact: Triggered by Accept/Decline buttons in JobHub.jsx (Invites tab).\nLogic Impact: \n- If 'accepted': Adds entry to 'assignments' table and moves job out of 'Yet to Assign'.\n- Notifications: Notifies Studio Owner of the response."
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "description": "Photographer accepts or declines an invite.\nFrontend Impact: Triggered by Accept/Decline buttons in Projects.jsx (Invites tab).\n\nLogic Impact: \n- If 'accepted': Adds entry to 'assignments' table and moves job out of 'Yet to Assign'.\n- Notifications: Notifies Studio Owner of the response."
                     },
                     "response": []
                 },
@@ -428,7 +670,13 @@
                     "name": "Cancel Job Request",
                     "request": {
                         "method": "DELETE",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/requests/{id}",
                             "host": [
@@ -448,7 +696,13 @@
                     "name": "Get Eligible Jobs",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/requests/eligible-jobs/{photographer_id}",
                             "host": [
@@ -469,7 +723,13 @@
                     "name": "Get Requests For Job",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/requests/job/{job_id}",
                             "host": [
@@ -482,7 +742,7 @@
                                 "{job_id}"
                             ]
                         },
-                        "description": "Fetches all invitations/requests for a specific job.\nFrontend Impact: Populates the 'Request Status' popup in JobHub.jsx."
+                        "description": "Fetches all invitations/requests for a specific job.\nFrontend Impact: Populates the 'Request Status' popup in Projects.jsx."
                     },
                     "response": []
                 },
@@ -490,7 +750,13 @@
                     "name": "Get Accepted Jobs",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/requests/accepted-jobs",
                             "host": [
@@ -502,31 +768,37 @@
                                 "accepted-jobs"
                             ]
                         },
-                        "description": "Returns jobs assigned to the current Photographer.\nFrontend Impact: Populates the 'Accepted Jobs' sub-tab in JobHub.jsx."
+                        "description": "Returns jobs assigned to the current Photographer.\nFrontend Impact: Populates the 'Accepted Projects' sub-tab in Projects.jsx."
                     },
                     "response": []
                 }
             ]
         },
         {
-            "name": "Jobs",
+            "name": "Projects",
             "item": [
                 {
                     "name": "Get Jobs",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/jobs/",
+                            "raw": "{{baseUrl}}/api/projects/",
                             "host": [
                                 "{{baseUrl}}"
                             ],
                             "path": [
                                 "api",
-                                "jobs"
+                                "projects"
                             ]
                         },
-                        "description": "Fetches all jobs created by the logged-in Studio Owner.\nFrontend Impact: Populates the 'My Jobs' grid in JobHub.jsx.\nSORTING: Returns jobs in chronological order (Current/Future first, Past last)."
+                        "description": "Fetches all jobs created by the logged-in Studio Owner.\nFrontend Impact: Populates the 'My Jobs' grid in Projects.jsx.\n\nSORTING: Returns jobs in chronological order (Current/Future first, Past last)."
                     },
                     "response": []
                 },
@@ -534,18 +806,33 @@
                     "name": "Create Job",
                     "request": {
                         "method": "POST",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/jobs/",
+                            "raw": "{{baseUrl}}/api/projects/",
                             "host": [
                                 "{{baseUrl}}"
                             ],
                             "path": [
                                 "api",
-                                "jobs"
+                                "projects"
                             ]
                         },
-                        "description": "Creates a new job. \nFrontend Impact: Triggered by 'Post New Job' button in JobHub.jsx.\nModification Risk: If 'status' default is changed from 'open', frontend filters \nin 'Yet to Assign' might stop working."
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"test_title\",\n    \"client\": \"test_client\",\n    \"venue\": \"test_venue\",\n    \"budget\": 1,\n    \"category\": \"test_category\",\n    \"date\": \"2026-12-25T10:00:00\",\n    \"roles\": [\n        \"Wedding\",\n        \"Candid\"\n    ]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "description": "Creates a new job. \nFrontend Impact: Triggered by 'Post New Job' button in Projects.jsx.\n\nModification Risk: If 'status' default is changed from 'open', frontend filters \nin 'Yet to Assign' might stop working."
                     },
                     "response": []
                 },
@@ -553,15 +840,21 @@
                     "name": "Get Job By Id",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/jobs/{job_id}",
+                            "raw": "{{baseUrl}}/api/projects/{job_id}",
                             "host": [
                                 "{{baseUrl}}"
                             ],
                             "path": [
                                 "api",
-                                "jobs",
+                                "projects",
                                 "{job_id}"
                             ]
                         }
@@ -572,17 +865,32 @@
                     "name": "Update Job",
                     "request": {
                         "method": "PUT",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/jobs/{job_id}",
+                            "raw": "{{baseUrl}}/api/projects/{job_id}",
                             "host": [
                                 "{{baseUrl}}"
                             ],
                             "path": [
                                 "api",
-                                "jobs",
+                                "projects",
                                 "{job_id}"
                             ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"test_title\",\n    \"client\": \"test_client\",\n    \"venue\": \"test_venue\",\n    \"budget\": 1,\n    \"category\": \"test_category\",\n    \"date\": \"2026-12-25T10:00:00\",\n    \"status\": \"test_status\",\n    \"roles\": [\n        \"Wedding\",\n        \"Candid\"\n    ]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
                         }
                     },
                     "response": []
@@ -591,15 +899,21 @@
                     "name": "Delete Job",
                     "request": {
                         "method": "DELETE",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/jobs/{job_id}",
+                            "raw": "{{baseUrl}}/api/projects/{job_id}",
                             "host": [
                                 "{{baseUrl}}"
                             ],
                             "path": [
                                 "api",
-                                "jobs",
+                                "projects",
                                 "{job_id}"
                             ]
                         }
@@ -615,7 +929,13 @@
                     "name": "Handle External Webhook",
                     "request": {
                         "method": "POST",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/webhooks/external-event",
                             "host": [
@@ -627,6 +947,15 @@
                                 "external-event"
                             ]
                         },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
                         "description": "Standard webhook receiver for external integrations (Meta, Stripe, etc.).\nConnection: Receives a POST, processes logic, and notifies the connected 'Pages' in real-time."
                     },
                     "response": []
@@ -635,7 +964,13 @@
                     "name": "Trigger Page Refresh",
                     "request": {
                         "method": "POST",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/webhooks/trigger-refresh",
                             "host": [
@@ -646,6 +981,15 @@
                                 "webhooks",
                                 "trigger-refresh"
                             ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
                         },
                         "description": "Internal 'webhook' to force a frontend page to refresh its data.\nConnection: Allows the backend to 'command' a page to update without a browser refresh."
                     },
@@ -660,7 +1004,13 @@
                     "name": "Get Analytics",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/analytics/",
                             "host": [
@@ -679,7 +1029,13 @@
                     "name": "Get Photographer Rankings",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/analytics/rankings",
                             "host": [
@@ -704,7 +1060,13 @@
                     "name": "Get Summary",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/dashboard/summary",
                             "host": [
@@ -729,7 +1091,13 @@
                     "name": "Get Tasks",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/tasks/",
                             "host": [
@@ -747,7 +1115,13 @@
                     "name": "Create Task",
                     "request": {
                         "method": "POST",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/tasks/",
                             "host": [
@@ -757,6 +1131,15 @@
                                 "api",
                                 "tasks"
                             ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"jobId\": 1,\n    \"text\": \"test_text\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
                         }
                     },
                     "response": []
@@ -765,7 +1148,13 @@
                     "name": "Update Task",
                     "request": {
                         "method": "PUT",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/tasks/{task_id}",
                             "host": [
@@ -776,6 +1165,15 @@
                                 "tasks",
                                 "{task_id}"
                             ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
                         }
                     },
                     "response": []
@@ -784,7 +1182,13 @@
                     "name": "Delete Task",
                     "request": {
                         "method": "DELETE",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/tasks/{task_id}",
                             "host": [
@@ -805,30 +1209,16 @@
             "name": "Subscription",
             "item": [
                 {
-                    "name": "Upgrade Plan",
-                    "request": {
-                        "method": "POST",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/api/subscription/upgrade",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "api",
-                                "subscription",
-                                "upgrade"
-                            ]
-                        },
-                        "description": "Upgrades the user to a premium plan.\nFrontend Impact: Triggered from Pricing.jsx.\nWebSocket Impact: Sends a 'SUBSCRIPTION_UPDATED' message to refresh the UI."
-                    },
-                    "response": []
-                },
-                {
                     "name": "Get Subscription Status",
                     "request": {
                         "method": "GET",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
                         "url": {
                             "raw": "{{baseUrl}}/api/subscription/status",
                             "host": [
@@ -843,6 +1233,213 @@
                         "description": "Returns the current user's subscription details."
                     },
                     "response": []
+                },
+                {
+                    "name": "Purchase Plan",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/subscription/purchase",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "subscription",
+                                "purchase"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"amount\": 1499,\n    \"currency\": \"INR\",\n    \"plan_name\": \"Pro\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "description": "Simulates a payment purchase.\nTriggers referral rewards if it's the FIRST successful paid purchase."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Referral",
+            "item": [
+                {
+                    "name": "Get Referral Info",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/referral/info",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "referral",
+                                "info"
+                            ]
+                        },
+                        "description": "Returns the user's referral stats and history."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Apply Referral Code",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/referral/apply",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "referral",
+                                "apply"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"referral_code\": \"ABCD1234\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "description": "Applies a referral code to the user's profile before their first purchase."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Calendar",
+            "item": [
+                {
+                    "name": "Get Daily Roster",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/calendar/roster",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "calendar",
+                                "roster"
+                            ]
+                        },
+                        "description": "Get the daily roster (assignments and pending invites) for a specific date."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Toggle Availability",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/calendar/availability",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "calendar",
+                                "availability"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"date\": \"2026-12-25T10:00:00\",\n    \"status\": \"test_status\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "description": "Toggle availability for a specific date (Booked, Partial, Blocked)."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "System",
+            "item": [
+                {
+                    "name": "Reset Database",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/system/reset-db",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "system",
+                                "reset-db"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "description": "DANGER ZONE: Resets the entire database to the default seed state."
+                    },
+                    "response": []
                 }
             ]
         },
@@ -850,7 +1447,13 @@
             "name": "Root",
             "request": {
                 "method": "GET",
-                "header": [],
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
                 "url": {
                     "raw": "{{baseUrl}}/",
                     "host": [
@@ -865,7 +1468,12 @@
     "variable": [
         {
             "key": "baseUrl",
-            "value": "http://localhost:8000",
+            "value": "http://192.168.1.13:8000",
+            "type": "string"
+        },
+        {
+            "key": "token",
+            "value": "",
             "type": "string"
         }
     ]

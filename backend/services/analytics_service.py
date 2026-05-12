@@ -28,7 +28,7 @@ class AnalyticsService:
         if role == 'photographer':
             # Owned Jobs
             jobs = db.query(Job).filter(
-                and_(Job.studio_owner_id == user_id, Job.date >= start_date)
+                and_(Job.user_id == user_id, Job.date >= start_date)
             ).all()
             
             # Revenue = Sum of budgets of owned jobs

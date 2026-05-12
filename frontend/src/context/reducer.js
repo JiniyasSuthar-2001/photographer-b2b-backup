@@ -2,7 +2,8 @@
 // REDUCER: STATE TRANSITIONS
 // Purpose: Pure function that handles all state changes for the AppContext.
 // Impact: Any action dispatched via useApp() flows through here.
-// Connected Pages: All frontend pages (Dashboard, JobHub, Team, etc.)
+// Connected Pages: All frontend pages (Dashboard, Projects, Team, etc.)
+
 // ==================================================================================
 
 import { emptyInitialState } from '../data/mockData';
@@ -244,6 +245,17 @@ export function reducer(state, action) {
         notifications: state.notifications.map(n => ({ ...n, is_read: true })),
         unreadCount: 0
       };
+
+    case 'CLEANUP_EXPIRED_NOTIFICATIONS': {
+      const threshold = action.payload;
+      const filtered = state.notifications.filter(n => new Date(n.created_at).getTime() > threshold);
+      if (filtered.length === state.notifications.length) return state; // Optimization: no change
+      return {
+        ...state,
+        notifications: filtered,
+        unreadCount: filtered.filter(n => !n.is_read).length
+      };
+    }
 
     // ── Reset ─────────────────────────────────────────────────────────────────
     case 'RESET_ALL':

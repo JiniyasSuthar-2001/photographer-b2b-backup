@@ -11,7 +11,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, Zap, Crown, Shield, ArrowRight, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { subscriptionService } from '../services/api';
+import { subscriptionService, referralService } from '../services/api';
+import { Ticket } from 'lucide-react';
 import './Pricing.css';
 
 
@@ -74,30 +75,46 @@ const PLANS = [
 export default function Pricing() {
   const { state, dispatch, addToast } = useApp();
   const navigate = useNavigate();
+  const { user } = state;
   const [isProcessing, setIsProcessing] = useState(false);
+  const [referralCode, setReferralCode] = useState(user.referred_by || '');
+  const [isReferralApplied, setIsReferralApplied] = useState(!!user.referred_by || user.first_purchase_completed);
 
-  const handleUpgrade = async (planId) => {
-    if (planId === 'starter') return;
-    if (planId === 'enterprise') {
+  const handleApplyReferral = async () => {
+    if (!referralCode.trim()) return;
+    try {
+      await referralService.applyCode(referralCode);
+      addToast('Referral code applied!', 'success');
+      setIsReferralApplied(true);
+    } catch (err) {
+      addToast(err.response?.data?.detail || 'Invalid referral code', 'error');
+    }
+  };
+
+  const handleUpgrade = async (plan) => {
+    if (plan.id === 'starter') return;
+    if (plan.id === 'enterprise') {
       addToast('Redirecting to sales inquiry...', 'info');
       return;
     }
 
     setIsProcessing(true);
     try {
-      // API CALL: Connecting to backend/routers/subscription.py
-      await subscriptionService.upgrade(planId === 'pro' ? 'Pro' : 'Enterprise');
+      // Amount in INR (dummy values from plan price string)
+      const amount = plan.price === '₹1,499' ? 1499 : 5000; 
+
+      // API CALL: Connecting to subscription router purchase endpoint
+      await subscriptionService.purchase(plan.name, amount);
       
-      // Note: We don't need to manually dispatch here because 
-      // the WebSocket 'SUBSCRIPTION_UPDATED' event will handle the state update.
-      addToast('Processing your upgrade...', 'info');
+      addToast('Payment successful!', 'success');
       
-      // Navigate after a short delay to allow WebSocket to hit
+      // Navigate after a short delay
       setTimeout(() => {
         navigate('/');
-      }, 1000);
+      }, 1500);
     } catch (err) {
-      addToast('Upgrade failed. Please check your connection.', 'error');
+      addToast(err.response?.data?.detail || 'Upgrade failed. Please check your connection.', 'error');
+    } finally {
       setIsProcessing(false);
     }
   };
@@ -113,6 +130,27 @@ export default function Pricing() {
         <h1>Elevate Your Production Workflow</h1>
         <p>Choose the plan that fits your studio's ambition. Upgrade or downgrade anytime.</p>
       </div>
+
+      {!isReferralApplied && !user.first_purchase_completed && (
+        <div className="referral-apply-section card card-padding" style={{maxWidth: '600px', margin: '0 auto 40px', display: 'flex', gap: '15px', alignItems: 'center'}}>
+          <Ticket size={24} style={{color: 'var(--accent-blue)'}} />
+          <div style={{flex: 1}}>
+            <h4 style={{margin: 0}}>Have a Referral Code?</h4>
+            <p style={{margin: 0, fontSize: '13px', color: 'var(--text-muted)'}}>Apply it now to give your friend 15 days of Pro!</p>
+          </div>
+          <div style={{display: 'flex', gap: '10px'}}>
+            <input 
+              type="text" 
+              className="input-field input-sm" 
+              placeholder="Enter code" 
+              value={referralCode} 
+              onChange={e => setReferralCode(e.target.value)}
+              style={{width: '120px'}}
+            />
+            <button className="btn btn-secondary btn-sm" onClick={handleApplyReferral}>Apply</button>
+          </div>
+        </div>
+      )}
 
       <div className="pricing-grid">
         {PLANS.map((plan) => (
@@ -133,7 +171,7 @@ export default function Pricing() {
             <button 
               className={`btn plan-btn ${plan.popular ? 'btn-primary' : 'btn-outline'}`}
               disabled={plan.disabled || isProcessing}
-              onClick={() => handleUpgrade(plan.id)}
+              onClick={() => handleUpgrade(plan)}
             >
               {isProcessing && plan.id === 'pro' ? 'Processing...' : plan.buttonText}
               {!plan.disabled && <ArrowRight size={16} />}

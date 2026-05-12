@@ -8,24 +8,21 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import { Plus, Search, ChevronLeft, ChevronRight, UserPlus, Clock, Send, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Search, ChevronLeft, ChevronRight, UserPlus, Clock, Send, Edit2, Trash2, Check, X, AlertCircle } from 'lucide-react';
 import Avatar from '../components/ui/Avatar';
 import Modal from '../components/ui/Modal';
+import { createPortal } from 'react-dom';
 import JobSelectionModal from '../components/team/JobSelectionModal';
 import { teamService } from '../services/api';
 import apiClient from '../services/api';
 import { sortChronologically } from '../utils/sorting';
 import './Team.css';
 
-
-
-
 export default function Team() {
   const { state, dispatch, addToast } = useApp();
   const location = useLocation();
   const { team } = state;
   const [isLoadingTeam, setIsLoadingTeam] = useState(false);
-
   const [foundUser, setFoundUser] = useState(null);
   const [isCheckingPhone, setIsCheckingPhone] = useState(false);
   
@@ -38,13 +35,11 @@ export default function Team() {
 
   // --- STATE: MEMBER MANAGEMENT ---
   const [showAddModal, setShowAddModal] = useState(false);
-  const [addForm, setAddForm] = useState({ name: '', role: 'Wedding', city: '', phone: '' });
+  const [addForm, setAddForm] = useState({ name: '', role: 'Candid', city: '', phone: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [showEditModal, setShowEditModal] = useState(false);
   const [memberToEdit, setMemberToEdit] = useState(null);
   const [editForm, setEditForm] = useState({ name: '', role: '', city: '' });
-  
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [memberToInvite, setMemberToInvite] = useState(null);
 
@@ -53,13 +48,12 @@ export default function Team() {
   const [joinedTeams, setJoinedTeams] = useState([]);
   const [isLoadingExternal, setIsLoadingExternal] = useState(false);
 
+  // --- STATE: FILTERS ---
+  const [searchTerm, setSearchTerm] = useState('');
+  const [roleFilter, setRoleFilter] = useState('All');
+
   // --- API: FETCH COLLABORATION HISTORY ---
   const fetchHistory = async (memberId, currentPage) => {
-    /**
-     * Connects to: GET /api/team/collaborations/{memberId}
-     * Impact: Populates the work history modal. 
-     * Modification Risk: Changing pagination parameters here must match backend limit logic.
-     */
     setIsLoadingHistory(true);
     try {
       const response = await apiClient.get(`/team/collaborations/${memberId}`, {
@@ -119,7 +113,6 @@ export default function Team() {
   useEffect(() => {
     if (location.state?.openAddModal) {
       setShowAddModal(true);
-      // Clear state to prevent modal reopening on refresh
       window.history.replaceState({}, document.title);
     }
   }, [location]);
@@ -129,14 +122,12 @@ export default function Team() {
     const cleanPhone = phone.trim();
     if (cleanPhone.length < 10) return;
     setIsCheckingPhone(true);
-    console.log(`Searching for photographer with phone: ${cleanPhone}`);
     try {
       const response = await apiClient.get(`/team/users/search?phone=${cleanPhone}`);
-      console.log('Photographer found:', response.data);
       setFoundUser(response.data);
       setAddForm({
         name: response.data.full_name,
-        role: response.data.category || 'Wedding',
+        role: response.data.category || 'Candid',
         city: response.data.city || '',
         phone: response.data.phone
       });
@@ -153,40 +144,22 @@ export default function Team() {
     if (!addForm.phone) return;
     setIsSubmitting(true);
     try {
-      // If we found a user, use their real info, otherwise use defaults
       const payload = {
         phone: addForm.phone,
         display_name: addForm.name || `User ${addForm.phone.slice(-4)}`,
         display_category: addForm.role || 'Other',
         display_city: addForm.city || 'Unknown'
       };
-      
       await teamService.sendTeamRequest(payload);
       addToast('Team request sent successfully');
       setShowAddModal(false);
-      setAddForm({ name: '', role: 'Wedding', city: '', phone: '' });
+      setAddForm({ name: '', role: 'Candid', city: '', phone: '' });
       setFoundUser(null);
       fetchTeam();
     } catch (error) {
       addToast(error.response?.data?.detail || 'Failed to send request', 'error');
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const handleConnect = async (p) => {
-    try {
-      await teamService.sendTeamRequest({
-        phone: p.phone,
-        display_name: p.name,
-        display_category: p.category,
-        display_city: p.city
-      });
-      addToast(`Invitation sent to ${p.name}!`);
-      // Update local list to remove them from discovery
-      setDiscovered(prev => prev.filter(x => x.id !== p.id));
-    } catch (err) {
-      addToast('Failed to send connection request', 'error');
     }
   };
 
@@ -203,10 +176,6 @@ export default function Team() {
 
   // --- API: UPDATE TEAMMATE (EDIT ALIAS) ---
   const handleUpdateMember = async (e) => {
-    /**
-     * Connects to: PATCH /api/team/{member_id}
-     * Impact: Updates local display info for the studio owner.
-     */
     e.preventDefault();
     try {
       await apiClient.patch(`/team/${memberToEdit.id}`, 
@@ -226,10 +195,6 @@ export default function Team() {
 
   // --- API: REMOVE TEAMMATE ---
   const handleDeleteMember = async (memberId) => {
-    /**
-     * Connects to: DELETE /api/team/{member_id}
-     * Impact: Removes the relationship from the owner's directory.
-     */
     if (!window.confirm('Are you sure you want to remove this member?')) return;
     try {
       await apiClient.delete(`/team/${memberId}`);
@@ -262,12 +227,11 @@ export default function Team() {
         </div>
         <div style={{display:'flex', gap: 12}}>
           <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
-            <Plus size={18} style={{marginRight: 8}} /> Add by Phone
+            <Plus size={18} style={{marginRight: 8}} /> Add Freelancer
           </button>
         </div>
       </div>
 
-      {/* --- PENDING INVITATIONS (Integrated) --- */}
       {pendingRequests.length > 0 && (
         <div className="pending-invites-integrated">
           <div className="alert-banner">
@@ -291,13 +255,39 @@ export default function Team() {
         </div>
       )}
 
+      <div className="discovery-filters" style={{ marginBottom: 16 }}>
+        <div className="search-box">
+          <Search size={16} color="var(--text-muted)" />
+          <input 
+            type="text" 
+            placeholder="Search by name or city..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <select 
+          className="role-select"
+          value={roleFilter}
+          onChange={(e) => setRoleFilter(e.target.value)}
+        >
+          <option value="All">All Roles</option>
+          <option value="Lead">Lead</option>
+          <option value="Traditional">Traditional</option>
+          <option value="Candid">Candid</option>
+          <option value="Drone">Drone</option>
+          <option value="Reel">Reel</option>
+          <option value="Cinematographer">Cinematographer</option>
+          <option value="Assistant">Assistant</option>
+          <option value="Helper">Helper</option>
+          <option value="Creative Director">Creative Director</option>
+        </select>
+      </div>
 
       <div className="team-table-container">
         <table className="team-table">
           <thead>
             <tr>
               <th>Name</th>
-              <th>Status</th>
               <th>Jobs Together</th>
               <th>Roles</th>
               <th>City</th>
@@ -307,26 +297,19 @@ export default function Team() {
           </thead>
           <tbody>
             {team.length === 0 && joinedTeams.length === 0 ? (
-              <tr><td colSpan="7" style={{textAlign:'center', padding: 40, color: 'var(--text-muted)'}}>No team members yet. Add someone by phone!</td></tr>
+              <tr><td colSpan="6" style={{textAlign:'center', padding: 40, color: 'var(--text-muted)'}}>No team members yet. Add someone by phone!</td></tr>
             ) : (
               <>
-                {/* 1. MEMBERS I MANAGE */}
-                {team.map(m => (
+                {team.filter(m => 
+                  (m.name.toLowerCase().includes(searchTerm.toLowerCase()) || m.city.toLowerCase().includes(searchTerm.toLowerCase())) &&
+                  (roleFilter === 'All' || m.category === roleFilter)
+                ).map(m => (
                   <tr key={m.id} className={m.is_locked ? 'member-locked-row' : ''}>
                     <td>
                       <div className="team-member-name-cell" onClick={() => !m.is_locked && handleNameClick(m)} style={{cursor: m.is_locked ? 'default' : 'pointer'}}>
                         <Avatar name={m.name} size="sm" />
                         <span className="member-name-link">{m.name}</span>
                       </div>
-                    </td>
-                    <td>
-                      {m.is_locked ? (
-                        <span className="status-pill locked" title="Already Connected to Another Team">
-                          <AlertCircle size={12} /> Locked
-                        </span>
-                      ) : (
-                        <span className="status-pill available">Active</span>
-                      )}
                     </td>
                     <td>{m.jobsCompleted}</td>
                     <td>
@@ -340,7 +323,7 @@ export default function Team() {
                       <div className="team-action-cell">
                         {!m.is_locked && (
                           <>
-                            <button className="btn btn-ghost btn-sm" title="Invite to Job" onClick={() => {
+                            <button className="btn btn-ghost btn-sm" title="Invite to Project" onClick={() => {
                               setMemberToInvite(m);
                               setIsInviteModalOpen(true);
                             }}>
@@ -361,18 +344,16 @@ export default function Team() {
                     </td>
                   </tr>
                 ))}
-
-                {/* 2. TEAMS I HAVE JOINED (Unified Display) */}
-                {joinedTeams.map(jt => (
+                {joinedTeams.filter(jt => 
+                  (jt.owner_name.toLowerCase().includes(searchTerm.toLowerCase()) || jt.display_city.toLowerCase().includes(searchTerm.toLowerCase())) &&
+                  (roleFilter === 'All' || jt.display_category === roleFilter)
+                ).map(jt => (
                   <tr key={`joined-${jt.id}`} className="joined-team-row">
                     <td>
                       <div className="team-member-name-cell">
                         <Avatar name={jt.owner_name} size="sm" />
                         <span className="member-name-link">{jt.owner_name}'s Studio</span>
                       </div>
-                    </td>
-                    <td>
-                      <span className="status-pill connected">Connected</span>
                     </td>
                     <td>—</td>
                     <td>
@@ -394,9 +375,6 @@ export default function Team() {
           </tbody>
         </table>
       </div>
-
-
-
 
       <Modal 
         isOpen={!!selectedPhotographer} 
@@ -457,15 +435,15 @@ export default function Team() {
       <Modal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
-        title="Add New Teammate"
+        title="Add Freelancer"
         size="md"
       >
         <form onSubmit={handleAddMember} className="add-teammate-form">
-          <p className="modal-desc">Enter the freelancer's phone number to find them on Lumière and send an invite.</p>
+          <p className="modal-desc">Enter the freelancer's email or phone number to find them on Lumière and send an invite.</p>
 
           
           <div className="form-group">
-            <label>Phone Number</label>
+            <label>Email or Phone Number</label>
             <div style={{display:'flex', gap: 8}}>
               <input 
                 type="text" 
@@ -476,7 +454,7 @@ export default function Team() {
                   setAddForm({...addForm, phone: e.target.value});
                   if (e.target.value.length >= 10) handlePhoneCheck(e.target.value);
                 }}
-                placeholder="e.g. 9876543210"
+                placeholder="e.g. name@example.com or 9876543210"
                 autoFocus
               />
             </div>
@@ -551,16 +529,18 @@ export default function Team() {
                 value={editForm.role}
                 onChange={(e) => setEditForm({...editForm, role: e.target.value})}
               >
-                <option value="Candid">Candid</option>
-                <option value="Traditional">Traditional</option>
-                <option value="Wedding">Wedding</option>
-                <option value="Corporate">Corporate</option>
-                <option value="Event">Event</option>
-                <option value="Portrait">Portrait</option>
                 <option value="Lead">Lead</option>
+                <option value="Traditional">Traditional</option>
+                <option value="Candid">Candid</option>
                 <option value="Drone">Drone</option>
                 <option value="Reel">Reel</option>
+                <option value="Cinematographer">Cinematographer</option>
+                <option value="Assistant">Assistant</option>
+                <option value="Helper">Helper</option>
+                <option value="Creative Director">Creative Director</option>
                 <option value="Other">Other</option>
+
+
               </select>
             </div>
             <div className="form-group">
@@ -582,15 +562,18 @@ export default function Team() {
       </Modal>
 
       {/* MODAL: Quick Job Invitation */}
-      <JobSelectionModal 
-        isOpen={isInviteModalOpen}
-        onClose={() => setIsInviteModalOpen(false)}
-        photographer={memberToInvite}
-        onSelect={() => {
-          addToast('Job request sent successfully!');
-          setIsInviteModalOpen(false);
-        }}
-      />
+      {isInviteModalOpen && createPortal(
+        <JobSelectionModal 
+          isOpen={isInviteModalOpen}
+          onClose={() => setIsInviteModalOpen(false)}
+          photographer={memberToInvite}
+          onSelect={() => {
+            addToast('Project request sent successfully!');
+            setIsInviteModalOpen(false);
+          }}
+        />,
+        document.body
+      )}
     </div>
   );
 }

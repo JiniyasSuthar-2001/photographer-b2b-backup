@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-
+import { createPortal } from 'react-dom';
 export default function Modal({ isOpen, onClose, title, children, footer, size = 'md' }) {
   if (!isOpen) return null;
 
@@ -9,7 +9,7 @@ export default function Modal({ isOpen, onClose, title, children, footer, size =
     if (e.target === e.currentTarget) onClose();
   };
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal" style={{ maxWidth }}>
         <div className="modal-header">
@@ -21,6 +21,7 @@ export default function Modal({ isOpen, onClose, title, children, footer, size =
         <div className="modal-body">{children}</div>
         {footer && <div className="modal-footer">{footer}</div>}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

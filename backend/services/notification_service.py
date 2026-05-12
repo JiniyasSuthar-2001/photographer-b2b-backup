@@ -45,6 +45,9 @@ class NotificationService:
             }
         }, user_id)
 
+        # Also show a real-time toast
+        await manager.send_toast(message, "info", user_id)
+
         return notif
 
 notification_service = NotificationService()

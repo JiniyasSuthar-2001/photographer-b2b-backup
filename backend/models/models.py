@@ -38,6 +38,12 @@ class User(Base):
     plan = Column(String, default='Starter')
     is_on_trial = Column(Boolean, default=True)
     trial_days_left = Column(Integer, default=14)
+    subscription_expiry = Column(DateTime, nullable=True)
+
+    # Referral Fields
+    referral_code = Column(String(8), unique=True, index=True)
+    referred_by = Column(String(8), nullable=True)
+    first_purchase_completed = Column(Boolean, default=False)
 
     # Relationships
     jobs_owned = relationship("Job", back_populates="owner")
@@ -67,7 +73,7 @@ class Job(Base):
     title = Column(String)
     client = Column(String)
     date = Column(DateTime, default=datetime.utcnow)
-    studio_owner_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
     category = Column(String) # Now a free-text field, no longer affects filtering logic.
     status = Column(String, default="open") # open, completed, assigned, cancelled
     budget = Column(Integer, default=0)
@@ -197,6 +203,76 @@ class Task(Base):
 
     job = relationship("Job", back_populates="tasks")
 
-# Add relationship to Job class as well (must be done in a separate block if not using strings)
-# But Job already has relationship defined by string in many places. 
-# Let's update Job class to include task relationship.
+# --- NEW MODELS FOR REFERRAL, PAYMENT & SUBSCRIPTION ---
+
+class Payment(Base):
+    """
+    Tracks payment transactions.
+    """
+    __tablename__ = "payments"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    amount = Column(Integer)
+    currency = Column(String, default="INR")
+    status = Column(String, default="pending") # pending, success, failed
+    transaction_id = Column(String, unique=True, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = relationship("User", backref="payments")
+
+class SubscriptionHistory(Base):
+    """
+    Tracks subscription changes over time.
+    """
+    __tablename__ = "subscription_history"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    plan = Column(String)
+    start_date = Column(DateTime, default=datetime.utcnow)
+    end_date = Column(DateTime)
+    status = Column(String, default="active")
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", backref="subscription_logs")
+
+class ReferralHistory(Base):
+    """
+    Logs successful referral rewards.
+    """
+    __tablename__ = "referral_history"
+    id = Column(Integer, primary_key=True, index=True)
+    referrer_id = Column(Integer, ForeignKey("users.id")) # Person who shared their code
+    referred_user_id = Column(Integer, ForeignKey("users.id")) # Person who used the code
+    days_earned = Column(Integer, default=15)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    referrer = relationship("User", foreign_keys=[referrer_id], backref="referrals_given")
+    referred_user = relationship("User", foreign_keys=[referred_user_id], backref="referral_received")
+
+class IdentityOwnership(Base):
+    """
+    Strict mapping of email/phone to a specific user ID.
+    Prevents reuse of identity across different accounts.
+    """
+    __tablename__ = "identity_ownership"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    identity_type = Column(String) # email, phone
+    identity_value = Column(String, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", backref="owned_identities")
+
+class WebSocketSession(Base):
+    """
+    Tracks active websocket sessions for real-time broadcasting.
+    """
+    __tablename__ = "websocket_sessions"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    connection_id = Column(String, unique=True)
+    status = Column(String, default="online")
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", backref="ws_sessions")

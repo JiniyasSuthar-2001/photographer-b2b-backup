@@ -7,7 +7,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from db.database import get_db
-from models.schemas import UserLogin, UserSignUp, Token
+from models.schemas import UserLogin, UserSignUp, Token, ForgotPassword
 from models import models
 from services.auth_service import auth_service
 from fastapi.security import OAuth2PasswordBearer
@@ -84,12 +84,9 @@ async def logout(current_user = Depends(get_current_user)):
     return {"message": "Logged out successfully"}
 
 @router.post("/forgot-password")
-async def forgot_password(data: dict):
+async def forgot_password(data: ForgotPassword):
     """
     Simulates a password reset request.
     Frontend Impact: Connected to the 'Forgot Password' link in Login.jsx.
     """
-    username = data.get("username")
-    if not username:
-        raise HTTPException(status_code=400, detail="Username is required")
-    return {"message": f"Password reset instructions sent to user {username}"}
+    return {"message": f"Password reset instructions sent to user {data.username}"}

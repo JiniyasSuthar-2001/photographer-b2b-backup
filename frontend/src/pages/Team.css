@@ -1,5 +1,5 @@
 .team-page {
-  padding: var(--space-6) var(--space-8);
+  padding: var(--space-5) var(--space-6);
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -8,7 +8,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-5);
 }
 
 .team-table-container {
@@ -26,17 +26,17 @@
 
 .team-table th {
   background: var(--surface-hover);
-  padding: var(--space-3) var(--space-4);
-  font-size: 12.5px;
+  padding: 6px 12px;
+  font-size: 11.5px;
   font-weight: 600;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border);
 }
 
 .team-table td {
-  padding: var(--space-3) var(--space-4);
+  padding: 8px 12px;
   border-bottom: 1px solid var(--border);
-  font-size: 13.5px;
+  font-size: 12.5px;
   color: var(--text-primary);
   vertical-align: middle;
 }
@@ -106,7 +106,8 @@
 }
 
 .history-date {
-  font-size: 12px;
+  font-size: 11px;
+
   color: var(--text-secondary);
 }
 
@@ -122,7 +123,8 @@
 }
 
 .history-role {
-  font-size: 13px;
+  font-size: 12px;
+
   color: var(--text-secondary);
   background: var(--surface);
   padding: 2px 8px;
@@ -162,7 +164,8 @@
 }
 
 .page-info {
-  font-size: 13px;
+  font-size: 12px;
+
   color: var(--text-secondary);
 }
 
@@ -203,7 +206,8 @@
 
 .result-name {
   font-weight: 600;
-  font-size: 16px;
+  font-size: 15px;
+
 }
 
 .result-location {
@@ -252,7 +256,7 @@
 }
 
 .form-group label {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary);
 }
@@ -280,9 +284,10 @@
 }
 
 .tab-btn {
-  padding: 6px 16px;
+  padding: 5px 12px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 12.5px;
+
   font-weight: 600;
   border: none;
   background: transparent;
@@ -353,7 +358,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: 12px;
+
   font-weight: 600;
   color: #475569;
 }
@@ -380,7 +386,8 @@
 }
 
 .invite-text {
-  font-size: 12.5px;
+  font-size: 12px;
+
   color: #1e293b;
 }
 
@@ -401,9 +408,11 @@
   transition: all 0.2s;
 }
 
-.btn-icon-check { background: #f0fdf4; color: #16a34a; }
+.btn-icon-check { background: #f0fdf4; color: #16a34a; scale: 0.9; }
+
 .btn-icon-check:hover { background: #dcfce7; }
-.btn-icon-cancel { background: #fef2f2; color: #dc2626; }
+.btn-icon-cancel { background: #fef2f2; color: #dc2626; scale: 0.9; }
+
 .btn-icon-cancel:hover { background: #fee2e2; }
 
 .member-locked-row {
@@ -419,4 +428,39 @@
   background: #f1f5f9;
   color: #64748b;
 }
+
+
+/* --- Team Filters -------------------------------------------------------- */
+.discovery-filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.discovery-filters .search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  flex: 1;
+  min-width: 200px;
+  transition: border-color 0.2s;
+}
+.discovery-filters .search-box:focus-within { border-color: #6366F1; box-shadow: 0 0 0 3px rgba(99,102,241,0.12); }
+.discovery-filters .search-box input { border:none; outline:none; background:transparent; font-size:13px; width:100%; color:var(--text-primary); }
+.discovery-filters .role-select {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.discovery-filters .role-select:focus { border-color: #6366F1; }
 

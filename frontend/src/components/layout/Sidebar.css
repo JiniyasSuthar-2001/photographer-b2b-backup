@@ -1,9 +1,10 @@
 /* ── Sidebar ──────────────────────────────────────────────────────────────────── */
 .sidebar {
   position: fixed;
-  top: 16px;
-  left: 16px;
-  bottom: 16px;
+  top: 12px;
+  left: 12px;
+  bottom: 12px;
+
   width: var(--sidebar-width);
   background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
@@ -23,14 +24,16 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: 0 var(--space-6) var(--space-6);
+  padding: 0 var(--space-5) var(--space-5);
+
   border-bottom: 1px solid var(--border-light);
   margin-bottom: var(--space-4);
 }
 
 .sidebar-logo-icon {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
+
   border-radius: var(--radius-sm);
   background: var(--gradient);
   display: flex;
@@ -43,7 +46,8 @@
 
 .sidebar-logo-text {
   font-family: 'Outfit', sans-serif;
-  font-size: 22px;
+  font-size: 16.5px;
+
   font-weight: 800;
   letter-spacing: -0.04em;
   background: var(--gradient-text);
@@ -57,7 +61,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 0 var(--space-6) var(--space-4);
+  padding: 0 var(--space-5) var(--space-3);
+
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -97,13 +102,17 @@
 .sidebar-nav-item {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
-  padding: 12px var(--space-4);
+  gap: var(--space-3);
+  padding: 8px var(--space-3);
+
+
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
   text-decoration: none;
-  font-size: 14px;
+  font-size: 12.5px;
+
   font-weight: 500;
+
   position: relative;
   transition: all var(--transition);
   cursor: pointer;
@@ -135,7 +144,8 @@
   transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.sidebar-nav-item.active .sidebar-nav-bar { height: 24px; }
+.sidebar-nav-item.active .sidebar-nav-bar { height: 20px; }
+
 
 .sidebar-nav-icon {
   flex-shrink: 0;
@@ -183,7 +193,8 @@
 /* ── Trial Banner ─────────────────────────────────────────────────────────────── */
 .sidebar-trial {
   margin: 0 var(--space-3) var(--space-3);
-  padding: var(--space-4);
+  padding: var(--space-3);
+
   background: var(--gradient-soft);
   border: 1px solid rgba(59,130,246,0.15);
   border-radius: var(--radius);
@@ -205,7 +216,8 @@
   background: var(--gradient);
   color: #fff;
   border-radius: var(--radius-sm);
-  font-size: 12.5px;
+  font-size: 12px;
+
   font-weight: 600;
   text-decoration: none;
   transition: all var(--transition);
@@ -236,8 +248,9 @@
 }
 
 .sidebar-profile-name {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
+
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
@@ -245,8 +258,9 @@
 }
 
 .sidebar-profile-email {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-muted);
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

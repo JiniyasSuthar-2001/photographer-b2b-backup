@@ -1,208 +1,181 @@
-// ─── Role Types ───────────────────────────────────────────────────────────────
 export const ROLE_TYPES = {
-  'Candid': { color: '#10B981', bg: 'rgba(16,185,129,0.12)', label: 'Candid' },
-  'Traditional': { color: '#F43F5E', bg: 'rgba(244,63,94,0.12)', label: 'Traditional' },
-  'Wedding': { color: '#8B5CF6', bg: 'rgba(139,92,246,0.12)', label: 'Wedding' },
-  'Corporate': { color: '#3B82F6', bg: 'rgba(59,130,246,0.12)', label: 'Corporate' },
-  'Event': { color: '#10B981', bg: 'rgba(16,185,129,0.12)', label: 'Event' },
-  'Portrait': { color: '#F59E0B', bg: 'rgba(245,158,11,0.12)', label: 'Portrait' },
-  'Lead': { color: '#3B82F6', bg: 'rgba(59,130,246,0.12)', label: 'Lead' },
-  'Drone': { color: '#8B5CF6', bg: 'rgba(139,92,246,0.12)', label: 'Drone' },
-  'Reel': { color: '#F59E0B', bg: 'rgba(245,158,11,0.12)', label: 'Reel' },
-  'Other': { color: '#64748b', bg: 'rgba(100,116,139,0.12)', label: 'Other' },
+  'Lead':             { color: '#3B82F6', bg: 'rgba(59,130,246,0.12)', label: 'Lead' },
+  'Traditional':      { color: '#F43F5E', bg: 'rgba(244,63,94,0.12)',  label: 'Traditional' },
+  'Candid':           { color: '#10B981', bg: 'rgba(16,185,129,0.12)', label: 'Candid' },
+  'Drone':            { color: '#8B5CF6', bg: 'rgba(139,92,246,0.12)', label: 'Drone' },
+  'Reel':             { color: '#F59E0B', bg: 'rgba(245,158,11,0.12)', label: 'Reel' },
+  'Cinematographer':  { color: '#06B6D4', bg: 'rgba(6,182,212,0.12)',  label: 'Cinematographer' },
+  'Assistant':        { color: '#6366F1', bg: 'rgba(99,102,241,0.12)', label: 'Assistant' },
+  'Helper':           { color: '#94A3B8', bg: 'rgba(148,163,184,0.12)',label: 'Helper' },
+  'Creative Director':{ color: '#EC4899', bg: 'rgba(236,72,153,0.12)', label: 'Creative Director' },
 };
 
-// ─── Mock Team Members ────────────────────────────────────────────────────────
+// ─── TEAM DIRECTORY ──────────────────────────────────────────────────────────
 export const mockTeam = [
-  { id: 1, name: 'Sofia Reyes',   role: 'Lead',     status: 'available', jobsCompleted: 47, rating: 4.9, joinedDate: '2024-02-10', color: '#3B82F6', specialties: ['Candid', 'Lead'], city: 'Ahmedabad', phone: '+91 91234 56780', equipment: ['Sony A7R V', '24-70mm lens'] },
-  { id: 2, name: 'Marcus Chen',   role: 'Candid', status: 'busy',      jobsCompleted: 23, rating: 4.7, joinedDate: '2024-06-15', color: '#8B5CF6', specialties: ['Candid'], city: 'Surat', phone: '+91 91234 56781', equipment: ['Canon R5'] },
-  { id: 3, name: 'Priya Nair',    role: 'Event',           status: 'available', jobsCompleted: 31, rating: 4.8, joinedDate: '2024-03-22', color: '#2DD4BF', specialties: ['Event'], city: 'Vadodara', phone: '+91 91234 56782', equipment: ['Panasonic GH6'] },
-  { id: 4, name: 'James Okafor',  role: 'Portrait',                 status: 'offline',   jobsCompleted: 58, rating: 4.6, joinedDate: '2023-11-01', color: '#F59E0B', specialties: ['Portrait'], city: 'Rajkot', phone: '+91 91234 56783', equipment: ['MacBook Pro'] },
-  { id: 5, name: 'Lena Müller',   role: 'Candid',         status: 'available', jobsCompleted: 15, rating: 4.5, joinedDate: '2025-01-18', color: '#F43F5E', specialties: ['Candid'], city: 'Ahmedabad', phone: '+91 91234 56784', equipment: ['Nikon Z6 II'] },
-  { id: 6, name: 'Diego Santos',  role: 'Drone',         status: 'busy',      jobsCompleted: 19, rating: 4.9, joinedDate: '2024-09-05', color: '#10B981', specialties: ['Drone'], city: 'Surat', phone: '+91 91234 56785', equipment: ['DJI Mavic 3'] },
-  { id: 7, name: 'Arjun Varma',   role: 'Videographer',           status: 'available', jobsCompleted: 42, rating: 4.8, joinedDate: '2024-01-12', color: '#2DD4BF', specialties: ['Videographer'], city: 'Ahmedabad', phone: '+91 91234 56786', equipment: ['Sony FX3', 'Ronin RS3'] },
-  { id: 8, name: 'Ishani Bhatt',  role: 'Reel',            status: 'available', jobsCompleted: 67, rating: 4.9, joinedDate: '2024-04-05', color: '#F43F5E', specialties: ['Reel'], city: 'Surat', phone: '+91 91234 56787', equipment: ['iPhone 15 Pro Max', 'Insta360 Flow'] },
-  { id: 9, name: 'Karan Mehta',   role: 'Corporate',         status: 'busy',      jobsCompleted: 28, rating: 4.7, joinedDate: '2024-02-20', color: '#F59E0B', specialties: ['Corporate'], city: 'Vadodara', phone: '+91 91234 56788', equipment: ['Canon EOS R3', '24-105mm'] },
+  { id: 101, name: 'Aarav Sharma', role: 'Lead', status: 'available', jobsCompleted: 156, rating: 4.9, joinedDate: '2023-01-12', city: 'Ahmedabad', phone: '+91 98765 00001', specialties: ['Lead', 'Traditional'], equipment: ['Sony A7R V', '24-70mm GM II'] },
+  { id: 102, name: 'Ishani Patel', role: 'Candid', status: 'busy', jobsCompleted: 89, rating: 4.8, joinedDate: '2023-05-20', city: 'Mumbai', phone: '+91 98765 00002', specialties: ['Candid'], equipment: ['Canon R5', '50mm f/1.2'] },
+  { id: 103, name: 'Rohan Mehta', role: 'Drone', status: 'available', jobsCompleted: 42, rating: 4.7, joinedDate: '2024-02-15', city: 'Surat', phone: '+91 98765 00003', specialties: ['Drone'], equipment: ['DJI Mavic 3 Pro', 'Inspire 3'] },
+  { id: 104, name: 'Sana Khan', role: 'Reel', status: 'available', jobsCompleted: 210, rating: 4.9, joinedDate: '2023-11-05', city: 'Ahmedabad', phone: '+91 98765 00004', specialties: ['Reel', 'Candid'], equipment: ['iPhone 15 Pro Max', 'RS3 Mini'] },
+  { id: 105, name: 'Vikram Singh', role: 'Traditional', status: 'offline', jobsCompleted: 312, rating: 4.6, joinedDate: '2022-08-10', city: 'Rajkot', phone: '+91 98765 00005', specialties: ['Traditional'], equipment: ['Nikon Z9', '70-200mm f/2.8'] },
+  { id: 106, name: 'Priya Das', role: 'Cinematographer', status: 'available', jobsCompleted: 67, rating: 5.0, joinedDate: '2024-01-01', city: 'Vadodara', phone: '+91 98765 00006', specialties: ['Cinematographer'], equipment: ['Sony FX3', 'Anamorphic Lenses'] },
+  { id: 107, name: 'Karan Malhotra', role: 'Assistant', status: 'available', jobsCompleted: 24, rating: 4.5, joinedDate: '2024-03-12', city: 'Ahmedabad', phone: '+91 98765 00007', specialties: ['Assistant'], equipment: ['Reflectors', 'AD600 Pro'] },
+  { id: 108, name: 'Ananya Iyer', role: 'Creative Director', status: 'busy', jobsCompleted: 112, rating: 4.9, joinedDate: '2023-02-28', city: 'Mumbai', phone: '+91 98765 00008', specialties: ['Creative Director'], equipment: ['MacBook Pro M3 Max'] }
 ];
 
-// ─── Mock Jobs ────────────────────────────────────────────────────────────────
+// ─── PROJECT HUB ─────────────────────────────────────────────────────────────
 export const mockJobs = [
-  { id: 'J001', title: 'Sorrento Wedding',        client: 'Isabella Romano',    date: '2026-05-18', budget: 42000, status: 'assigned',    assignedTo: 1, category: 'Wedding', roles: ['Lead', 'Candid', 'Drone'], tags: ['wedding', 'outdoor'],          location: 'Ahmedabad, IN',    venue: 'Taj Skyline',     notes: 'Golden hour shoot, ceremony at 5PM' },
-  { id: 'J002', title: 'Chen Corporate Headshots', client: 'TechNova Inc.',      date: '2026-05-20', budget: 18000, status: 'open',        assignedTo: null, category: 'Corporate', roles: ['Lead', 'Portrait'],         tags: ['corporate', 'portrait'],       location: 'Surat, IN',        venue: 'Diamond Bourse',   notes: '25 executives, 2 hour session' },
-  { id: 'J003', title: 'Milan Fashion Editorial',  client: 'Vogue Italia',       date: '2026-05-25', budget: 65000, status: 'in_progress', assignedTo: 3, category: 'Event', roles: ['Lead', 'Candid'], tags: ['fashion', 'editorial'],        location: 'Vadodara, IN',        venue: 'Laxmi Vilas Palace',     notes: 'Spring collection, 8 outfits' },
-  { id: 'J004', title: 'Rivera Quinceanera',       client: 'Maria Rivera',       date: '2026-04-30', budget: 29000, status: 'completed',   assignedTo: 2, category: 'Wedding', roles: ['Lead'],         tags: ['event', 'portrait'],           location: 'Rajkot, IN', venue: 'Imperial Palace',          notes: '' },
-  { id: 'J005', title: 'Coastal Elopement',        client: 'Alex & Jordan Kim',  date: '2026-06-02', budget: 34000, status: 'open',        assignedTo: null, category: 'Wedding', roles: ['Candid', 'Drone'],              tags: ['wedding', 'intimate', 'outdoor'], location: 'Ahmedabad, IN',   venue: 'Sabarmati Riverfront',    notes: 'Sunrise shoot, 6AM start' },
-  { id: 'J006', title: 'Bloom Brand Campaign',     client: 'Bloom Cosmetics',    date: '2026-05-22', budget: 89000, status: 'assigned',    assignedTo: 3, category: 'Corporate', roles: ['Lead', 'Candid'], tags: ['commercial', 'beauty'],        location: 'Surat, IN',        venue: 'Dumas Beach',  notes: 'Full day, studio + location' },
-  { id: 'J007', title: 'Park Family Session',      client: 'The Park Family',    date: '2026-04-15', budget: 8500,  status: 'completed',   assignedTo: 5, category: 'Portrait', roles: ['Candid'],              tags: ['family', 'portrait'],          location: 'Ahmedabad, IN', venue: 'Kankaria Lake',     notes: '' },
-  { id: 'J008', title: 'Rooftop Engagement',       client: 'Zara & Finn Cole',   date: '2026-06-08', budget: 16000, status: 'open',        assignedTo: null, category: 'Event', roles: ['Candid', 'Lead'],              tags: ['engagement', 'urban'],         location: 'Vadodara, IN',     venue: 'Sayaji Hotel Roof',notes: 'Blue hour preferred' },
-  { id: 'J009', title: 'Aerial Estate Survey',     client: 'Prestige Realty',    date: '2026-05-28', budget: 32000, status: 'assigned',    assignedTo: 6, category: 'Corporate', roles: ['Drone'],               tags: ['drone', 'real estate'],        location: 'Rajkot, IN',       venue: 'Race Course Ring Road', notes: '4K footage + stills' },
-  { id: 'J010', title: 'Jazz Festival Coverage',   client: 'NewPort Music Fest', date: '2026-06-14', budget: 26000, status: 'open',        assignedTo: null, category: 'Event', roles: ['Candid', 'Lead'],              tags: ['event', 'music'],              location: 'Ahmedabad, IN',      venue: 'Sardar Patel Stadium', notes: '3-day coverage' },
-  { id: 'J011', title: 'Santana Product Launch',   client: 'Santana Motors',     date: '2026-05-30', budget: 120000,status: 'in_progress', assignedTo: 1, category: 'Corporate', roles: ['Drone', 'Candid', 'Lead'],      tags: ['commercial', 'automotive'],    location: 'Surat, IN',  venue: 'VR Mall Event Space',     notes: '' },
-  { id: 'J012', title: 'Yuki Maternity',           client: 'Yuki Tanaka',        date: '2026-06-01', budget: 9500,  status: 'open',        assignedTo: null, category: 'Portrait', roles: ['Lead'],         tags: ['maternity', 'portrait'],       location: 'Ahmedabad, IN',           venue: 'Lumière Studio',     notes: 'In-studio, natural light' },
-  { id: 'J013', title: 'Villa Paradiso Elopement', client: 'Emma & Louis Petit', date: '2026-07-12', budget: 52000, status: 'open',        assignedTo: null, category: 'Wedding', roles: ['Lead', 'Drone'], tags: ['wedding', 'outdoor'],         location: 'Vadodara, IN',      venue: 'Sursagar Lake',        notes: 'Sunset ceremony 7PM' },
-  { id: 'J014', title: 'Summit Tech Conference',   client: 'GlobeTech Inc.',     date: '2026-07-20', budget: 38000, status: 'open',        assignedTo: null, category: 'Corporate', roles: ['Candid', 'Lead'], tags: ['corporate', 'event'],        location: 'Ahmedabad, IN', venue: 'Mahatma Mandir',      notes: '2-day event, 500 attendees' },
-  { id: 'J015', title: 'Surat Corporate Gala',     client: 'Reliance Ind.',      date: '2026-06-15', budget: 45000, status: 'open',        assignedTo: null, category: 'Event', roles: ['Corporate'],           tags: ['corporate', 'black-tie'],      location: 'Surat, IN',        venue: 'Avadh Utopia',     notes: 'CEO arrival shots mandatory' },
-  { id: 'J016', title: 'Ahmedabad Sangeet Night',  client: 'Mehta Family',       date: '2026-06-18', budget: 32000, status: 'open',        assignedTo: null, category: 'Wedding', roles: ['Videographer', 'Candid'],        tags: ['wedding', 'dance'],            location: 'Ahmedabad, IN',    venue: 'Karnavati Club',   notes: 'Focus on dance performances' },
-  { id: 'J017', title: 'Vadodara Fashion Reel',    client: 'Nandini Boutique',   date: '2026-06-22', budget: 15000, status: 'open',        assignedTo: null, category: 'Event', roles: ['Reel'],         tags: ['fashion', 'reels'],            location: 'Vadodara, IN',     venue: 'In-Studio',        notes: '10 cinematic reels for IG' },
-  { id: 'J018', title: 'Rajkot Palace Wedding',    client: 'Goyal & Singh',      date: '2026-07-05', budget: 68000, status: 'open',        assignedTo: null, category: 'Wedding', roles: ['Drone', 'Lead'], tags: ['wedding', 'luxury'],           location: 'Rajkot, IN',       venue: 'The Imperial Palace', notes: 'Grand entries from air' },
+  { id: 'JOB-2026-001', title: 'The Oberoi Destination Wedding', client: 'Malhotra & Kapoor', date: '2026-05-18', budget: 250000, status: 'assigned', category: 'Wedding', roles: ['Lead', 'Candid', 'Drone', 'Reel'], location: 'Udaipur, RJ', venue: 'Udaidvilas Palace', notes: 'Golden hour ceremony mandatory.' },
+  { id: 'JOB-2026-002', title: 'TechCon Global Summit', client: 'Google India', date: '2026-05-22', budget: 85000, status: 'assigned', category: 'Corporate', roles: ['Lead', 'Candid'], location: 'Ahmedabad, GJ', venue: 'Mahatma Mandir', notes: 'Keynote speakers focus.' },
+  { id: 'JOB-2026-003', title: 'Sabyasachi Heritage Campaign', client: 'Sabyasachi Mukherjee', date: '2026-05-28', budget: 120000, status: 'open', category: 'Commercial', roles: ['Cinematographer', 'Candid'], location: 'Mumbai, MH', venue: 'Ballard Estate', notes: 'Vintage aesthetic required.' },
+  { id: 'JOB-2026-004', title: 'Grand Sangeet Night', client: 'Mehta Family', date: '2026-05-15', budget: 45000, status: 'completed', category: 'Wedding', roles: ['Reel', 'Traditional'], location: 'Ahmedabad, GJ', venue: 'Karnavati Club', notes: 'Focus on dance performances.' },
+  { id: 'JOB-2026-005', title: 'Real Estate Portfolio', client: 'Adani Realty', date: '2026-06-05', budget: 35000, status: 'open', category: 'Commercial', roles: ['Drone'], location: 'Surat, GJ', venue: 'Adani Shantigram', notes: '4K aerial shots of all towers.' },
+  { id: 'JOB-2026-006', title: 'Maternity Studio Session', client: 'Yuki Tanaka', date: '2026-06-01', budget: 12000, status: 'assigned', category: 'Portrait', roles: ['Lead'], location: 'Ahmedabad, GJ', venue: 'Lumière Studio', notes: 'Natural light setup.' }
 ];
 
-// ─── Mock Job Requests ────────────────────────────────────────────────────────
+// ─── JOB REQUESTS & HISTORY ──────────────────────────────────────────────────
 export const mockJobRequests = [
-  { id: 'REQ001', jobId: 'J002', jobTitle: 'Chen Corporate Headshots', sentBy: 'Studio Owner', sentTo: 'Sofia Reyes',  role: 'Traditional', date: '2026-05-20', venue: 'Diamond Bourse', budget: 18000, payment: null, status: 'pending',  sentAt: '2026-05-03T09:00:00Z', respondedAt: null, notes: 'Need top-tier executive portraits' },
-  { id: 'REQ002', jobId: 'J005', jobTitle: 'Coastal Elopement',        sentBy: 'Studio Owner', sentTo: 'Lena Müller',  role: 'Candid',      date: '2026-06-02', venue: 'Sabarmati Riverfront',  budget: 34000, payment: null, status: 'pending',  sentAt: '2026-05-03T10:30:00Z', respondedAt: null, notes: 'Sunrise, very early start' },
-  { id: 'REQ003', jobId: 'J008', jobTitle: 'Rooftop Engagement',       sentBy: 'Studio Owner', sentTo: 'Marcus Chen',  role: 'Candid',      date: '2026-06-08', venue: 'Sayaji Hotel Roof', budget: 16000, payment: 14000, status: 'accepted', sentAt: '2026-05-01T14:00:00Z', respondedAt: '2026-05-01T16:00:00Z', notes: '' },
-  { id: 'REQ004', jobId: 'J010', jobTitle: 'Jazz Festival Coverage',   sentBy: 'Studio Owner', sentTo: 'Priya Nair',   role: 'Candid',      date: '2026-06-14', venue: 'Sardar Patel Stadium',    budget: 26000, payment: null, status: 'declined', sentAt: '2026-04-30T11:00:00Z', respondedAt: '2026-04-30T13:00:00Z', notes: '' },
-  { id: 'REQ005', jobId: 'J012', jobTitle: 'Yuki Maternity',           sentBy: 'Studio Owner', sentTo: 'Sofia Reyes',  role: 'Traditional', date: '2026-06-01', venue: 'Lumière Studio',   budget: 9500,  payment: null, status: 'pending',  sentAt: '2026-05-03T11:00:00Z', respondedAt: null, notes: 'Natural light specialist needed' },
-  { id: 'REQ006', jobId: 'J013', jobTitle: 'Villa Paradiso Elopement', sentBy: 'Studio Owner', sentTo: 'Diego Santos', role: 'Drone',       date: '2026-07-12', venue: 'Sursagar Lake',      budget: 52000, payment: null, status: 'pending',  sentAt: '2026-05-03T08:00:00Z', respondedAt: null, notes: 'Drone coverage of ceremony' },
-  { id: 'REQ007', jobId: 'J014', jobTitle: 'Summit Tech Conference',   sentBy: 'Studio Owner', sentTo: 'James Okafor', role: 'Traditional', date: '2026-07-20', venue: 'Mahatma Mandir',     budget: 38000, payment: 35000, status: 'accepted', sentAt: '2026-05-02T09:00:00Z', respondedAt: '2026-05-02T10:30:00Z', notes: '' },
-  { id: 'REQ008', jobId: 'J001', jobTitle: 'Sorrento Wedding',         sentBy: 'Studio Owner', sentTo: 'Marcus Chen',  role: 'Candid',      date: '2026-05-18', venue: 'Taj Skyline',   budget: 42000, payment: null, status: 'declined', sentAt: '2026-04-28T15:00:00Z', respondedAt: '2026-04-28T18:00:00Z', notes: 'Conflict with personal booking' },
-  { id: 'REQ009', jobId: 'J015', jobTitle: 'Surat Corporate Gala',     sentBy: 'Studio Owner', sentTo: 'Karan Mehta',   role: 'Corporate',   date: '2026-06-15', venue: 'Avadh Utopia',     budget: 45000, payment: null, status: 'pending',  sentAt: '2026-05-04T09:00:00Z', respondedAt: null, notes: 'Need formal coverage' },
-  { id: 'REQ010', jobId: 'J016', jobTitle: 'Ahmedabad Sangeet Night',  sentBy: 'Studio Owner', sentTo: 'Arjun Varma',   role: 'Videographer',date: '2026-06-18', venue: 'Karnavati Club',   budget: 32000, payment: null, status: 'pending',  sentAt: '2026-05-04T10:00:00Z', respondedAt: null, notes: 'Capture all dance moves' },
-  { id: 'REQ011', jobId: 'J017', jobTitle: 'Vadodara Fashion Reel',    sentBy: 'Studio Owner', sentTo: 'Ishani Bhatt',  role: 'Reel Expert', date: '2026-06-22', venue: 'In-Studio',        budget: 15000, payment: null, status: 'pending',  sentAt: '2026-05-04T11:00:00Z', respondedAt: null, notes: 'Focus on vertical video' },
+  { id: 'REQ-001', jobId: 'JOB-2026-001', jobTitle: 'The Oberoi Destination Wedding', owner_name: 'Lumière Admin', sentTo: 'Aarav Sharma', role: 'Lead', job_date: '2026-05-18', venue: 'Udaidvilas Palace', budget: 45000, status: 'accepted', sentAt: '2026-05-01T10:00:00Z', respondedAt: '2026-05-01T12:30:00Z' },
+  { id: 'REQ-002', jobId: 'JOB-2026-001', jobTitle: 'The Oberoi Destination Wedding', owner_name: 'Lumière Admin', sentTo: 'Rohan Mehta', role: 'Drone', job_date: '2026-05-18', venue: 'Udaidvilas Palace', budget: 30000, status: 'accepted', sentAt: '2026-05-01T10:05:00Z', respondedAt: '2026-05-02T09:15:00Z' },
+  { id: 'REQ-003', jobId: 'JOB-2026-002', jobTitle: 'TechCon Global Summit', owner_name: 'Lumière Admin', sentTo: 'Ishani Patel', role: 'Candid', job_date: '2026-05-22', venue: 'Mahatma Mandir', budget: 25000, status: 'accepted', sentAt: '2026-05-05T14:00:00Z', respondedAt: '2026-05-05T15:00:00Z' },
+  { id: 'REQ-004', jobId: 'JOB-2026-003', jobTitle: 'Sabyasachi Heritage Campaign', owner_name: 'Lumière Admin', sentTo: 'Priya Das', role: 'Cinematographer', job_date: '2026-05-28', venue: 'Ballard Estate', budget: 50000, status: 'pending', sentAt: '2026-05-10T11:00:00Z', respondedAt: null },
+  { id: 'REQ-005', jobId: 'JOB-2026-005', jobTitle: 'Real Estate Portfolio', owner_name: 'Lumière Admin', sentTo: 'Rohan Mehta', role: 'Drone', job_date: '2026-06-05', venue: 'Adani Shantigram', budget: 15000, status: 'declined', sentAt: '2026-05-08T16:00:00Z', respondedAt: '2026-05-08T18:00:00Z', decline_reason: 'Schedule conflict' },
+
+  // ─── INCOMING REQUESTS (Admin acting as a Photographer/Freelancer for others) ───
+  // Accepted (Upcoming)
+  { id: 'INC-001', jobId: 'EXT-001', job_title: 'Global Motors Product Launch', sender_name: 'Studio X', owner_name: 'Studio X', receiver_name: 'Lumière Admin', role: 'Lead', job_date: '2026-05-25', venue: 'Convention Center', budget: 120000, status: 'accepted', sentAt: '2026-05-10T09:00:00Z' },
+  { id: 'INC-002', jobId: 'EXT-002', job_title: 'BMW M-Series Launch', sender_name: 'Studio Munich', owner_name: 'Studio Munich', receiver_name: 'Lumière Admin', role: 'Cinematographer', job_date: '2026-06-20', venue: 'BIC Track', budget: 85000, status: 'accepted', sentAt: '2026-05-01T14:00:00Z' },
+  
+  // Invites (Pending)
+  { id: 'INC-003', jobId: 'EXT-003', job_title: 'Luxury Villa Shoot', sender_name: 'Adani Realty', owner_name: 'Adani Realty', receiver_name: 'Lumière Admin', role: 'Drone', job_date: '2026-05-30', venue: 'Shantigram', budget: 45000, status: 'pending', sentAt: '2026-05-11T10:00:00Z' },
+  { id: 'INC-004', jobId: 'EXT-004', job_title: 'Royal Wedding - Jodhpur', sender_name: 'Grand Moments', owner_name: 'Grand Moments', receiver_name: 'Lumière Admin', role: 'Traditional', job_date: '2026-06-12', venue: 'Umaid Bhawan', budget: 150000, status: 'pending', sentAt: '2026-05-09T16:00:00Z' },
+  
+  // Past Assignments
+  { id: 'INC-005', jobId: 'EXT-005', job_title: 'Retro Theme Sangeet', sender_name: 'Vogue Events', owner_name: 'Vogue Events', receiver_name: 'Lumière Admin', role: 'Lead', job_date: '2026-04-15', venue: 'The Leela', budget: 35000, status: 'accepted', sentAt: '2026-04-01T12:00:00Z' },
+  { id: 'INC-006', jobId: 'EXT-006', job_title: 'Corporate Portfolio', sender_name: 'TCS India', owner_name: 'TCS India', receiver_name: 'Lumière Admin', role: 'Candid', job_date: '2026-03-22', venue: 'TCS Campus', budget: 15000, status: 'accepted', sentAt: '2026-03-10T10:00:00Z' },
+  
+  // Declined
+  { id: 'INC-007', jobId: 'EXT-007', job_title: 'Birthday Bash', sender_name: 'Local Studio', owner_name: 'Local Studio', receiver_name: 'Lumière Admin', role: 'Assistant', job_date: '2026-05-20', venue: 'City Club', budget: 5000, status: 'declined', sentAt: '2026-05-05T09:00:00Z', decline_reason: 'Budget too low' }
 ];
 
-// ─── Calendar Role Assignments ────────────────────────────────────────────────
+// ─── CALENDAR & AVAILABILITY ────────────────────────────────────────────────
 export const mockCalendarRoles = {
-  '2026-05-18': ['Wedding', 'Candid'],
-  '2026-05-20': ['Lead'],
-  '2026-05-22': ['Candid', 'Lead'],
-  '2026-05-25': ['Candid', 'Lead'],
-  '2026-05-28': ['Drone'],
-  '2026-05-30': ['Drone', 'Candid'],
+  '2026-05-15': ['Traditional', 'Reel'],
+  '2026-05-18': ['Lead', 'Drone', 'Candid'],
+  '2026-05-22': ['Lead', 'Candid'],
+  '2026-05-28': ['Cinematographer'],
   '2026-06-01': ['Lead'],
-  '2026-06-02': ['Candid'],
-  '2026-06-08': ['Candid'],
-  '2026-06-14': ['Candid'],
+  '2026-06-05': ['Drone']
 };
 
-// ─── Mock Calendar Availability ───────────────────────────────────────────────
 export const mockAvailability = {
-  '2026-05-01': 'booked',  '2026-05-02': 'available', '2026-05-03': 'available',
-  '2026-05-05': 'booked',  '2026-05-06': 'partial',   '2026-05-07': 'available',
-  '2026-05-08': 'blocked', '2026-05-09': 'blocked',   '2026-05-10': 'available',
-  '2026-05-12': 'booked',  '2026-05-14': 'available', '2026-05-15': 'booked',
-  '2026-05-16': 'available','2026-05-18': 'booked',   '2026-05-19': 'partial',
-  '2026-05-20': 'booked',  '2026-05-21': 'available', '2026-05-22': 'booked',
-  '2026-05-23': 'available','2026-05-24': 'available', '2026-05-25': 'booked',
-  '2026-05-26': 'partial', '2026-05-27': 'available', '2026-05-28': 'booked',
-  '2026-05-29': 'available','2026-05-30': 'booked',   '2026-06-01': 'booked',
-  '2026-06-02': 'booked',  '2026-06-05': 'available', '2026-06-08': 'booked',
+  '2026-05-15': 'booked',
+  '2026-05-18': 'booked',
+  '2026-05-22': 'booked',
+  '2026-05-28': 'booked',
+  '2026-05-01': 'booked',
+  '2026-06-05': 'available'
 };
 
-// ─── Photographer Profile ───────────────────────────────────────────────────────
-export const mockPhotographerProfile = {
-  bio: 'Lifestyle & wedding photographer with 5+ years of experience capturing authentic moments. Specialising in natural light and candid storytelling across three continents.',
-  skills: ['Wedding', 'Portrait', 'Editorial', 'Street', 'Documentary'],
-  specialties: ['Candid', 'Traditional'],
-  equipment: [
-    { id: 1, name: 'Sony A7R V',         type: 'Camera'    },
-    { id: 2, name: 'Canon 85mm f/1.4',   type: 'Lens'      },
-    { id: 3, name: 'Sony 24-70mm f/2.8', type: 'Lens'      },
-    { id: 4, name: 'DJI Mavic 3 Pro',    type: 'Drone'     },
-    { id: 5, name: 'Profoto B10',        type: 'Lighting'  },
-  ],
-  yearsExperience: 5,
-  instagramHandle: '@alex.lumiere',
-  portfolioUrl: 'lumiere.io/alex',
-  availableForBookings: true,
-};
-
-// ─── Mock Analytics ────────────────────────────────────────────────────────────
-// 36 months of booking trend data (for 1M–3Y range filter)
-function buildTrends() {
-  const months = [];
-  const startDate = new Date(2023, 5, 1); // Jun 2023
-  const seeds = [6,8,11,9,13,8,16,7,10,12,11,14, 7,9,12,10,14,9,17,8,11,13,12,15, 8,10,13,11,15,10,18,9,12,14,13,16];
-  for (let i = 0; i < 36; i++) {
-    const d = new Date(startDate.getFullYear(), startDate.getMonth() + i, 1);
-    const label = d.toLocaleString('default', { month: 'short' }) + " '" + String(d.getFullYear()).slice(2);
-    const base = seeds[i] || 10;
-    months.push({
-      month: label,
-      bookings: base,
-      Candid: Math.round(base * 0.42),
-      Drone: Math.round(base * 0.22),
-      Wedding: Math.round(base * 0.36),
-      amount: base * 820 + Math.round(Math.random() * 2000),
-      jobs: base,
+// ─── ANALYTICS (TRENDS & KPIS) ───────────────────────────────────────────────
+const buildTrends = () => {
+  const trends = [];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const values = [45000, 52000, 48000, 72000, 115000, 142000, 98000, 105000, 130000, 165000, 198000, 220000];
+  for (let i = 0; i < 12; i++) {
+    trends.push({
+      month: `${months[i]} '26`,
+      amount: values[i],
+      jobs: Math.round(values[i] / 12000),
+      Candid: Math.round(values[i] * 0.4),
+      Lead: Math.round(values[i] * 0.35),
+      Drone: Math.round(values[i] * 0.25)
     });
   }
-  return months;
-}
+  return trends;
+};
+
 export const mockBookingTrends = buildTrends();
-
-export const mockRevenue = mockBookingTrends.slice(-12).map(d => ({ month: d.month, amount: d.amount, jobs: d.jobs }));
-
+export const mockRevenue = mockBookingTrends.slice(-12);
 export const mockRevenueByRole = [
-  { name: 'Wedding', value: 48200, color: '#8B5CF6' },
-  { name: 'Candid',      value: 31600, color: '#3B82F6' },
-  { name: 'Drone',       value: 18400, color: '#10B981' },
+  { name: 'Lead',            value: 342000, color: '#3B82F6' },
+  { name: 'Candid',         value: 285000, color: '#10B981' },
+  { name: 'Drone',          value: 165000, color: '#8B5CF6' },
+  { name: 'Reel',           value: 92000,  color: '#F59E0B' },
+  { name: 'Cinematographer',value: 78000,  color: '#06B6D4' },
+  { name: 'Traditional',    value: 54000,  color: '#F43F5E' },
 ];
 
 export const mockTeamUtilization = [
-  { name: 'Sofia Reyes',  percent: 92, jobs: 8 },
-  { name: 'Marcus Chen',  percent: 74, jobs: 6 },
-  { name: 'Priya Nair',   percent: 88, jobs: 7 },
-  { name: 'James Okafor', percent: 61, jobs: 5 },
-  { name: 'Lena Müller',  percent: 45, jobs: 4 },
-  { name: 'Diego Santos', percent: 79, jobs: 6 },
+  { name: 'Aarav Sharma', percent: 94, jobs: 18 },
+  { name: 'Sana Khan', percent: 88, jobs: 24 },
+  { name: 'Ishani Patel', percent: 82, jobs: 12 },
+  { name: 'Rohan Mehta', percent: 76, jobs: 15 }
 ];
 
 export const mockTopClients = [
-  { name: 'Vogue Italia',       jobs: 6, revenue: 34200, satisfaction: 5.0 },
-  { name: 'Bloom Cosmetics',    jobs: 4, revenue: 28600, satisfaction: 4.9 },
-  { name: 'TechNova Inc.',      jobs: 8, revenue: 14400, satisfaction: 4.7 },
-  { name: 'Santana Motors',     jobs: 2, revenue: 24000, satisfaction: 4.8 },
-  { name: 'NewPort Music Fest', jobs: 5, revenue: 13000, satisfaction: 4.6 },
+  { name: 'The Oberois', jobs: 12, revenue: 850000, satisfaction: 5.0 },
+  { name: 'Sabyasachi Mukherjee', jobs: 5, revenue: 420000, satisfaction: 4.9 },
+  { name: 'Google India', jobs: 8, revenue: 310000, satisfaction: 4.8 }
 ];
 
 export const mockBookingSources = [
-  { name: 'Instagram', value: 38 },
-  { name: 'Direct',    value: 27 },
-  { name: 'Referral',  value: 21 },
-  { name: 'Platform',  value: 14 },
+  { name: 'Referral', value: 45 },
+  { name: 'Instagram', value: 30 },
+  { name: 'Direct', value: 15 },
+  { name: 'Platform', value: 10 }
 ];
 
-export const mockPhotographerEarnings = mockBookingTrends.slice(-12).map(d => ({
-  month: d.month,
-  amount: Math.round(d.amount * 0.46),
-  jobs: Math.round(d.jobs * 0.48),
+export const mockPhotographerEarnings = mockBookingTrends.map(t => ({
+  month: t.month,
+  amount: Math.round(t.amount * 0.5),
+  jobs: t.jobs
 }));
 
-// ─── Mock Notifications ────────────────────────────────────────────────────────
+// ─── NOTIFICATIONS ──────────────────────────────────────────────────────────
 export const mockNotifications = [
-  { id: 1, type: 'request', message: 'New job request: Chen Corporate Headshots',         time: '2m ago',  read: false },
-  { id: 2, type: 'request', message: 'New job request: Coastal Elopement',                time: '1h ago',  read: false },
-  { id: 3, type: 'team',    message: 'Marcus Chen accepted Rooftop Engagement',           time: '2h ago',  read: false },
-  { id: 4, type: 'payment', message: 'Payment received: ₹42,000 from Isabella Romano',    time: '3h ago',  read: true  },
-  { id: 5, type: 'job',     message: 'Milan Fashion Editorial moved to In Progress',      time: '5h ago',  read: true  },
-  { id: 6, type: 'team',    message: 'Priya Nair declined Jazz Festival Coverage',        time: '1d ago',  read: true  },
+  { id: 1, type: 'job_invite', title: 'New Job Invitation', message: 'Ishani Patel accepted your request for TechCon Global Summit.', time: '10m ago', created_at: new Date(Date.now() - 10 * 60000).toISOString(), is_read: false },
+  { id: 2, type: 'job_invite', title: 'Incoming Request', message: 'New inquiry from Adani Realty for Drone coverage.', time: '1h ago', created_at: new Date(Date.now() - 60 * 60000).toISOString(), is_read: false },
+  { id: 3, type: 'payment', title: 'Payment Received', message: 'Advance payment of ₹1,00,000 received for Udaipur Wedding.', time: '3h ago', created_at: new Date(Date.now() - 180 * 60000).toISOString(), is_read: true },
+  { id: 4, type: 'team', title: 'Team Update', message: 'Priya Das updated her equipment: Sony FX3 added.', time: '5h ago', created_at: new Date(Date.now() - 300 * 60000).toISOString(), is_read: true }
 ];
 
-// ─── Demo Initial State (For Admin) ──────────────────────────────────────────
+// ─── ADMIN INITIAL STATE ─────────────────────────────────────────────────────
 export const demoInitialState = {
   user: {
-    full_name: 'Studio Owner',
-    email: 'user@lumiere.io',
-    phone: '+91 00000 00000',
+    full_name: 'Lumière Admin',
+    email: 'admin',
+    phone: '9876543210',
     mode: 'photographer',
     authority: 'manager',
-
-    isOnTrial: true,
-    trialDaysLeft: 11,
-    trialModalDismissed: false,
-    studioName: 'My Studio',
+    user_type: 'photographer',
+    is_pro: true,
+    isOnTrial: false,
+    trialDaysLeft: 0,
+    trialModalDismissed: true,
+    studioName: 'Lumière Premium Studio',
     studioLocation: 'Ahmedabad, Gujarat',
-    studioEmail: 'studio@lumiere.io',
-    rolesOffered: ['Candid', 'Traditional', 'Drone'],
+    studioEmail: 'admin@lumiere.io',
+    rolesOffered: ['Lead', 'Traditional', 'Candid', 'Drone', 'Reel', 'Cinematographer', 'Assistant', 'Helper', 'Creative Director']
   },
   team: mockTeam,
   jobs: mockJobs,
   jobRequests: mockJobRequests,
   calendarRoles: mockCalendarRoles,
   availability: mockAvailability,
-  photographerProfile: mockPhotographerProfile,
+  photographerProfile: {
+    bio: 'Premium destination wedding and corporate cinematography studio based in Gujarat. Serving luxury clients globally since 2018.',
+    skills: ['Directing', 'Post-Production', 'Lighting Design'],
+    specialties: ['Luxury Weddings', 'High-Fashion Editorial'],
+    equipment: [
+      { id: 1, name: 'RED V-Raptor', type: 'Camera' },
+      { id: 2, name: 'Arri Alexa Mini', type: 'Camera' },
+      { id: 3, name: 'Zeiss CP.3 Prime Set', type: 'Lens' }
+    ],
+    yearsExperience: 12,
+    instagramHandle: '@lumiere.premium',
+    portfolioUrl: 'lumiere.studio',
+    availableForBookings: true
+  },
   analytics: {
     revenue: mockRevenue,
     bookingTrends: mockBookingTrends,
@@ -211,50 +184,46 @@ export const demoInitialState = {
     topClients: mockTopClients,
     bookingSources: mockBookingSources,
     photographerEarnings: mockPhotographerEarnings,
-    totalRevenue: 112400,
+    totalRevenue: 1542000,
     jobsThisMonth: 14,
-    growthRate: 18.4,
-    clientSatisfaction: 4.8,
-    avgJobValue: 3847,
-    totalJobsCompleted: 193,
-    responseRate: 94,
-    acceptRate: 87,
+    growthRate: 24.5,
+    clientSatisfaction: 4.9,
+    avgJobValue: 42000,
+    totalJobsCompleted: 542,
+    responseRate: 98,
+    acceptRate: 92,
+    utilizationRate: 88
   },
   jobTasks: [
-    { id: 1, jobId: 'J001', text: 'Confirm arrival time with venue', completed: true },
-    { id: 2, jobId: 'J001', text: 'Check battery levels for all cameras', completed: false },
-    { id: 3, jobId: 'J002', text: 'Prepare lighting setup for corporate portraits', completed: false },
-    { id: 4, jobId: 'J002', text: 'Get list of executives for headshots', completed: true },
-    { id: 5, jobId: 'J003', text: 'Coordinate with makeup artists and stylists', completed: false },
-    { id: 6, jobId: 'J003', text: 'Scout locations at Laxmi Vilas Palace', completed: true },
-    { id: 7, jobId: 'J004', text: 'Edit and deliver final photo album', completed: false },
-    { id: 8, jobId: 'J005', text: 'Check weather forecast for sunrise shoot', completed: false },
-    { id: 9, jobId: 'J006', text: 'Rent additional lighting equipment', completed: true },
-    { id: 10, jobId: 'J008', text: 'Confirm rooftop access permissions', completed: false },
-    { id: 11, jobId: 'J009', text: 'Ensure drone permits are approved', completed: true },
-    { id: 12, jobId: 'J010', text: 'Prepare press pass for 3-day coverage', completed: false },
-    { id: 13, jobId: 'J013', text: 'Verify sunset times for ceremony', completed: false },
+    { id: 1, jobId: 'JOB-2026-001', text: 'Coordinate with Udaipur travel desk for gear transport', completed: true },
+    { id: 2, jobId: 'JOB-2026-001', text: 'Scout locations at Udaidvilas for sunset shots', completed: false },
+    { id: 3, jobId: 'JOB-2026-001', text: 'Finalize drone permit for lake area', completed: false },
+    { id: 4, jobId: 'JOB-2026-002', text: 'Apply for Mahatma Mandir press pass', completed: true },
+    { id: 5, jobId: 'JOB-2026-002', text: 'Prepare interview gear for CEO talk', completed: true },
+    { id: 6, jobId: 'JOB-2026-003', text: 'Source vintage fabric backgrounds', completed: false },
+    { id: 7, jobId: 'JOB-2026-003', text: 'Model coordination for heritage look', completed: false },
+    { id: 8, jobId: 'JOB-2026-004', text: 'Deliver final edited reels to Mehta family', completed: true },
+    { id: 9, jobId: 'JOB-2026-006', text: 'Clean studio natural light windows', completed: false }
   ],
   notifications: mockNotifications,
-  toasts: [],
+  toasts: []
 };
 
-// ─── Empty Initial State (For New Accounts) ──────────────────────────────────
+// ─── EMPTY INITIAL STATE ─────────────────────────────────────────────────────
 export const emptyInitialState = {
   user: {
-    full_name: 'New User',
+    full_name: '',
     email: '',
     phone: '',
     mode: 'photographer',
     authority: 'manager',
-
     isOnTrial: true,
     trialDaysLeft: 14,
     trialModalDismissed: false,
-    studioName: 'My Studio',
+    studioName: '',
     studioLocation: '',
     studioEmail: '',
-    rolesOffered: [],
+    rolesOffered: []
   },
   team: [],
   jobs: [],
@@ -269,36 +238,32 @@ export const emptyInitialState = {
     yearsExperience: 0,
     instagramHandle: '',
     portfolioUrl: '',
-    availableForBookings: true,
+    availableForBookings: true
   },
   analytics: {
-    revenue: mockRevenue,
-    bookingTrends: mockBookingTrends,
-    revenueByRole: mockRevenueByRole,
-    teamUtilization: mockTeamUtilization,
-    topClients: mockTopClients,
-    bookingSources: mockBookingSources,
-    photographerEarnings: mockPhotographerEarnings,
-    totalRevenue: 452000,
-    photographerRevenue: 84000,
-    jobsThisMonth: 12,
-    growthRate: 14.2,
-    clientSatisfaction: 4.9,
-    utilizationRate: 82,
-    avgJobValue: 12500,
-    totalJobsCompleted: 28,
-    responseRate: 94,
-    acceptRate: 87,
+    revenue: [],
+    bookingTrends: [],
+    revenueByRole: [],
+    teamUtilization: [],
+    topClients: [],
+    bookingSources: [],
+    photographerEarnings: [],
+    totalRevenue: 0,
+    jobsThisMonth: 0,
+    growthRate: 0,
+    clientSatisfaction: 0,
+    avgJobValue: 0,
+    totalJobsCompleted: 0,
+    responseRate: 0,
+    acceptRate: 0,
+    utilizationRate: 0
   },
-
   jobTasks: [],
   notifications: [],
-  toasts: [],
+  toasts: []
 };
 
-// ─── State Selector Logic ───────────────────────────────────────────────────
 export function getAppInitialState(username) {
   if (username === 'admin') return demoInitialState;
   return emptyInitialState;
 }
-

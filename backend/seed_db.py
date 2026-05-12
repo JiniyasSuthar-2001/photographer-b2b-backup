@@ -9,93 +9,175 @@ def seed_data():
     # Create tables
     models.Base.metadata.create_all(bind=engine)
 
-    # Create users
-    owner = db.query(models.User).filter(models.User.username == "studio_owner").first()
-    if not owner:
-        owner = models.User(
-            username="studio_owner",
-            hashed_password=auth_service.get_password_hash("password123"),
-            phone="1112223334",
-            full_name="Studio Owner",
-            city="Mumbai",
-            user_type="studio_owner"
-        )
-        db.add(owner)
-    
-    photographer = db.query(models.User).filter(models.User.username == "photographer_user").first()
-    if not photographer:
-        photographer = models.User(
-            username="photographer_user",
-            hashed_password=auth_service.get_password_hash("password123"),
-            phone="9876543210",
-            full_name="Jiniyas Suthar",
+    # 1. CORE USERS
+    admin_user = db.query(models.User).filter(models.User.username == "admin").first()
+    if not admin_user:
+        admin_user = models.User(
+            username="admin",
+            hashed_password=auth_service.get_password_hash("admin@001"),
+            phone="0000000000",
+            full_name="System Admin",
             city="Ahmedabad",
-            category="Wedding",
+            user_type="photographer" # Note: 'photographer' role is the new unified role
+        )
+        db.add(admin_user)
+        db.commit()
+        db.refresh(admin_user)
+
+    # Secondary admin users
+    for i in range(1, 3):
+        u = f"admin0{i}"
+        p = f"admin@00{i+1}"
+        if not db.query(models.User).filter(models.User.username == u).first():
+            new_u = models.User(
+                username=u,
+                hashed_password=auth_service.get_password_hash(p),
+                full_name=f"Admin {i}",
+                phone=f"000000000{i}",
+                user_type="photographer"
+            )
+            db.add(new_u)
+
+    # Create a 'Studio Partner' who sends requests to Admin
+    partner = db.query(models.User).filter(models.User.username == "studio_partner").first()
+    if not partner:
+        partner = models.User(
+            username="studio_partner",
+            hashed_password=auth_service.get_password_hash("password123"),
+            phone="9998887776",
+            full_name="Elite Studios",
+            city="Mumbai",
             user_type="photographer"
         )
-        db.add(photographer)
-    
-    # Add new hardcoded admin users
-    admin_users = {
-        "admin": "admin@001",
-        "admin01": "admin@002",
-        "admin02": "admin003",
-    }
-    for username, password in admin_users.items():
-        existing = db.query(models.User).filter(models.User.username == username).first()
-        if not existing:
-            new_admin = models.User(
-                username=username,
-                hashed_password=auth_service.get_password_hash(password),
-                full_name=username.capitalize(),
-                phone=f"00000000{list(admin_users.keys()).index(username)}",
-                user_type="studio_owner"
-            )
-            db.add(new_admin)
+        db.add(partner)
+        db.commit()
+        db.refresh(partner)
 
-    db.commit()
-    db.refresh(owner)
-    db.refresh(photographer)
-
-    # Add to team
-    team_member = db.query(models.Team).filter(
-        models.Team.owner_id == owner.id,
-        models.Team.member_id == photographer.id
-    ).first()
-    if not team_member:
-        team_member = models.Team(
-            owner_id=owner.id, 
-            member_id=photographer.id,
-            display_name=photographer.full_name,
-            display_category=photographer.category,
-            display_city=photographer.city,
-            phone=photographer.phone
-        )
-        db.add(team_member)
-
-    # Create shared jobs
-    for i in range(1, 15):
+    # 2. JOBS FOR ADMIN (AS OWNER)
+    # These appear in 'My Jobs'
+    for i in range(1, 6):
         job = models.Job(
-            title=f"Shared Wedding Job {i}",
-            date=datetime.utcnow() - timedelta(days=i*10),
-            studio_owner_id=owner.id,
-            category="Wedding" if i % 2 == 0 else "Portrait",
-            status="completed" if i > 5 else "open",
-            roles="Lead,Candid,Drone" if i % 2 == 0 else "Portrait,Assistant"
+            title=f"Wedding Project {i}",
+            date=datetime.utcnow() + timedelta(days=i*5),
+            user_id=admin_user.id,
+            category="Wedding",
+            status="open",
+            budget=25000 + (i * 5000),
+            roles="Lead,Candid,Drone"
+        )
+        db.add(job)
+
+    # 3. JOBS FOR ADMIN (AS FREELANCER/RECEIVER)
+    # We create jobs owned by the partner, then send requests to admin
+    
+    # A. ACCEPTED JOBS (Upcoming)
+    for i in range(1, 4):
+        job = models.Job(
+            title=f"Elite Event {i}",
+            date=datetime.utcnow() + timedelta(days=i*3),
+            user_id=partner.id,
+            category="Corporate",
+            status="assigned",
+            budget=15000,
+            roles="Lead"
         )
         db.add(job)
         db.commit()
         db.refresh(job)
 
-        assignment = models.Assignment(
+        # Create the request (accepted)
+        req = models.JobRequest(
             job_id=job.id,
-            member_id=photographer.id,
-            role="Lead" if i % 2 == 0 else "Assistant"
+            sender_id=partner.id,
+            receiver_id=admin_user.id,
+            role="Lead",
+            budget=15000,
+            status="accepted"
         )
-        db.add(assignment)
+        db.add(req)
+        
+        # Create the assignment
+        assign = models.Assignment(
+            job_id=job.id,
+            member_id=admin_user.id,
+            role="Lead"
+        )
+        db.add(assign)
+
+    # B. INVITES (Pending)
+    for i in range(1, 4):
+        job = models.Job(
+            title=f"Pending Gala {i}",
+            date=datetime.utcnow() + timedelta(days=i*10),
+            user_id=partner.id,
+            category="Event",
+            status="open",
+            budget=12000,
+            roles="Candid"
+        )
+        db.add(job)
+        db.commit()
+        db.refresh(job)
+
+        req = models.JobRequest(
+            job_id=job.id,
+            sender_id=partner.id,
+            receiver_id=admin_user.id,
+            role="Candid",
+            budget=12000,
+            status="pending"
+        )
+        db.add(req)
+
+    # C. PAST ASSIGNMENTS
+    for i in range(1, 4):
+        job = models.Job(
+            title=f"Legacy Shoot {i}",
+            date=datetime.utcnow() - timedelta(days=i*15),
+            user_id=partner.id,
+            category="Portrait",
+            status="completed",
+            budget=8000,
+            roles="Lead"
+        )
+        db.add(job)
+        db.commit()
+        db.refresh(job)
+
+        assign = models.Assignment(
+            job_id=job.id,
+            member_id=admin_user.id,
+            role="Lead"
+        )
+        db.add(assign)
+
+    # D. DECLINED JOBS
+    for i in range(1, 3):
+        job = models.Job(
+            title=f"Rejected Offer {i}",
+            date=datetime.utcnow() + timedelta(days=20 + i),
+            user_id=partner.id,
+            category="Other",
+            status="open",
+            budget=5000,
+            roles="Assistant"
+        )
+        db.add(job)
+        db.commit()
+        db.refresh(job)
+
+        req = models.JobRequest(
+            job_id=job.id,
+            sender_id=partner.id,
+            receiver_id=admin_user.id,
+            role="Assistant",
+            budget=5000,
+            status="declined"
+        )
+        db.add(req)
 
     db.commit()
-    print("Database seeded successfully!")
+    print("Admin demo data seeded successfully with full lifecycle (Accepted, Pending, Past, Declined)!")
     db.close()
 
 if __name__ == "__main__":

@@ -40,6 +40,7 @@ class JobService:
         
         return {
             "id": job.id,
+            "user_id": job.user_id,
             "title": job.title or "Untitled Job",
             "client": job.client,
             "venue": job.location,

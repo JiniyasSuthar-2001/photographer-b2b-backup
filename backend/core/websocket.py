@@ -29,6 +29,14 @@ class ConnectionManager:
             for connection in self.active_connections[user_id]:
                 await connection.send_text(json.dumps(message))
 
+    async def send_toast(self, message: str, toast_type: str, user_id: int):
+        """Sends a real-time toast notification to a specific user."""
+        await self.send_personal_message({
+            "type": "TOAST",
+            "message": message,
+            "toastType": toast_type
+        }, user_id)
+
     async def broadcast(self, message: dict):
         """Broadcasts an event to every connected page across the whole platform."""
         for user_id in self.active_connections:

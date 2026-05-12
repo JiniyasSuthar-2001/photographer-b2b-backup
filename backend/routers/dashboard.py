@@ -10,7 +10,8 @@ router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
 @router.get("/summary")
 async def get_summary(
-    role: str = Query("studio_owner"),
+    role: str = Query("photographer"),
+
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
@@ -23,7 +24,7 @@ async def get_summary(
     # Common: Next Week Work (Jobs from BOTH roles)
     # 1. Owned Jobs
     owned_jobs = db.query(models.Job).filter(
-        and_(models.Job.studio_owner_id == current_user.id, models.Job.date >= now, models.Job.date <= next_week)
+        and_(models.Job.user_id == current_user.id, models.Job.date >= now, models.Job.date <= next_week)
     ).all()
     
     # 2. Accepted Assignments
@@ -36,7 +37,7 @@ async def get_summary(
     # Role-specific latest items
     if role == 'studio_owner':
         latest_items = db.query(models.Job).filter(
-            models.Job.studio_owner_id == current_user.id
+            models.Job.user_id == current_user.id
         ).order_by(models.Job.date.desc()).limit(4).all()
     else:
         latest_items = db.query(models.JobRequest).filter(

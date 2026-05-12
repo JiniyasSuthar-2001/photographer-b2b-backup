@@ -1,7 +1,8 @@
 # ==================================================================================
 # REQUESTS ROUTER
 # Purpose: Handles invitations and responses for jobs.
-# Affected Pages: Frontend -> JobHub.jsx (Accepted Jobs Tab), Team.jsx (Send Request Modal)
+# Affected Pages: Frontend -> Projects.jsx (Accepted Jobs Tab), Team.jsx (Send Request Modal)
+
 # ==================================================================================
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -66,7 +67,8 @@ async def send_job_request(
         message=f"{current_user.full_name} has invited you to work on '{job_title}' as {request.role}.",
         notif_type="job_invite",
         reference_id=new_request.id,
-        redirect_to="/job-hub" # Leads to Invites tab
+        redirect_to="/projects"
+ # Leads to Invites tab
     )
 
     # Notify receiver to refresh their invites/requests page
@@ -86,7 +88,8 @@ async def respond_to_job_request(
 ):
     """
     Photographer accepts or declines an invite.
-    Frontend Impact: Triggered by Accept/Decline buttons in JobHub.jsx (Invites tab).
+    Frontend Impact: Triggered by Accept/Decline buttons in Projects.jsx (Invites tab).
+
     Logic Impact: 
     - If 'accepted': Adds entry to 'assignments' table and moves job out of 'Yet to Assign'.
     - Notifications: Notifies Studio Owner of the response.
@@ -129,7 +132,8 @@ async def respond_to_job_request(
         message=f"{current_user.full_name} has {status} your invite for '{job_title}'.",
         notif_type="job_invite_response",
         reference_id=job_request.id,
-        redirect_to="/job-hub"
+        redirect_to="/projects"
+
     )
 
     # Confirmation for Photographer
@@ -141,21 +145,23 @@ async def respond_to_job_request(
         message=f"You have {status} {sender_name}'s invite for '{job_title}'.",
         notif_type="job_invite_response",
         reference_id=job_request.id,
-        redirect_to="/job-hub"
+        redirect_to="/projects"
+
     )
 
     # Notify Studio Owner to refresh their Job Hub (My Jobs tab)
     await manager.send_personal_message({
         "type": "REFRESH_PAGE",
-        "page": "jobs"
+        "page": "projects"
+
     }, job_request.sender_id)
 
-    # Real-time WebSocket refresh for the Studio Owner
     await manager.send_personal_message({
         "type": "REFRESH_PAGE",
-        "page": "jobs",
+        "page": "projects",
         "message": f"New update on '{job_title}'"
     }, job_request.sender_id)
+
 
     return job_request
 
@@ -186,7 +192,7 @@ async def get_eligible_jobs(
 
     jobs = db.query(models.Job).filter(
         and_(
-            models.Job.studio_owner_id == current_user.id,
+            models.Job.user_id == current_user.id,
             models.Job.status == "open",
             # Removed role filter to show all available jobs
             ~models.Job.id.in_(excluded_ids) if excluded_ids else True
@@ -206,7 +212,8 @@ async def get_my_requests(
     Main feed for requests/invites.
     Frontend Impact: 
     - role=receiver & status=pending -> 'Invites' tab.
-    - role=receiver & status=declined -> 'Declined Jobs' tab.
+    - role=receiver & status=declined -> 'Declined Projects' tab.
+
     """
     query = db.query(models.JobRequest)
     if role == "sender":
@@ -226,13 +233,13 @@ async def get_my_requests(
         receiver = db.query(models.User).filter(models.User.id == req.receiver_id).first()
         
         result.append({
-            "id": req.id,
+            "request_id": req.id, # Explicitly named as request_id
             "job_id": req.job_id,
             "job_title": job.title if job else "Unknown Job",
             "job_date": job.date if job else None,
-            "sender_id": req.sender_id,
+            "sender_user_id": req.sender_id, # sender_id is a user_id
             "sender_name": sender.full_name if sender else "Unknown",
-            "receiver_id": req.receiver_id,
+            "receiver_user_id": req.receiver_id, # receiver_id is a user_id
             "receiver_name": receiver.full_name if receiver else "Unknown",
             "role": req.role,
             "budget": req.budget,
@@ -274,10 +281,11 @@ async def get_requests_for_job(
 ):
     """
     Fetches all invitations/requests for a specific job.
-    Frontend Impact: Populates the 'Request Status' popup in JobHub.jsx.
+    Frontend Impact: Populates the 'Request Status' popup in Projects.jsx.
+
     """
     # Verify ownership
-    job = db.query(models.Job).filter(and_(models.Job.id == job_id, models.Job.studio_owner_id == current_user.id)).first()
+    job = db.query(models.Job).filter(and_(models.Job.id == job_id, models.Job.user_id == current_user.id)).first()
     if not job:
         raise HTTPException(status_code=403, detail="Not authorized to view this job's requests")
 
@@ -287,9 +295,9 @@ async def get_requests_for_job(
     for req in requests:
         receiver = db.query(models.User).filter(models.User.id == req.receiver_id).first()
         result.append({
-            "id": req.id,
+            "request_id": req.id,
             "receiver_name": receiver.full_name if receiver else "Unknown",
-            "receiver_id": req.receiver_id,
+            "receiver_user_id": req.receiver_id,
             "role": req.role,
             "status": req.status,
             "created_at": req.created_at
@@ -303,20 +311,21 @@ async def get_accepted_jobs(
 ):
     """
     Returns jobs assigned to the current Photographer.
-    Frontend Impact: Populates the 'Accepted Jobs' sub-tab in JobHub.jsx.
+    Frontend Impact: Populates the 'Accepted Projects' sub-tab in Projects.jsx.
+
     """
     assignments = db.query(models.Assignment).filter(models.Assignment.member_id == current_user.id).all()
     
     result = []
     for assign in assignments:
         job = db.query(models.Job).filter(models.Job.id == assign.job_id).first()
-        owner = db.query(models.User).filter(models.User.id == job.studio_owner_id).first() if job else None
+        owner = db.query(models.User).filter(models.User.id == job.user_id).first() if job else None
         
         result.append({
-            "id": assign.id,
+            "assignment_id": assign.id,
             "job_id": assign.job_id,
             "title": job.title if job else "Unknown Job",
-            "owner_id": owner.id if owner else None,
+            "owner_user_id": owner.id if owner else None,
             "owner_name": owner.full_name if owner else "Unknown",
             "date": job.date if job else None,
             "role": assign.role,

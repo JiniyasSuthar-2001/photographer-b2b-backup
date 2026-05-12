@@ -90,31 +90,35 @@ export const notificationService = {
 
 // --- JOB SERVICE ---
 // Connects to: backend/routers/jobs.py
-// Used in: JobHub.jsx (My Jobs tab)
+// Used in: Projects.jsx (My Jobs tab)
+
 export const jobService = {
     getJobs: async () => {
         // Fetches list for Studio Owners. 
-        // Logic Risk: JobHub.jsx filters these based on 'accepted_count'.
-        const response = await apiClient.get('/jobs/');
+        // Logic Risk: Projects.jsx filters these based on 'accepted_count'.
+
+        const response = await apiClient.get('/projects/');
         return response.data;
     },
     createJob: async (data) => {
-        const response = await apiClient.post('/jobs/', data);
+        const response = await apiClient.post('/projects/', data);
         return response.data;
     },
     updateJob: async (id, data) => {
-        const response = await apiClient.put(`/jobs/${id}`, data);
+        const response = await apiClient.put(`/projects/${id}`, data);
         return response.data;
     },
     deleteJob: async (id) => {
-        const response = await apiClient.delete(`/jobs/${id}`);
+        const response = await apiClient.delete(`/projects/${id}`);
         return response.data;
     }
+
 };
 
 // --- REQUEST SERVICE ---
 // Connects to: backend/routers/requests.py
-// Used in: JobHub.jsx (Accepted Jobs/Invites tabs)
+// Used in: Projects.jsx (Accepted Jobs/Invites tabs)
+
 export const requestService = {
     getInvites: async () => {
         // Populates 'Invites' tab for Photographers.
@@ -154,7 +158,8 @@ export const requestService = {
 
 // --- TEAM SERVICE ---
 // Connects to: backend/routers/team.py
-// Used in: JobHub.jsx (CollaborationModal)
+// Used in: Projects.jsx (CollaborationModal)
+
 export const teamService = {
     getTeam: async () => {
         // Fetches the studio owner's team directory.
@@ -212,12 +217,36 @@ export const taskService = {
 
 // --- SUBSCRIPTION SERVICE ---
 export const subscriptionService = {
-    upgrade: async (plan) => {
-        const response = await apiClient.post('/subscription/upgrade', { plan });
+    purchase: async (planName, amount) => {
+        // Impact: Critical for payment processing.
+        // Differentiates between 'id' (payment record) and 'user_id' in backend response.
+        const response = await apiClient.post('/subscription/purchase', { plan_name: planName, amount });
         return response.data;
     },
     getStatus: async () => {
         const response = await apiClient.get('/subscription/status');
+        return response.data;
+    }
+};
+
+// --- REFERRAL SERVICE ---
+// Connects to: backend/routers/referral.py
+export const referralService = {
+    getInfo: async () => {
+        const response = await apiClient.get('/referral/info');
+        return response.data;
+    },
+    applyCode: async (code) => {
+        const response = await apiClient.post('/referral/apply', { referral_code: code });
+        return response.data;
+    }
+};
+
+// --- SYSTEM SERVICE ---
+// Connects to: backend/routers/system.py
+export const systemService = {
+    resetDatabase: async () => {
+        const response = await apiClient.post('/system/reset-db');
         return response.data;
     }
 };

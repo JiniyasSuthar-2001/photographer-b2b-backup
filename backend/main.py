@@ -22,7 +22,8 @@ async def lifespan(app: FastAPI):
     root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     postman_path = os.path.join(root_dir, "postman.json")
     generate_postman_collection(app, postman_path)
-    print(f"✅ Postman collection generated at {postman_path}")
+    print(f"[SUCCESS] Postman collection generated at {postman_path}")
+
     yield
     # Shutdown logic (if any)
 
@@ -31,7 +32,7 @@ app = FastAPI(title="Lumière API", lifespan=lifespan)
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"], # Allowing all for easier local testing across devices
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -50,28 +51,41 @@ async def websocket_endpoint(
     Real-time connection point for frontend pages.
     Connects a 'User' session to the server for instant updates.
     """
-    print(f"🔌 WebSocket connection attempt with token: {token[:10]}...")
+    print(f"[WS] WebSocket connection attempt with token: {token[:10]}...")
+
     # manager.connect handles websocket.accept() internally
     
     db = SessionLocal()
     try:
         user = auth_service.get_current_user(db, token)
         if not user:
-            print("❌ WebSocket Auth Failed: User not found")
+            print("[ERROR] WebSocket Auth Failed: User not found")
+
             await websocket.close(code=4001)
             return
 
-        print(f"✅ WebSocket Connected: User {user.username} (ID: {user.id})")
+        print(f"[SUCCESS] WebSocket Connected: User {user.username} (ID: {user.id})")
+
         await manager.connect(websocket, user.id)
         try:
             while True:
                 data = await websocket.receive_text()
-                # Handle client-side pings or commands here
+                try:
+                    import json
+                    payload = json.loads(data)
+                    if payload.get("type") == "PING":
+                        await websocket.send_text(json.dumps({"type": "PONG", "status": "online"}))
+                    elif payload.get("type") == "BROADCAST":
+                        await manager.broadcast(payload)
+                except json.JSONDecodeError:
+                    pass
         except WebSocketDisconnect:
-            print(f"🔌 WebSocket Disconnected: User {user.id}")
+            print(f"[WS] WebSocket Disconnected: User {user.id}")
+
             manager.disconnect(websocket, user.id)
     except Exception as e:
-        print(f"💥 WebSocket Error: {str(e)}")
+        print(f"[ERROR] WebSocket Error: {str(e)}")
+
     finally:
         db.close()
 
@@ -82,3 +96,4 @@ async def root():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=settings.PORT, reload=True)
+

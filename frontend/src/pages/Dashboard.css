@@ -1,8 +1,8 @@
 .dashboard-container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  padding-bottom: 40px;
+  gap: var(--space-5);
+  padding-bottom: 32px;
 }
 
 .dashboard-header-actions {
@@ -17,22 +17,22 @@
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 6px;
-  gap: 6px;
+  padding: 4px;
+  gap: 5px;
   box-shadow: var(--shadow-md);
 }
 
 .role-toggle-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
+  gap: 8px;
+  padding: 6px 12px;
   border: none;
   background: none;
   color: var(--text-secondary);
-  font-size: 14px;
-  font-weight: 700;
-  border-radius: var(--radius);
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all var(--transition);
 }
@@ -60,15 +60,17 @@
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-6);
+  gap: var(--space-5);
+
 }
 
 .dashboard-main-grid {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: var(--space-6);
+  grid-template-columns: 1fr 300px;
+  gap: var(--space-5);
   align-items: start;
 }
+
 
 @media (max-width: 1200px) {
   .dashboard-main-grid {
@@ -79,13 +81,15 @@
 .dashboard-content-left {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-5);
+
 }
 
 .dashboard-content-right {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-5);
+
   position: sticky;
   top: 24px;
 }
@@ -131,7 +135,8 @@
 .request-info { flex: 1; min-width: 0; }
 
 .request-title {
-  font-size: 13px;
+  font-size: 12px;
+
   font-weight: 600;
   color: var(--text-primary);
   white-space: nowrap;
@@ -139,11 +144,13 @@
   text-overflow: ellipsis;
 }
 
+
 .request-meta {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 11.5px;
+  font-size: 11px;
+
   color: var(--text-muted);
   margin-top: 2px;
 }
@@ -191,10 +198,12 @@
 }
 
 .incoming-req-title {
-  font-size: 14px;
+  font-size: 12.5px;
+
   font-weight: 700;
   color: var(--text-primary);
 }
+
 
 .incoming-req-from {
   font-size: 12px;
@@ -203,11 +212,13 @@
 }
 
 .incoming-req-budget {
-  font-size: 18px;
+  font-size: 15px;
+
   font-weight: 800;
   color: var(--accent-blue);
   white-space: nowrap;
 }
+
 
 .incoming-req-meta {
   display: flex;
@@ -262,8 +273,9 @@
 .quick-action-btn:hover { background: var(--bg-hover); }
 
 .quick-action-icon {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
+
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
@@ -271,8 +283,10 @@
   flex-shrink: 0;
 }
 
-.quick-action-label { font-size: 13px; font-weight: 600; }
-.quick-action-sub   { font-size: 11.5px; color: var(--text-muted); }
+.quick-action-label { font-size: 12px; font-weight: 600; }
+.quick-action-sub   { font-size: 10.5px; color: var(--text-muted); }
+
+
 
 /* ── Ecosystem Cards ─────────────────────────────────────────────────────── */
 .ecosystem-card {
@@ -304,10 +318,12 @@
 }
 
 .eco-title {
-  font-size: 15px;
+  font-size: 13.5px;
+
   font-weight: 700;
   color: var(--text-primary);
 }
+
 
 .eco-subtitle {
   font-size: 12px;
@@ -339,10 +355,12 @@
 }
 
 .eco-price {
-  font-size: 16px;
+  font-size: 14px;
+
   font-weight: 800;
   color: var(--accent-green);
 }
+
 
 .eco-actions {
   display: flex;
@@ -384,10 +402,12 @@
 }
 
 .section-title {
-  font-size: 16px;
+  font-size: 14px;
+
   font-weight: 700;
   color: var(--text-primary);
 }
+
 
 .view-all-link,
 .view-all-link-btn {
@@ -441,7 +461,8 @@
 }
 
 .item-title {
-  font-size: 13px;
+  font-size: 12.5px;
+
   font-weight: 600;
   margin-bottom: 4px;
 }
@@ -459,17 +480,19 @@
   position: fixed;
   bottom: 32px;
   right: 32px;
-  height: 52px;
-  padding: 0 24px;
+  height: 46px;
+  padding: 0 20px;
   background: var(--accent-blue);
   color: white;
-  border-radius: 26px;
+  border-radius: 23px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 12.5px;
+
   text-decoration: none;
+
   box-shadow: 0 8px 16px -4px rgba(59, 130, 246, 0.5);
   z-index: 1000;
   transition: all 0.2s;

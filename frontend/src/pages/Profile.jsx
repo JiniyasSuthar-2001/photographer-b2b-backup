@@ -10,17 +10,19 @@
 // - Freelancers manage their skills, equipment, and portfolio for discovery.
 // ==================================================================================
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import {
   User, Mail, Briefcase, MapPin, Link, AtSign, Phone,
-  Plus, Trash2, Camera, Settings, AlertTriangle, Star, LogOut
+  Plus, Trash2, Camera, Settings, AlertTriangle, Star, LogOut,
+  Ticket, Gift, Calendar as CalendarIcon, Copy
 } from 'lucide-react';
 import Avatar from '../components/ui/Avatar';
 import { ROLE_TYPES } from '../data/mockData';
 import { GUJARAT_CITIES } from '../data/gujaratCities';
-import { authService } from '../services/api';
+import { authService, referralService, systemService } from '../services/api';
+import Modal from '../components/ui/Modal';
 import './Profile.css';
 
 
@@ -48,7 +50,14 @@ export default function Profile() {
   const [newEquipName, setNewEquipName] = useState('');
   const [newEquipType, setNewEquipType] = useState('Camera');
   const [showReset, setShowReset] = useState(false);
+  const [resetConfirmed, setResetConfirmed] = useState(false);
   const [customCat, setCustomCat] = useState('');
+
+  const [referralInfo, setReferralInfo] = useState({ total_referrals: 0, earned_days: 0, history: [] });
+
+  useEffect(() => {
+    referralService.getInfo().then(data => setReferralInfo(data)).catch(console.error);
+  }, []);
 
   const handleDismissTrial = () => {
     dispatch({ type: 'DISMISS_TRIAL_MODAL' });
@@ -79,6 +88,21 @@ export default function Profile() {
     await authService.logout();
     navigate('/auth');
     addToast('Logged out successfully', 'info');
+  };
+
+  const handleResetData = async () => {
+    if (!resetConfirmed) return;
+    try {
+      await systemService.resetDatabase();
+      dispatch({ type: 'RESET_ALL' });
+      addToast('✅ All data has been reset to default state', 'success');
+      setShowReset(false);
+      setResetConfirmed(false);
+      // Optional: reload to ensure all data is fresh
+      setTimeout(() => window.location.reload(), 1500);
+    } catch (err) {
+      addToast('Failed to reset data', 'error');
+    }
   };
 
   return (
@@ -131,6 +155,67 @@ export default function Profile() {
               </div>
             </div>
 
+            {/* Referral & Subscription */}
+            <div className="card card-padding">
+              <div className="profile-section-title"><Gift size={14}/> Referral & Subscription</div>
+              
+              <div className="referral-box" style={{background: 'var(--bg-secondary)', padding: '15px', borderRadius: 'var(--radius-md)', marginBottom: '15px'}}>
+                <label className="profile-field-label" style={{marginBottom: '10px'}}>Your Referral Code</label>
+                <div style={{display: 'flex', gap: '10px'}}>
+                  <code style={{flex: 1, background: 'var(--card-bg)', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px dashed var(--border)', fontSize: '16px', fontWeight: 'bold', textAlign: 'center', letterSpacing: '2px'}}>
+                    {user.referral_code || 'GNR8-CODE'}
+                  </code>
+                  <button className="btn btn-secondary" onClick={() => { 
+                    const code = user.referral_code || '';
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                      navigator.clipboard.writeText(code);
+                      addToast('Code copied to clipboard!', 'success');
+                    } else {
+                      // Fallback for non-secure contexts
+                      const textArea = document.createElement("textarea");
+                      textArea.value = code;
+                      document.body.appendChild(textArea);
+                      textArea.select();
+                      try {
+                        document.execCommand('copy');
+                        addToast('Code copied (fallback)!', 'success');
+                      } catch (err) {
+                        addToast('Failed to copy code', 'error');
+                      }
+                      document.body.removeChild(textArea);
+                    }
+                  }}>
+                    <Copy size={14}/>
+                  </button>
+                </div>
+                <p style={{fontSize: '12px', color: 'var(--text-muted)', marginTop: '10px'}}>
+                  Share this code! Every successful referral adds 15 days to your Pro subscription.
+                </p>
+                <div style={{marginTop: '15px', paddingTop: '15px', borderTop: '1px solid var(--border)'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '8px'}}>
+                    <span>Total Referrals:</span>
+                    <span style={{fontWeight: 'bold'}}>{referralInfo.total_referrals}</span>
+                  </div>
+                  <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '13px'}}>
+                    <span>Earned Days:</span>
+                    <span style={{fontWeight: 'bold', color: 'var(--accent-blue)'}}>+{referralInfo.earned_days} Days</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="subscription-status-box" style={{border: '1px solid var(--border)', padding: '15px', borderRadius: 'var(--radius-md)'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>
+                  <span style={{fontSize: '14px', fontWeight: 600}}>Status: <span className="badge badge-purple">{user.plan}</span></span>
+                  <span style={{fontSize: '12px', color: 'var(--text-muted)'}}>
+                    {user.subscription_expiry ? `Expires: ${new Date(user.subscription_expiry).toLocaleDateString()}` : 'No active subscription'}
+                  </span>
+                </div>
+                <button className="btn btn-outline btn-sm" style={{width: '100%', justifyContent: 'center'}} onClick={() => navigate('/pricing')}>
+                  {user.is_pro ? 'Extend Subscription' : 'Upgrade to Pro'}
+                </button>
+              </div>
+            </div>
+
             {/* Danger Zone */}
             <div className="card card-padding danger-zone">
               <div className="profile-section-title" style={{color:'var(--accent-rose)'}}>
@@ -139,16 +224,7 @@ export default function Profile() {
               <p style={{fontSize:13,color:'var(--text-secondary)',margin:'var(--space-2) 0 var(--space-3)'}}>
                 Reset all data to default state. This cannot be undone.
               </p>
-              {!showReset ? (
-                <button className="btn btn-danger" onClick={()=>setShowReset(true)}>Reset All Data</button>
-              ) : (
-                <div style={{display:'flex',gap:'var(--space-2)'}}>
-                  <button className="btn btn-secondary" onClick={()=>setShowReset(false)}>Cancel</button>
-                  <button className="btn btn-danger" onClick={()=>{ dispatch({type:'RESET_ALL'}); addToast('Data reset complete','info'); setShowReset(false); }}>
-                    Confirm Reset
-                  </button>
-                </div>
-              )}
+              <button className="btn btn-danger" onClick={()=>setShowReset(true)}>Reset All Data</button>
             </div>
           </div>
 
@@ -263,13 +339,55 @@ export default function Profile() {
               <button className="btn btn-primary" style={{flex:2, justifyContent:'center'}} onClick={handleSaveAll}>
                 Save Profile
               </button>
-              <button className="btn btn-danger" style={{flex:1, justifyContent:'center', background:'var(--accent-rose)', borderColor:'var(--accent-rose)'}} onClick={handleLogout}>
+              <button className="btn btn-danger" style={{flex:1, justifyContent:'center', background:'var(--accent-rose)', borderColor:'var(--accent-rose)', color: '#fff'}} onClick={handleLogout}>
                 <LogOut size={15}/> Sign Out
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={showReset}
+        onClose={() => setShowReset(false)}
+        title="⚠️ Critical: Reset All Data"
+        size="sm"
+        footer={(
+          <div style={{display: 'flex', gap: '10px', width: '100%'}}>
+            <button className="btn btn-secondary" style={{flex: 1}} onClick={() => setShowReset(false)}>Cancel</button>
+            <button 
+              className="btn btn-danger" 
+              style={{flex: 1, opacity: resetConfirmed ? 1 : 0.5}} 
+              disabled={!resetConfirmed}
+              onClick={handleResetData}
+            >
+              OK Reset
+            </button>
+          </div>
+        )}
+      >
+        <div style={{textAlign: 'center', padding: '10px 0'}}>
+          <div style={{background: 'rgba(244, 63, 94, 0.1)', color: 'var(--accent-rose)', width: '48px', height: '48px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 15px'}}>
+            <AlertTriangle size={24} />
+          </div>
+          <h4 style={{marginBottom: '10px', color: 'var(--text-primary)'}}>Are you absolutely sure?</h4>
+          <p style={{fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '20px', lineHeight: '1.5'}}>
+            This will permanently delete all your projects, team members, and settings, and restore the platform to its default seed state. <strong>This action cannot be undone.</strong>
+          </p>
+          
+          <label style={{display: 'flex', alignItems: 'center', gap: '10px', padding: '12px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', textAlign: 'left'}}>
+            <input 
+              type="checkbox" 
+              checked={resetConfirmed} 
+              onChange={(e) => setResetConfirmed(e.target.checked)}
+              style={{width: '18px', height: '18px'}}
+            />
+            <span style={{fontSize: '12.5px', fontWeight: 500, color: 'var(--text-primary)'}}>
+              I understand that all data will be permanently reset
+            </span>
+          </label>
+        </div>
+      </Modal>
     </>
   );
 }

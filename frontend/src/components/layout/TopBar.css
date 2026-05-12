@@ -1,9 +1,10 @@
 /* ── TopBar ───────────────────────────────────────────────────────────────────── */
 .topbar {
   position: fixed;
-  top: 16px;
-  left: calc(var(--sidebar-width) + 32px);
-  right: 16px;
+  top: 12px;
+  left: calc(var(--sidebar-width) + 24px);
+  right: 12px;
+
   height: var(--topbar-height);
   background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
@@ -13,7 +14,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--space-8);
+  padding: 0 var(--space-6);
+
   z-index: 90;
   box-shadow: var(--shadow-md);
 }
@@ -37,7 +39,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 14px;
+  padding: 5px 12px;
+
   background: var(--gradient-soft);
   border: 1px solid rgba(124, 58, 237, 0.2);
   border-radius: var(--radius-pill);
@@ -61,8 +64,9 @@
 
 /* Notification button */
 .topbar-icon-btn {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
+
   border-radius: var(--radius-sm);
   border: 1.5px solid var(--border);
   background: var(--bg-card);

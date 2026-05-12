@@ -14,23 +14,33 @@ class UserSignUp(BaseModel):
     city: Optional[str] = None
     category: Optional[str] = None
     user_type: Optional[str] = "photographer"
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-    user: UserProfile
+    referral_code_applied: Optional[str] = None
 
 class UserProfile(BaseModel):
-    id: int
+    id: int # The unique ID of the user
     username: str
     phone: Optional[str] = None
     full_name: Optional[str] = None
     city: Optional[str] = None
     category: Optional[str] = None
     user_type: str
+    
+    # Subscription and Referral Data
+    is_pro: bool = False
+    plan: str
+    trial_days_left: int
+    subscription_expiry: Optional[datetime] = None
+    referral_code: Optional[str] = None
+    referred_by: Optional[str] = None
+    first_purchase_completed: bool = False
 
     class Config:
         from_attributes = True
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    user: UserProfile
 
 class CollaborationHistory(BaseModel):
     job_id: int
@@ -91,3 +101,42 @@ class NotificationResponse(BaseModel):
 
 class NotificationUpdate(BaseModel):
     is_read: bool
+
+class ForgotPassword(BaseModel):
+    username: str
+
+
+# --- PAYMENT SCHEMAS ---
+class PaymentCreate(BaseModel):
+    amount: int
+    currency: str = "INR"
+    plan_name: str
+
+class PaymentResponse(BaseModel):
+    id: int
+    user_id: int
+    amount: int
+    currency: str
+    status: str
+    transaction_id: Optional[str] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# --- REFERRAL SCHEMAS ---
+class ReferralInfo(BaseModel):
+    referral_code: str
+    total_referrals: int
+    earned_days: int
+    history: List[dict] # Simplified for now
+
+class ReferralApply(BaseModel):
+    referral_code: str
+
+# --- SUBSCRIPTION SCHEMAS ---
+class SubscriptionStatus(BaseModel):
+    plan: str
+    is_pro: bool
+    expiry_date: Optional[datetime] = None
+    days_left: int

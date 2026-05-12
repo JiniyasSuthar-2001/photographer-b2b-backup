@@ -13,33 +13,31 @@
   margin-bottom: var(--space-2);
 }
 
-.notes-search-bar {
-  position: relative;
-  width: 300px;
+.notes-status-filter {
+  display: flex;
+  gap: 8px;
+  background: var(--bg-secondary);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
 }
 
-.notes-search-bar svg {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+.notes-status-filter .sub-tab {
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  background: transparent;
   color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.notes-search-bar input {
-  width: 100%;
-  padding: 10px 12px 10px 40px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-pill);
-  font-size: 14px;
-  background: var(--bg-card);
-  outline: none;
-  transition: all var(--transition);
-}
-
-.notes-search-bar input:focus {
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+.notes-status-filter .sub-tab.active {
+  background: var(--card-bg);
+  color: var(--accent-blue);
+  box-shadow: var(--shadow-sm);
 }
 
 .notes-grid {
@@ -228,4 +226,44 @@
 
 .task-edit-row input {
   flex: 1;
+}
+
+.task-item-empty {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  margin: var(--space-4);
+  border: 1px dashed var(--border);
+}
+
+.task-item-empty p {
+  margin-bottom: var(--space-3);
+}
+
+.btn-text-sm {
+  background: none;
+  border: none;
+  color: var(--accent-blue);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.btn-text-sm:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.job-task-group {
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.job-task-group:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }

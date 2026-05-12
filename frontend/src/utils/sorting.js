@@ -6,7 +6,8 @@
  * 2. PAST: date < today OR status === 'completed', sorted DESC (most recent first).
  * 
  * Connectivity: 
- * - JobHub.jsx (My Jobs, Accepted Jobs, Invites)
+ * - Projects.jsx (My Jobs, Accepted Jobs, Invites)
+
  * - Dashboard.jsx (Recent Jobs widget)
  */
 

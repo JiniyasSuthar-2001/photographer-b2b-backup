@@ -1,7 +1,7 @@
-# ==================================================================================
-# JOBS ROUTER
-# Purpose: Manages job creation and retrieval for Studio Owners.
-# Affected Pages: Frontend -> JobHub.jsx (My Jobs tab)
+# PROJECTS ROUTER
+# Purpose: Manages project creation and retrieval for Studio Owners.
+# Affected Pages: Frontend -> Projects.jsx (My Projects tab)
+
 # ==================================================================================
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -15,11 +15,12 @@ from core.websocket import manager
 from typing import List, Optional
 from services.job_service import job_service
 
-router = APIRouter(prefix="/jobs", tags=["Jobs"])
+router = APIRouter(prefix="/projects", tags=["Projects"])
+
 
 # --- SCHEMAS ---
 # NOTE: Changing these schemas will break the frontend's ability to parse data.
-# JobHub.jsx depends on 'pending_count', 'accepted_count', and 'declined_count' 
+# Projects.jsx depends on 'pending_count', 'accepted_count', and 'declined_count' 
 # to decide which tab a job appears in (e.g., 'Yet to Assign' vs 'Current').
 
 class JobCreate(BaseModel):
@@ -42,7 +43,8 @@ class JobUpdate(BaseModel):
     roles: Optional[List[str]] = None
 
 class JobResponse(BaseModel):
-    id: int
+    id: int # The unique ID of the job
+    user_id: int # The ID of the user who created it
     title: str
     client: Optional[str] = None
     venue: Optional[str] = None
@@ -70,7 +72,8 @@ async def create_job(
 ):
     """
     Creates a new job. 
-    Frontend Impact: Triggered by 'Post New Job' button in JobHub.jsx.
+    Frontend Impact: Triggered by 'Post New Job' button in Projects.jsx.
+
     Modification Risk: If 'status' default is changed from 'open', frontend filters 
     in 'Yet to Assign' might stop working.
     """
@@ -81,7 +84,7 @@ async def create_job(
         budget=job.budget,
         category=job.category,
         date=job.date or datetime.utcnow(),
-        studio_owner_id=current_user.id,
+        user_id=current_user.id,
         status="open",
         roles=",".join(job.roles) if job.roles else ""
     )
@@ -89,8 +92,14 @@ async def create_job(
     db.commit()
     db.refresh(new_job)
     
-    # Return with 0 counts (since it's a new job)
+    # Real-time refresh for Studio Owner
+    await manager.send_personal_message({
+        "type": "REFRESH_PAGE",
+        "page": "projects"
+    }, current_user.id)
+
     return {
+
         **new_job.__dict__,
         "roles": new_job.roles.split(",") if new_job.roles else [],
         "pending_count": 0,
@@ -105,10 +114,11 @@ async def get_jobs(
 ):
     """
     Fetches all jobs created by the logged-in Studio Owner.
-    Frontend Impact: Populates the 'My Jobs' grid in JobHub.jsx.
+    Frontend Impact: Populates the 'My Jobs' grid in Projects.jsx.
+
     SORTING: Returns jobs in chronological order (Current/Future first, Past last).
     """
-    jobs = db.query(models.Job).filter(models.Job.studio_owner_id == current_user.id).all()
+    jobs = db.query(models.Job).filter(models.Job.user_id == current_user.id).all()
     
     result = []
     for job in jobs:
@@ -126,9 +136,19 @@ async def get_job_by_id(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    job = db.query(models.Job).filter(models.Job.id == job_id, models.Job.studio_owner_id == current_user.id).first()
+    # Allow access if user is either the owner OR an assigned member
+    job = db.query(models.Job).filter(models.Job.id == job_id).first()
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
+        
+    is_owner = job.user_id == current_user.id
+    is_assigned = db.query(models.Assignment).filter(
+        models.Assignment.job_id == job_id, 
+        models.Assignment.member_id == current_user.id
+    ).first() is not None
+    
+    if not (is_owner or is_assigned):
+        raise HTTPException(status_code=403, detail="Not authorized to view this job")
 
     pending, accepted, declined = job_service.get_job_counts(db, job.id)
     return job_service.format_job_response(job, pending, accepted, declined)
@@ -140,7 +160,7 @@ async def update_job(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    job = db.query(models.Job).filter(models.Job.id == job_id, models.Job.studio_owner_id == current_user.id).first()
+    job = db.query(models.Job).filter(models.Job.id == job_id, models.Job.user_id == current_user.id).first()
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
 
@@ -172,7 +192,8 @@ async def update_job(
     # Real-time refresh for Studio Owner
     await manager.send_personal_message({
         "type": "REFRESH_PAGE",
-        "page": "jobs"
+        "page": "projects"
+
     }, current_user.id)
 
     pending, accepted, declined = job_service.get_job_counts(db, job.id)
@@ -184,7 +205,7 @@ async def delete_job(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    job = db.query(models.Job).filter(models.Job.id == job_id, models.Job.studio_owner_id == current_user.id).first()
+    job = db.query(models.Job).filter(models.Job.id == job_id, models.Job.user_id == current_user.id).first()
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
         
@@ -194,7 +215,8 @@ async def delete_job(
     # Real-time refresh for Studio Owner
     await manager.send_personal_message({
         "type": "REFRESH_PAGE",
-        "page": "jobs"
+        "page": "projects"
+
     }, current_user.id)
     
     return {"message": "Job deleted successfully"}

@@ -1,22 +1,66 @@
 .analytics-container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  padding-bottom: 40px;
+  gap: 48px;
+  padding: 48px;
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 .analytics-filters {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: -10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 @media (max-width: 768px) {
-  .analytics-filters {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+  .analytics-filters { flex-direction: column; align-items: flex-start; }
+}
+
+/* ─── Category pill multi-select ─────────────────────────────────────────── */
+.category-filter-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 4px 0;
+}
+.cat-pill {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.cat-pill:hover { border-color: #6366F1; color: #6366F1; background: rgba(99,102,241,0.06); }
+.cat-pill.active { background: #6366F1; border-color: #6366F1; color: #fff; }
+.cat-pill.clear { border-color: #F43F5E; color: #F43F5E; }
+.cat-pill.clear:hover { background: rgba(244,63,94,0.08); }
+
+
+/* KPI Grid */
+.premium-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .premium-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .premium-kpi-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -42,9 +86,9 @@
 }
 
 .switch-btn.active {
-  background: var(--surface-hover);
-  color: var(--text-primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background: var(--primary-gradient);
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 /* Timeframe Group */
@@ -52,6 +96,8 @@
   display: flex;
   gap: 8px;
 }
+
+
 
 .tf-btn {
   padding: 6px 12px;
@@ -66,8 +112,8 @@
 }
 
 .tf-btn.active {
-  background: var(--accent-blue);
-  border-color: var(--accent-blue);
+  background: var(--primary-gradient);
+  border-color: transparent;
   color: white;
 }
 
@@ -175,6 +221,8 @@
   gap: 12px;
   font-weight: 600;
 }
+
+
 
 .user-avatar {
   width: 32px;

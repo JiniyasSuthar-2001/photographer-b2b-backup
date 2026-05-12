@@ -29,9 +29,12 @@ async def get_notifications(
     Frontend Impact: Populates the dropdown list in the NotificationBell.
     Polling: NotificationBell.jsx calls this every 30 seconds to refresh the list.
     """
+    from datetime import datetime, timedelta
     offset = (page - 1) * limit
+    two_hours_ago = datetime.utcnow() - timedelta(hours=2)
     notifications = db.query(models.Notification).\
         filter(models.Notification.user_id == current_user.id).\
+        filter(models.Notification.created_at >= two_hours_ago).\
         order_by(models.Notification.created_at.desc()).\
         offset(offset).limit(limit).all()
     

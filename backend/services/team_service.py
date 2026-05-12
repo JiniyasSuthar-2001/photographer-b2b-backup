@@ -30,7 +30,7 @@ class TeamService:
             jobs_together = db.query(models.Assignment).\
                 join(models.Job, models.Assignment.job_id == models.Job.id).\
                 filter(and_(
-                    models.Job.studio_owner_id == owner_id,
+                    models.Job.user_id == owner_id,
                     models.Assignment.member_id == entry.member_id,
                     models.Job.status == "completed"
                 )).count()

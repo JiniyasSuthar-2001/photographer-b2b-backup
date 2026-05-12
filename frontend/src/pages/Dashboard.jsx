@@ -2,7 +2,7 @@
 // PAGE: DASHBOARD
 // Purpose: High-level overview of the photography ecosystem for both roles.
 // Connected Pages: 
-// - JobHub.jsx (Linked via interactive StatCards)
+// - Projects.jsx (Linked via interactive StatCards)
 // - Analytics.jsx (Linked via the Earnings StatCard)
 // Role Architecture:
 // - Photographer Mode: Focuses on managed jobs and revenue.
@@ -25,8 +25,6 @@ import { ROLE_TYPES } from '../data/mockData';
 import { sortChronologically } from '../utils/sorting';
 import './Dashboard.css';
 
-
-
 const REQUEST_STATUS_STYLES = {
   pending:  { color: '#F59E0B', bg: 'rgba(245,158,11,0.1)',  label: 'Pending'  },
   accepted: { color: '#10B981', bg: 'rgba(16,185,129,0.1)',  label: 'Accepted' },
@@ -44,37 +42,25 @@ export default function Dashboard() {
   } = state;
 
   // --- CORE DATA PROCESSING ---
-  // Connects to: backend/routers/jobs.py & backend/routers/requests.py
-  // Logic: Filters 'jobs' and 'jobRequests' from global state based on the active role.
   const isPhotographerMode = activeDashboardRole === 'photographer';
 
-
-
-  // CHRONOLOGICAL SORTING: Ensuring immediate work is at the top
+  // CHRONOLOGICAL SORTING
   const myOwnedJobs = sortChronologically(jobs.filter(j => j.status !== 'cancelled'), 'date').slice(0, 4);
   const myIncomingRequests = sortChronologically(jobRequests.filter(r => r.status === 'pending'), 'job_date').slice(0, 4);
-
   
-  // Stats calculation based on active role
+  // Stats calculation
   const pendingCount = jobRequests.filter(r => r.status === 'pending').length;
   const activeAssignmentsCount = jobRequests.filter(r => r.status === 'accepted').length;
   
-  // Earnings logic based on role requirement
-  // Photographer = Revenue from owned jobs (mocked here from analytics)
-  // Freelancer = Payouts from accepted jobs
   const currentEarnings = isPhotographerMode 
     ? ((analytics.photographerEarnings[analytics.photographerEarnings.length - 1]?.amount || 0) * 1.5) 
     : (analytics.photographerEarnings[analytics.photographerEarnings.length - 1]?.amount || 0);
 
-
-  // --- NEXT WEEK WORK (COMBINED ECOSYSTEM) ---
-  // Aggregates both owned jobs and accepted freelance assignments
-  // Sorted chronologically to show the week's priority
+  // --- NEXT WEEK WORK ---
   const nextWeekWork = sortChronologically([
     ...jobs.filter(j => j.status === 'assigned').map(j => ({ ...j, type: 'owned' })),
     ...jobRequests.filter(r => r.status === 'accepted').map(r => ({ ...r, title: r.jobTitle, date: r.job_date, type: 'freelance' }))
   ], 'date').slice(0, 4);
-
 
   const navigate = useNavigate();
 
@@ -83,18 +69,11 @@ export default function Dashboard() {
     addToast(`Switched to ${role === 'photographer' ? 'Photographer' : 'Freelancer'} view`);
   };
 
-
-  // --- NAVIGATION HELPERS ---
-  // These functions set the global tab state before navigating to ensure the user 
-  // lands on the correct sub-section of the platform.
-
-  const navigateToJobHub = (mainTab, subTab = 'accepted') => {
+  const navigateToProjects = (mainTab, subTab = 'accepted') => {
     dispatch({ type: 'SET_MAIN_TAB', payload: mainTab });
     dispatch({ type: 'SET_SUB_TAB', payload: subTab });
-    navigate('/job-hub');
+    navigate('/projects');
   };
-
-
 
   const handleDismissTrial = () => {
     dispatch({ type: 'DISMISS_TRIAL_MODAL' });
@@ -112,7 +91,6 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      {/* ─── ECOSYSTEM ROLE TOGGLE ─── */}
       <div className="dashboard-header-actions">
         <div className="dashboard-welcome">
           <h1>Welcome back, {user.full_name || user.username}</h1>
@@ -136,11 +114,9 @@ export default function Dashboard() {
         </div>
       </div>
 
-
-      {/* ─── DYNAMIC KPI ROW (CONNECTED NAVIGATION) ─── */}
       <div className="grid-3 dashboard-stats-row">
         <div 
-          onClick={() => navigateToJobHub(isPhotographerMode ? 'my-jobs' : 'accepted-jobs', isPhotographerMode ? 'assigned' : 'invites')} 
+          onClick={() => navigateToProjects(isPhotographerMode ? 'my-jobs' : 'accepted-jobs', isPhotographerMode ? 'assigned' : 'invites')} 
           className="clickable-stat"
         >
           <StatCard 
@@ -151,7 +127,7 @@ export default function Dashboard() {
           />
         </div>
         <div 
-          onClick={() => navigateToJobHub(isPhotographerMode ? 'my-jobs' : 'accepted-jobs', 'accepted')} 
+          onClick={() => navigateToProjects(isPhotographerMode ? 'my-jobs' : 'accepted-jobs', 'accepted')} 
           className="clickable-stat"
         >
           <StatCard 
@@ -173,37 +149,29 @@ export default function Dashboard() {
         </div>
       </div>
 
-
-
       <div className="dashboard-main-grid">
         <div className="dashboard-content-left">
-          
-          {/* ─── DYNAMIC MODE SECTION ─── */}
           <div className="card card-padding mode-section">
             <div className="section-header">
               <h2 className="section-title">
                 {isPhotographerMode ? 'My Jobs (Photography)' : 'My Requests (Freelance)'}
               </h2>
               <button 
-                onClick={() => navigateToJobHub(isPhotographerMode ? 'my-jobs' : 'accepted-jobs')} 
+                onClick={() => navigateToProjects(isPhotographerMode ? 'my-jobs' : 'accepted-jobs')} 
                 className="view-all-link-btn"
               >
                 View Hub <ArrowRight size={14} />
               </button>
             </div>
-
-
             <div className="mode-items-list">
               {isPhotographerMode ? (
-                // PHOTOGRAPHER VIEW (Old Studio Owner)
                 myOwnedJobs.length === 0 ? (
                   <EmptyState 
                     title="No Photography Jobs" 
                     message="You haven't created any jobs for your business yet."
-                    action={<NavLink to="/job-hub" className="btn btn-primary btn-sm">Post a Job</NavLink>}
+                    action={<NavLink to="/projects" className="btn btn-primary btn-sm">Post a Job</NavLink>}
                   />
                 ) : myOwnedJobs.map(job => (
-
                   <div key={job.id} className="ecosystem-card">
                     <div className="eco-card-top">
                       <div className="eco-title">{job.title}</div>
@@ -216,7 +184,6 @@ export default function Dashboard() {
                   </div>
                 ))
               ) : (
-                // FREELANCER VIEW
                 myIncomingRequests.length === 0 ? (
                   <EmptyState 
                     title="No Incoming Requests" 
@@ -231,9 +198,9 @@ export default function Dashboard() {
                       </div>
                       <div className="eco-price">₹{req.budget.toLocaleString()}</div>
                     </div>
-                    <div className="eco-actions">
+                    <div className="redesigned-card-footer">
                       <button className="btn-mini btn-primary" onClick={() => handleAccept(req)}>Accept</button>
-                      <button className="btn-mini btn-outline" onClick={() => navigateToJobHub('accepted-jobs', 'invites')}>View</button>
+                      <button className="btn-mini btn-outline" onClick={() => navigateToProjects('accepted-jobs', 'invites')}>View</button>
                     </div>
                   </div>
                 ))
@@ -293,10 +260,11 @@ export default function Dashboard() {
 
       {/* Floating Action Button - Connected to Job Hub creation */}
       {isPhotographerMode && createPortal(
-        <NavLink to="/job-hub" className="fab-ecosystem">
+        <NavLink to="/projects" className="fab-ecosystem">
           <Plus size={20} />
-          Create New Job
+          Create New Project
         </NavLink>,
+
         document.body
       )}
 

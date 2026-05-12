@@ -14,7 +14,8 @@ const AuthPage = () => {
         password: '',
         confirmPassword: '',
         phone: '',
-        full_name: ''
+        full_name: '',
+        referral_code_applied: ''
     });
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
@@ -30,7 +31,8 @@ const AuthPage = () => {
             password: '', 
             confirmPassword: '',
             phone: '',
-            full_name: ''
+            full_name: '',
+            referral_code_applied: ''
         });
     };
 
@@ -229,6 +231,16 @@ const AuthPage = () => {
                                             placeholder="Confirm your password"
                                         />
                                     </div>
+                                </label>
+                                <label>
+                                    <span>Referral Code (Optional)</span>
+                                    <input 
+                                        type="text" 
+                                        name="referral_code_applied" 
+                                        value={formData.referral_code_applied} 
+                                        onChange={handleChange} 
+                                        placeholder="Enter referral code"
+                                    />
                                 </label>
                                 <button 
                                     type="button" 

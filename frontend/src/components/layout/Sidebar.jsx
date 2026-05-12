@@ -4,7 +4,8 @@
 // Connected Pages: ALL (Persistent across the platform)
 // Logic: 
 // - Dynamic Badge: Reflects Photographer vs Freelancer role.
-// - Notification Badge: Triggers on '/job-hub' when freelancer has pending requests.
+// - Notification Badge: Triggers on '/projects' when freelancer has pending requests.
+
 // ==================================================================================
 
 import { NavLink } from 'react-router-dom';
@@ -21,8 +22,10 @@ import './Sidebar.css';
 const navItems = [
   { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
   { path: '/calendar', icon: Calendar, label: 'Calendar' },
-  { path: '/job-hub', icon: Briefcase, label: 'Job Hub' },
+  { path: '/projects', icon: Briefcase, label: 'Projects' },
+  { path: '/other-projects', icon: Briefcase, label: 'Other Projects' },
   { path: '/team', icon: Users, label: 'Team' },
+
   { path: '/analytics', icon: BarChart2, label: 'Analytics' },
   { path: '/notes', icon: ClipboardList, label: 'Notes' },
   { path: '/profile', icon: UserCircle, label: 'Profile' },
@@ -75,7 +78,7 @@ export default function Sidebar() {
             <span className="sidebar-nav-bar" />
             <Icon size={18} className="sidebar-nav-icon" />
             <span className="sidebar-nav-label-text">{label}</span>
-            {path === '/job-hub' && pendingRequests > 0 && (
+            {path === '/projects' && pendingRequests > 0 && (
               <span className="sidebar-nav-badge">{pendingRequests}</span>
             )}
           </NavLink>

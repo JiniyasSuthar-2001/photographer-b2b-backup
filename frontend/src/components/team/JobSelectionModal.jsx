@@ -55,7 +55,8 @@ const JobSelectionModal = ({ isOpen, onClose, photographer, onSelect }) => {
             <div className="job-selection-modal">
                 <div className="modal-header">
                     <div className="header-info">
-                        <h3>Send Job Request</h3>
+                        <h3>Send Project Request</h3>
+
                         <p>Inviting <strong>{photographer.full_name || photographer.name}</strong> ({photographer.category || (photographer.specialties && photographer.specialties[0]) || 'General'})</p>
                     </div>
                     <button className="close-btn" onClick={onClose}><X size={20} /></button>
@@ -69,13 +70,14 @@ const JobSelectionModal = ({ isOpen, onClose, photographer, onSelect }) => {
                         </div>
                     ) : jobs.length === 0 ? (
                         <div className="empty-state">
-                            <Briefcase size={40} />
-                            <p>No open jobs found requiring <strong>{photographer.category}</strong> role.</p>
-                            <small>Try adding a new job with this role in Job Hub.</small>
+                            <p>No open projects found requiring <strong>{photographer.category}</strong> role.</p>
+                            <small>Try adding a new project in Projects.</small>
+
                         </div>
                     ) : (
                         <div className="jobs-list-container">
-                            <p className="section-label">Select a Job</p>
+                            <p className="section-label">Select a Project</p>
+
                             <div className="jobs-list">
                                 {jobs.map(job => (
                                     <div 
