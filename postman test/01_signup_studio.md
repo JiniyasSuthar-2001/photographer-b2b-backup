@@ -5,8 +5,10 @@
 ```json
 {
   "username": "studio_vision",
-  "password": "StudioPassword!2026",
+  "email": "studio@vision.example",
   "phone": "+919811122233",
+  "password": "StudioPassword!2026",
+  "confirm_password": "StudioPassword!2026",
   "full_name": "Vision Studios Mumbai",
   "city": "Mumbai",
   "category": "Wedding",

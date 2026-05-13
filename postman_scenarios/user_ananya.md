@@ -11,8 +11,10 @@ This file contains all requests related to Ananya Iyer, including account creati
 ```json
 {
   "username": "ananya_iyer",
-  "password": "Password123!",
+  "email": "ananya.iyer@example.com",
   "phone": "+919876543216",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Ananya Iyer",
   "city": "Chennai",
   "category": "Reel",

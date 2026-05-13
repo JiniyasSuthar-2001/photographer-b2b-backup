@@ -27,13 +27,15 @@ The token is obtained from the `/api/auth/login` response and stored in `localSt
 ```json
 {
     "username": "photographer_test",
-    "password": "SecurePass@123",
-    "phone": "+919876543210",
-    "full_name": "Arjun Mehta",
-    "city": "Ahmedabad",
-    "category": "Wedding",
-    "user_type": "photographer",
-    "referral_code_applied": "ABCD1234"
+        "email": "photographer_test@example.com",
+        "password": "SecurePass@123",
+        "confirm_password": "SecurePass@123",
+        "phone": "+919876543210",
+        "full_name": "Arjun Mehta",
+        "city": "Ahmedabad",
+        "category": "Wedding",
+        "user_type": "photographer",
+        "referral_code_applied": "ABCD1234"
 }
 ```
 - **Notes**: `referral_code_applied` is optional. If provided, it is stored as `referred_by` on the user. The referral reward (+15 days) is only distributed upon the user's **first successful payment**, not at signup.

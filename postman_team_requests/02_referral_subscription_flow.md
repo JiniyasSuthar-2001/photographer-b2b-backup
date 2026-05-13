@@ -27,8 +27,10 @@ This file demonstrates how the referral reward system integrates with team build
 ```json
 {
   "username": "aman_sharma",
-  "password": "Password123!",
+  "email": "aman.sharma@example.com",
   "phone": "+919876543211",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Aman Sharma",
   "city": "Mumbai",
   "category": "Lead",

@@ -70,8 +70,8 @@ export default function Projects({ mode = 'my-jobs' }) {
     if (typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
       return dateStr;
     }
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return '';
+    const d = dateStr ? new Date(dateStr) : new Date();
+    if (isNaN(d.getTime())) return new Date().toISOString().split('T')[0];
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
@@ -354,7 +354,7 @@ export default function Projects({ mode = 'my-jobs' }) {
               : 'Track projects you have been invited to or accepted'}
           </p>
         </div>
-        {canPostJob && (
+        {canPostJob && activeMainTab === 'my-jobs' && (
           <button className="btn-post-project" onClick={() => setShowNewJob(true)}>
             <Plus size={18} /> Post New Project
           </button>
@@ -708,7 +708,7 @@ export default function Projects({ mode = 'my-jobs' }) {
                 venue: fd.get('venue'),
                 budget: parseInt(fd.get('budget')) || 0,
                 category: fd.get('category'),
-                date: fd.get('date'),
+                date: fd.get('date') || new Date().toISOString(),
                 roles: selectedRoles
               };
               if (editingJob) {
@@ -752,7 +752,7 @@ export default function Projects({ mode = 'my-jobs' }) {
                   </div>
                 </div>
                 <div style={{display:'none'}}>
-                   <input name="category" defaultValue={editingJob?.category || 'Wedding'} />
+                   <input name="category" defaultValue={editingJob?.category || 'Photography'} />
                    <input name="date" type="date" defaultValue={formatDateForInput(editingJob?.date)} />
                 </div>
                 <div className="landscape-footer">

@@ -25,9 +25,10 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
-    phone = Column(String, unique=True, index=True)
-    full_name = Column(String)
-    city = Column(String)
+    phone = Column(String, unique=True, index=True, nullable=True)
+    email = Column(String, unique=True, index=True, nullable=True)
+    full_name = Column(String, nullable=True)
+    city = Column(String, nullable=True)
     category = Column(String) # Now referred to as 'Roles' in the UI
     user_type = Column(String, default='photographer') # photographer, freelancer
 

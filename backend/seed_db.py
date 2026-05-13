@@ -18,6 +18,7 @@ def seed_data():
             phone="0000000000",
             full_name="System Admin",
             city="Ahmedabad",
+            email="admin@example.com",
             user_type="photographer" # Note: 'photographer' role is the new unified role
         )
         db.add(admin_user)
@@ -34,6 +35,7 @@ def seed_data():
                 hashed_password=auth_service.get_password_hash(p),
                 full_name=f"Admin {i}",
                 phone=f"000000000{i}",
+                email=f"admin0{i}@example.com",
                 user_type="photographer"
             )
             db.add(new_u)
@@ -47,6 +49,7 @@ def seed_data():
             phone="9998887776",
             full_name="Elite Studios",
             city="Mumbai",
+            email="partner@example.com",
             user_type="photographer"
         )
         db.add(partner)

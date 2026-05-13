@@ -13,9 +13,7 @@ const AuthPage = () => {
         username: '',
         password: '',
         confirmPassword: '',
-        phone: '',
-        full_name: '',
-        referral_code_applied: ''
+        email: ''
     });
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
@@ -30,9 +28,7 @@ const AuthPage = () => {
             username: '', 
             password: '', 
             confirmPassword: '',
-            phone: '',
-            full_name: '',
-            referral_code_applied: ''
+            email: ''
         });
     };
 
@@ -186,23 +182,13 @@ const AuthPage = () => {
                                     />
                                 </label>
                                 <label>
-                                    <span>Full Name</span>
+                                    <span>Email</span>
                                     <input 
-                                        type="text" 
-                                        name="full_name" 
-                                        value={formData.full_name} 
+                                        type="email" 
+                                        name="email" 
+                                        value={formData.email} 
                                         onChange={handleChange} 
-                                        placeholder="Enter your full name"
-                                    />
-                                </label>
-                                <label>
-                                    <span>Phone</span>
-                                    <input 
-                                        type="text" 
-                                        name="phone" 
-                                        value={formData.phone} 
-                                        onChange={handleChange} 
-                                        placeholder="Enter your phone number"
+                                        placeholder="Enter your email address"
                                     />
                                 </label>
                                 <label className="password-label">
@@ -232,16 +218,7 @@ const AuthPage = () => {
                                         />
                                     </div>
                                 </label>
-                                <label>
-                                    <span>Referral Code (Optional)</span>
-                                    <input 
-                                        type="text" 
-                                        name="referral_code_applied" 
-                                        value={formData.referral_code_applied} 
-                                        onChange={handleChange} 
-                                        placeholder="Enter referral code"
-                                    />
-                                </label>
+
                                 <button 
                                     type="button" 
                                     className={`submit ${isLoading ? 'loading' : ''}`} 

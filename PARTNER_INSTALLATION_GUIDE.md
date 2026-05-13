@@ -52,6 +52,8 @@ The backend is built with Python and FastAPI.
    ```
    *The backend is now running at `http://localhost:8000`. You can view the API documentation at `http://localhost:8000/docs`.*
 
+   If you want teammates on the same Wi‑Fi/LAN to access your running backend, make sure the server is bound to 0.0.0.0 and use `http://192.168.1.13:8000` (replace with your machine's LAN IP).
+
 ## Step 5: Frontend Setup (React)
 The frontend is built with React and Vite.
 

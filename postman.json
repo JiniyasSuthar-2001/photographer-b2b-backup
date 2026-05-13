@@ -32,7 +32,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"username\": \"photographer_test\",\n    \"password\": \"SecurePass@123\",\n    \"phone\": \"+919876543210\",\n    \"full_name\": \"Arjun Mehta\",\n    \"city\": \"Ahmedabad\",\n    \"category\": \"Wedding\",\n    \"user_type\": \"photographer\",\n    \"referral_code_applied\": \"\"\n}",
+                            "raw": "{\n    \"username\": \"new_user\",\n    \"email\": \"new@example.com\",\n    \"password\": \"Password123!\",\n    \"confirm_password\": \"Password123!\",\n    \"phone\": \"+919876543210\",\n    \"full_name\": \"Test User\",\n    \"city\": \"Mumbai\",\n    \"category\": \"Wedding\",\n    \"user_type\": \"photographer\",\n    \"referral_code_applied\": \"\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -125,7 +125,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \n}",
+                            "raw": "{}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -160,7 +160,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"username\": \"photographer_test\"\n}",
+                            "raw": "{\n    \"username\": \"admin\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -168,6 +168,41 @@
                             }
                         },
                         "description": "Simulates a password reset request.\nFrontend Impact: Connected to the 'Forgot Password' link in Login.jsx."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Profile",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/profile",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "profile"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"full_name\": \"Updated Name\",\n    \"city\": \"Pune\",\n    \"category\": \"Pre-Wedding\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "description": "Updates current user's profile information."
                     },
                     "response": []
                 }
@@ -188,7 +223,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/team/collaborations/{member_id}",
+                            "raw": "{{baseUrl}}/api/team/collaborations/{member_id}?page=1&limit=10",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -197,6 +232,26 @@
                                 "team",
                                 "collaborations",
                                 "{member_id}"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "category",
+                                    "value": "",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "city",
+                                    "value": "",
+                                    "disabled": true
+                                }
                             ]
                         },
                         "description": "Fetches past jobs shared between the Studio Owner and a specific Photographer.\nFrontend Impact: Populates the list inside CollaborationModal in Projects.jsx.\n\nModification Risk: If pagination logic changes, the modal's 'Next/Prev' buttons \nmay stop functioning."
@@ -215,7 +270,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/team/users/search",
+                            "raw": "{{baseUrl}}/api/team/users/search?phone={{phone}}",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -224,6 +279,13 @@
                                 "team",
                                 "users",
                                 "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "phone",
+                                    "value": "{{phone}}",
+                                    "description": "Phone number"
+                                }
                             ]
                         },
                         "description": "Search for a registered photographer by phone number.\nFrontend Impact: Triggered in Team.jsx when adding a 'Connected' member."
@@ -290,7 +352,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \n}",
+                            "raw": "{\n    \"status\": \"accepted\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -313,7 +375,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/team/requests/pending",
+                            "raw": "{{baseUrl}}/api/team/requests/pending?page=1&limit=10",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -322,6 +384,26 @@
                                 "team",
                                 "requests",
                                 "pending"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "category",
+                                    "value": "",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "city",
+                                    "value": "",
+                                    "disabled": true
+                                }
                             ]
                         },
                         "description": "Fetches team invitations sent TO the current user."
@@ -340,7 +422,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/team/joined",
+                            "raw": "{{baseUrl}}/api/team/joined?page=1&limit=10",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -348,6 +430,26 @@
                                 "api",
                                 "team",
                                 "joined"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "category",
+                                    "value": "",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "city",
+                                    "value": "",
+                                    "disabled": true
+                                }
                             ]
                         },
                         "description": "Fetches teams that the current user is a member of."
@@ -366,13 +468,33 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/team/",
+                            "raw": "{{baseUrl}}/api/team/?page=1&limit=10",
                             "host": [
                                 "{{baseUrl}}"
                             ],
                             "path": [
                                 "api",
                                 "team"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "category",
+                                    "value": "",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "city",
+                                    "value": "",
+                                    "disabled": true
+                                }
                             ]
                         },
                         "description": "Fetches the full team directory for a Studio Owner.\nFrontend Impact: Populates the table in Team.jsx."
@@ -403,7 +525,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"display_name\": \"Rohan Shah Updated\",\n    \"display_category\": \"Wedding\",\n    \"display_city\": \"Ahmedabad\"\n}",
+                            "raw": "{\n    \"display_name\": \"Updated Alias\",\n    \"display_category\": \"Wedding\",\n    \"display_city\": \"Ahmedabad\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -452,7 +574,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/team/discover",
+                            "raw": "{{baseUrl}}/api/team/discover?page=1&limit=10",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -460,6 +582,26 @@
                                 "api",
                                 "team",
                                 "discover"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "category",
+                                    "value": "",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "city",
+                                    "value": "",
+                                    "disabled": true
+                                }
                             ]
                         },
                         "description": "Public directory of registered freelancers.\nFrontend Impact: Populates the 'Discover' tab in Team.jsx."
@@ -483,13 +625,23 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/notifications/",
+                            "raw": "{{baseUrl}}/api/notifications/?page=1&limit=20",
                             "host": [
                                 "{{baseUrl}}"
                             ],
                             "path": [
                                 "api",
                                 "notifications"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "20"
+                                }
                             ]
                         },
                         "description": "Fetches the user's notification history.\nFrontend Impact: Populates the dropdown list in the NotificationBell.\nPolling: NotificationBell.jsx calls this every 30 seconds to refresh the list."
@@ -521,7 +673,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \n}",
+                            "raw": "{}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -556,7 +708,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \n}",
+                            "raw": "{}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -595,7 +747,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"job_id\": 1,\n    \"receiver_id\": 1,\n    \"role\": \"test_role\",\n    \"budget\": 1\n}",
+                            "raw": "{\n    \"job_id\": 1,\n    \"receiver_id\": 2,\n    \"role\": \"Candid Photographer\",\n    \"budget\": 5000\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -618,13 +770,25 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/requests/",
+                            "raw": "{{baseUrl}}/api/requests/?role=receiver",
                             "host": [
                                 "{{baseUrl}}"
                             ],
                             "path": [
                                 "api",
                                 "requests"
+                            ],
+                            "query": [
+                                {
+                                    "key": "role",
+                                    "value": "receiver",
+                                    "description": "sender or receiver"
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "pending",
+                                    "disabled": true
+                                }
                             ]
                         },
                         "description": "Main feed for requests/invites.\nFrontend Impact: \n- role=receiver & status=pending -> 'Invites' tab.\n- role=receiver & status=declined -> 'Declined Projects' tab."
@@ -655,7 +819,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \n}",
+                            "raw": "{\n    \"status\": \"accepted\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -704,7 +868,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/requests/eligible-jobs/{photographer_id}",
+                            "raw": "{{baseUrl}}/api/requests/eligible-jobs/{photographer_id}?role=receiver",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -713,6 +877,18 @@
                                 "requests",
                                 "eligible-jobs",
                                 "{photographer_id}"
+                            ],
+                            "query": [
+                                {
+                                    "key": "role",
+                                    "value": "receiver",
+                                    "description": "sender or receiver"
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "pending",
+                                    "disabled": true
+                                }
                             ]
                         },
                         "description": "Lists jobs matching photographer's category that aren't already requested.\nFrontend Impact: Populates the dropdown in the 'Send Request' modal."
@@ -731,7 +907,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/requests/job/{job_id}",
+                            "raw": "{{baseUrl}}/api/requests/job/{job_id}?role=receiver",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -740,6 +916,18 @@
                                 "requests",
                                 "job",
                                 "{job_id}"
+                            ],
+                            "query": [
+                                {
+                                    "key": "role",
+                                    "value": "receiver",
+                                    "description": "sender or receiver"
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "pending",
+                                    "disabled": true
+                                }
                             ]
                         },
                         "description": "Fetches all invitations/requests for a specific job.\nFrontend Impact: Populates the 'Request Status' popup in Projects.jsx."
@@ -758,7 +946,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/requests/accepted-jobs",
+                            "raw": "{{baseUrl}}/api/requests/accepted-jobs?role=receiver",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -766,6 +954,18 @@
                                 "api",
                                 "requests",
                                 "accepted-jobs"
+                            ],
+                            "query": [
+                                {
+                                    "key": "role",
+                                    "value": "receiver",
+                                    "description": "sender or receiver"
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "pending",
+                                    "disabled": true
+                                }
                             ]
                         },
                         "description": "Returns jobs assigned to the current Photographer.\nFrontend Impact: Populates the 'Accepted Projects' sub-tab in Projects.jsx."
@@ -825,7 +1025,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"title\": \"test_title\",\n    \"client\": \"test_client\",\n    \"venue\": \"test_venue\",\n    \"budget\": 1,\n    \"category\": \"test_category\",\n    \"date\": \"2026-12-25T10:00:00\",\n    \"roles\": [\n        \"Wedding\",\n        \"Candid\"\n    ]\n}",
+                            "raw": "{\n    \"title\": \"Grand Indian Wedding\",\n    \"client\": \"Sharma Family\",\n    \"venue\": \"Taj Hotel, Mumbai\",\n    \"budget\": 100000,\n    \"category\": \"Wedding\",\n    \"date\": \"2026-12-01T10:00:00\",\n    \"roles\": [\n        \"Candid Photographer\",\n        \"Cinematographer\"\n    ]\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -885,7 +1085,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"title\": \"test_title\",\n    \"client\": \"test_client\",\n    \"venue\": \"test_venue\",\n    \"budget\": 1,\n    \"category\": \"test_category\",\n    \"date\": \"2026-12-25T10:00:00\",\n    \"status\": \"test_status\",\n    \"roles\": [\n        \"Wedding\",\n        \"Candid\"\n    ]\n}",
+                            "raw": "{\n    \"status\": \"completed\",\n    \"budget\": 120000\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -949,7 +1149,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \n}",
+                            "raw": "{}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -984,7 +1184,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \n}",
+                            "raw": "{}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1037,7 +1237,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/analytics/rankings",
+                            "raw": "{{baseUrl}}/api/analytics/rankings?role=studio_owner",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -1045,6 +1245,12 @@
                                 "api",
                                 "analytics",
                                 "rankings"
+                            ],
+                            "query": [
+                                {
+                                    "key": "role",
+                                    "value": "studio_owner"
+                                }
                             ]
                         },
                         "description": "Returns the top collaborators (photographers) for the current user."
@@ -1068,7 +1274,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/dashboard/summary",
+                            "raw": "{{baseUrl}}/api/dashboard/summary?role=studio_owner",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -1076,6 +1282,13 @@
                                 "api",
                                 "dashboard",
                                 "summary"
+                            ],
+                            "query": [
+                                {
+                                    "key": "role",
+                                    "value": "studio_owner",
+                                    "description": "studio_owner or photographer"
+                                }
                             ]
                         },
                         "description": "Returns data for the dashboard based on active role."
@@ -1134,7 +1347,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"jobId\": 1,\n    \"text\": \"test_text\"\n}",
+                            "raw": "{\n    \"title\": \"Edit wedding highlights\",\n    \"job_id\": 1\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1168,7 +1381,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{}",
+                            "raw": "{\n    \"is_completed\": true\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1258,7 +1471,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"amount\": 1499,\n    \"currency\": \"INR\",\n    \"plan_name\": \"Pro\"\n}",
+                            "raw": "{\n    \"plan\": \"Pro\",\n    \"duration_months\": 12\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1324,7 +1537,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"referral_code\": \"ABCD1234\"\n}",
+                            "raw": "{\n    \"referral_code\": \"REF12345\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1390,7 +1603,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"date\": \"2026-12-25T10:00:00\",\n    \"status\": \"test_status\"\n}",
+                            "raw": "{}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1430,7 +1643,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \n}",
+                            "raw": "{}",
                             "options": {
                                 "raw": {
                                     "language": "json"

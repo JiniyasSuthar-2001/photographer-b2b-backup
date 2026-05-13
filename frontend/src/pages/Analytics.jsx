@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp, usePermission } from '../context/AppContext';
+import { analyticsService } from '../services/api';
 import {
   LineChart, Line, AreaChart, Area, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -86,6 +87,24 @@ export default function Analytics() {
   if (!analytics) return null;
 
   const isPhotographerMode = analyticsRole === 'photographer';
+
+  const [rankings, setRankings] = useState([]);
+  const [backendAnalytics, setBackendAnalytics] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const rankingsData = await analyticsService.getRankings();
+        if (Array.isArray(rankingsData)) setRankings(rankingsData);
+        // Note: We can also fetch dashboard/analytics metrics here if the server was running
+        // const metricsData = await analyticsService.getAnalytics();
+        // setBackendAnalytics(metricsData);
+      } catch (err) {
+        console.error('Failed to fetch analytics from backend:', err);
+      }
+    }
+    fetchData();
+  }, [analyticsTimeframe, analyticsRole]);
 
   const handleRoleChange = (role) => {
     dispatch({ type: 'SET_ANALYTICS_ROLE', payload: role });
@@ -318,22 +337,22 @@ export default function Analytics() {
                 </tr>
               </thead>
               <tbody>
-                {[
+                {(rankings.length > 0 ? rankings : [
                   { name: 'Aarav Sharma', jobs: 18, earnings: 184000, rating: 4.9, date: '18 May 2026' },
                   { name: 'Sana Khan', jobs: 24, earnings: 142000, rating: 4.9, date: '15 May 2026' },
                   { name: 'Ishani Patel', jobs: 12, earnings: 98000, rating: 4.8, date: '22 May 2026' },
                   { name: 'Rohan Mehta', jobs: 15, earnings: 85000, rating: 4.7, date: '18 May 2026' },
-                ].map((p, i) => (
+                ]).map((p, i) => (
                   <tr key={i}>
                     <td>
                       <div className="table-user">
-                        <div className="user-avatar" style={{background: 'var(--primary-gradient)', color:'white'}}>{p.name[0]}</div>
-                        {p.name}
+                        <div className="user-avatar" style={{background: 'var(--primary-gradient)', color:'white'}}>{(p.name || p.photographer_name || 'U')[0]}</div>
+                        {p.name || p.photographer_name}
                       </div>
                     </td>
-                    <td>{p.jobs}</td>
-                    <td className="text-green" style={{fontWeight: 600}}>₹{p.earnings.toLocaleString()}</td>
-                    <td className="text-muted">{p.date}</td>
+                    <td>{p.jobs || p.jobs_done_together || 0}</td>
+                    <td className="text-green" style={{fontWeight: 600}}>₹{(p.earnings || p.earnings_generated || 0).toLocaleString()}</td>
+                    <td className="text-muted">{p.date || p.latest_collaboration_date || 'Recent'}</td>
                   </tr>
                 ))}
               </tbody>

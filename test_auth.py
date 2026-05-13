@@ -1,6 +1,10 @@
+import os
 import requests
 
-BASE_URL = "http://localhost:8000/api/auth"
+# Allow overriding the backend base URL via environment variable so teammates
+# can point tests to a LAN-accessible backend (e.g. http://192.168.1.13:8000).
+BASE_HOST = os.getenv("BASE_HOST", "http://localhost:8000")
+BASE_URL = f"{BASE_HOST}/api/auth"
 
 def test_auth():
     print("Testing Signup...")

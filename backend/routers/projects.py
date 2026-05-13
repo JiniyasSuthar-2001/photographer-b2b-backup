@@ -48,7 +48,7 @@ class JobResponse(BaseModel):
     title: str
     client: Optional[str] = None
     venue: Optional[str] = None
-    budget: int = 0
+    budget: Optional[int] = 0
     category: Optional[str] = None
     date: Optional[datetime] = None
     status: str = "open"

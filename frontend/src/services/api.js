@@ -6,7 +6,7 @@
 
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = '/api';
 
 const apiClient = axios.create({
     baseURL: API_BASE_URL,
@@ -65,6 +65,12 @@ export const authService = {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
         }
+    },
+    updateProfile: async (data) => {
+        // Updates user profile in backend and local storage.
+        const response = await apiClient.put('/auth/profile', data);
+        localStorage.setItem('user', JSON.stringify(response.data));
+        return response.data;
     }
 };
 
@@ -247,6 +253,41 @@ export const referralService = {
 export const systemService = {
     resetDatabase: async () => {
         const response = await apiClient.post('/system/reset-db');
+        return response.data;
+    }
+};
+
+// --- ANALYTICS SERVICE ---
+// Connects to: backend/routers/analytics.py
+export const analyticsService = {
+    getAnalytics: async () => {
+        const response = await apiClient.get('/analytics/');
+        return response.data;
+    },
+    getRankings: async () => {
+        const response = await apiClient.get('/analytics/rankings');
+        return response.data;
+    }
+};
+
+// --- CALENDAR SERVICE ---
+// Connects to: backend/routers/calendar.py
+export const calendarService = {
+    getRoster: async () => {
+        const response = await apiClient.get('/calendar/roster');
+        return response.data;
+    },
+    updateAvailability: async (data) => {
+        const response = await apiClient.post('/calendar/availability', data);
+        return response.data;
+    }
+};
+
+// --- DASHBOARD SERVICE ---
+// Connects to: backend/routers/dashboard.py
+export const dashboardService = {
+    getSummary: async () => {
+        const response = await apiClient.get('/dashboard/summary');
         return response.data;
     }
 };

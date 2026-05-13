@@ -1,5 +1,6 @@
- POST `/signup`
-- Full Path: `http://localhost:8000/api/auth/signup`
+- POST `/signup`
+- Full Path: `http://localhost:8000/api/auth/signup` (or `http://192.168.1.13:8000/api/auth/signup` for LAN access)
+- Expected body: username, email, password, confirm_password, phone, full_name, optional city/category
 - Files Involved:
   - Router: `backend/routers/auth.py`
   - Service: `backend/services/auth_service.py`
@@ -14,7 +15,7 @@
 
 
 POST `/login`
-- Full Path: `http://localhost:8000/api/auth/login`
+- Full Path: `http://localhost:8000/api/auth/login` (or `http://192.168.1.13:8000/api/auth/login` for LAN access)
 - Files Involved:
   - Router: `backend/routers/auth.py`
   - Service: `backend/services/auth_service.py`
@@ -29,7 +30,7 @@ Implementation Details:
  Global API Configuration
 
 Base URL
-- Development: `http://localhost:8000/api`
+- Development: `http://localhost:8000/api` (or `http://192.168.1.13:8000/api` for LAN access)
 - Routing Logic: Managed by `backend/api/api_router.py`, which aggregates all sub-routers (Auth, Jobs, etc.) into a single entry point for `main.py`.
 
 CORS Policy

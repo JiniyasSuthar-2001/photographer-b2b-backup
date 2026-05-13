@@ -78,7 +78,7 @@ class AnalyticsService:
 
         return [
             {
-                "photographer_name": c.full_name,
+                "photographer_name": c.full_name or f"User {c.id}",
                 "photographer_id": c.id,
                 "jobs_done_together": c.jobs_done,
                 "earnings_generated": c.total_earnings or 0,

@@ -82,7 +82,7 @@ Notes:
 - The login response model is: { access_token, token_type, user } (where `user` is a full profile object).
 
 3) Authentication flows and storage
-- Signup: POST /api/auth/signup (body: username, password, phone, full_name, optional city/category)
+- Signup: POST /api/auth/signup (body: username, email, password, confirm_password, phone, full_name, optional city/category)
 - Login: POST /api/auth/login (body: username, password). Response: { access_token, token_type: 'bearer', user }
 - Logout: POST /api/auth/logout (protected endpoint; optional)
 - Forgot password: POST /api/auth/forgot-password (body: { username })
@@ -259,11 +259,13 @@ This section lists every form/page in the frontend and the exact fields you shou
     - password: string (required) — min 8 chars recommended
   - Example payload: { "username": "johndoe", "password": "SecureP@ssw0rd" }
 
-- Signup page (`/signup`)
+ - Signup page (`/signup`)
   - Method: POST `/api/auth/signup`
   - Fields (form names / JSON keys):
     - username: string (required) — unique
+    - email: string (required) — valid email address; used for contact & recovery
     - password: string (required) — min 8 chars recommended
+    - confirm_password: string (required) — should match `password` (server validates when provided)
     - phone: string (required) — E.164 or local format; used as a unique identifier
     - full_name: string (required)
     - city: string (optional)
@@ -271,7 +273,7 @@ This section lists every form/page in the frontend and the exact fields you shou
     - user_type: string (optional) — defaults to 'photographer' when omitted
     - referral_code_applied: string (optional)
   - Example payload:
-    { "username": "johndoe", "password": "SecureP@ssw0rd", "phone": "+919876543210", "full_name": "John Doe", "city": "Pune", "category": "wedding" }
+    { "username": "johndoe", "email": "johndoe@example.com", "password": "SecureP@ssw0rd", "confirm_password": "SecureP@ssw0rd", "phone": "+919876543210", "full_name": "John Doe", "city": "Pune", "category": "wedding" }
 
 - Profile / Edit Profile page (`/profile`)
   - Method: (server has no explicit update route listed; create/extend as needed) – use PATCH `/api/team/{member_id}` only for team display updates; otherwise keep local UI fields aligned with `UserProfile`.
@@ -419,13 +421,13 @@ This catalog lists every form input used across the application. For each field 
     - required: Yes
     - validation: min 8 chars, encourage complexity
     - placeholder: "Create a password"
-  - Confirm password (client-only, not sent to API)
+  - Confirm password
     - key (client): `confirm_password`
     - type: password
     - required: Yes
     - validation: must equal `password`
     - placeholder: "Confirm password"
-    - note: backend does not expect `confirm_password` — validate on client before sending
+    - note: The backend will validate `confirm_password` if it is provided. It's recommended to validate on the client and you may send `confirm_password` so the server can double-check.
   - City
     - key: `city`
     - type: text
@@ -600,7 +602,7 @@ General notes for forms
 - Always trim strings before sending.
 - Convert numbers to integers (no currency symbols) before sending.
 - For phone numbers prefer normalized E.164 format when possible.
-- Client-only fields (like `confirm_password`) should never be sent to the API.
+ - Client-only fields that are purely UI helpers (e.g., temporary toggles) should not be sent to the API. `confirm_password` is an exception: you may send it and the server will validate it if present, but client-side validation is recommended for faster feedback.
 
 16) Testing and verification
 - After wiring the API base URL and implementing `api.js`, verify:

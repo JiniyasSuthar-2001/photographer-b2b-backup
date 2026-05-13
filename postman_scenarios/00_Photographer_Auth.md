@@ -13,8 +13,10 @@ This file contains Signup and Login requests for all users in the system. Use th
 ```json
 {
   "username": "elite_studio",
-  "password": "Password123!",
+  "email": "elite_studio@example.com",
   "phone": "+919999900000",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Elite Photography Studio",
   "city": "Mumbai",
   "category": "Wedding",
@@ -37,8 +39,10 @@ This file contains Signup and Login requests for all users in the system. Use th
 ```json
 {
   "username": "aman_sharma",
-  "password": "Password123!",
+  "email": "aman.sharma@example.com",
   "phone": "+919876543211",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Aman Sharma",
   "city": "Mumbai",
   "category": "Lead",
@@ -61,8 +65,10 @@ This file contains Signup and Login requests for all users in the system. Use th
 ```json
 {
   "username": "priya_patel",
-  "password": "Password123!",
+  "email": "priya.patel@example.com",
   "phone": "+919876543212",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Priya Patel",
   "city": "Pune",
   "category": "Cinematographer",
@@ -85,8 +91,10 @@ This file contains Signup and Login requests for all users in the system. Use th
 ```json
 {
   "username": "rahul_verma",
-  "password": "Password123!",
+  "email": "rahul.verma@example.com",
   "phone": "+919876543213",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Rahul Verma",
   "city": "Bangalore",
   "category": "Drone",
@@ -109,8 +117,10 @@ This file contains Signup and Login requests for all users in the system. Use th
 ```json
 {
   "username": "sneha_gupta",
-  "password": "Password123!",
+  "email": "sneha.gupta@example.com",
   "phone": "+919876543214",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Sneha Gupta",
   "city": "Delhi",
   "category": "Traditional",
@@ -133,8 +143,10 @@ This file contains Signup and Login requests for all users in the system. Use th
 ```json
 {
   "username": "vikram_singh",
-  "password": "Password123!",
+  "email": "vikram.singh@example.com",
   "phone": "+919876543215",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Vikram Singh",
   "city": "Jaipur",
   "category": "Candid",
@@ -157,8 +169,10 @@ This file contains Signup and Login requests for all users in the system. Use th
 ```json
 {
   "username": "ananya_iyer",
-  "password": "Password123!",
+  "email": "ananya.iyer@example.com",
   "phone": "+919876543216",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Ananya Iyer",
   "city": "Chennai",
   "category": "Reel",
@@ -181,8 +195,10 @@ This file contains Signup and Login requests for all users in the system. Use th
 ```json
 {
   "username": "rohan_mehra",
-  "password": "Password123!",
+  "email": "rohan.mehra@example.com",
   "phone": "+919876543217",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Rohan Mehra",
   "city": "Mumbai",
   "category": "Creative Director",
@@ -205,8 +221,10 @@ This file contains Signup and Login requests for all users in the system. Use th
 ```json
 {
   "username": "ishita_das",
-  "password": "Password123!",
+  "email": "ishita.das@example.com",
   "phone": "+919876543218",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Ishita Das",
   "city": "Hyderabad",
   "category": "Assistant",
@@ -229,8 +247,10 @@ This file contains Signup and Login requests for all users in the system. Use th
 ```json
 {
   "username": "arjun_kapoor",
-  "password": "Password123!",
+  "email": "arjun.kapoor@example.com",
   "phone": "+919876543219",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Arjun Kapoor",
   "city": "Pune",
   "category": "Helper",

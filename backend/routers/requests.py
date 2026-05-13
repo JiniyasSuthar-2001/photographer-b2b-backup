@@ -137,7 +137,8 @@ async def respond_to_job_request(
     )
 
     # Confirmation for Photographer
-    sender_name = db.query(models.User).filter(models.User.id == job_request.sender_id).first().full_name
+    sender = db.query(models.User).filter(models.User.id == job_request.sender_id).first()
+    sender_name = sender.full_name or sender.username or sender.email if sender else "Studio Owner"
     await NotificationService.create_notification(
         db=db,
         user_id=current_user.id,
@@ -238,9 +239,9 @@ async def get_my_requests(
             "job_title": job.title if job else "Unknown Job",
             "job_date": job.date if job else None,
             "sender_user_id": req.sender_id, # sender_id is a user_id
-            "sender_name": sender.full_name if sender else "Unknown",
+            "sender_name": sender.full_name or sender.username or "Unknown",
             "receiver_user_id": req.receiver_id, # receiver_id is a user_id
-            "receiver_name": receiver.full_name if receiver else "Unknown",
+            "receiver_name": receiver.full_name or receiver.username or "Unknown",
             "role": req.role,
             "budget": req.budget,
             "status": req.status,
@@ -296,7 +297,7 @@ async def get_requests_for_job(
         receiver = db.query(models.User).filter(models.User.id == req.receiver_id).first()
         result.append({
             "request_id": req.id,
-            "receiver_name": receiver.full_name if receiver else "Unknown",
+            "receiver_name": receiver.full_name or receiver.username or "Unknown",
             "receiver_user_id": req.receiver_id,
             "role": req.role,
             "status": req.status,
@@ -326,11 +327,10 @@ async def get_accepted_jobs(
             "job_id": assign.job_id,
             "title": job.title if job else "Unknown Job",
             "owner_user_id": owner.id if owner else None,
-            "owner_name": owner.full_name if owner else "Unknown",
+            "owner_name": owner.full_name or owner.username or "Unknown",
             "date": job.date if job else None,
             "role": assign.role,
             "status": job.status if job else "unknown"
         })
     # Sort chronologically by job date (Upcoming first)
-    return job_service.sort_chronologically(result, date_key='date')
 

@@ -11,8 +11,10 @@ This file contains all requests related to Arjun Kapoor, including account creat
 ```json
 {
   "username": "arjun_kapoor",
-  "password": "Password123!",
+  "email": "arjun.kapoor@example.com",
   "phone": "+919876543219",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Arjun Kapoor",
   "city": "Pune",
   "category": "Helper",

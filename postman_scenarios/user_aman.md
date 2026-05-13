@@ -11,8 +11,10 @@ This file contains all requests related to Aman Sharma, including account creati
 ```json
 {
   "username": "aman_sharma",
-  "password": "Password123!",
+  "email": "aman.sharma@example.com",
   "phone": "+919876543211",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Aman Sharma",
   "city": "Mumbai",
   "category": "Lead",
@@ -21,14 +23,16 @@ This file contains all requests related to Aman Sharma, including account creati
 }
 ```
 > Optionally fill `referral_code_applied` with a friend's code to register the referral relationship.
-
----
-
-## 2. Login (Aman Sharma)
-**URL:** `http://192.168.1.13:8000/api/auth/login`
-**Method:** `POST`
-**Raw JSON:**
-```json
+  "username": "aman_sharma",
+  "email": "aman.sharma@example.com",
+  "phone": "+919876543211",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
+  "full_name": "Aman Sharma",
+  "city": "Mumbai",
+  "category": "Lead",
+  "user_type": "photographer",
+  "referral_code_applied": ""
 {
   "username": "aman_sharma",
   "password": "Password123!"

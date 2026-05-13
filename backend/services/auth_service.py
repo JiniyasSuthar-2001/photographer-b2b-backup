@@ -87,27 +87,26 @@ class AuthService:
     @staticmethod
     def create_user(db: Session, user_data: UserSignUp):
         # 1. Identity Ownership Check (Abuse Protection)
-        # Check if phone is already owned by another USER ID
-        existing_phone_owner = db.query(IdentityOwnership).filter(
-            IdentityOwnership.identity_type == "phone",
-            IdentityOwnership.identity_value == user_data.phone
+        # Check if email is already owned
+        existing_email_owner = db.query(IdentityOwnership).filter(
+            IdentityOwnership.identity_type == "email",
+            IdentityOwnership.identity_value == user_data.email
         ).first()
         
-        if existing_phone_owner:
-            # Check if this owner is still active as a different user
-            owner_user = db.query(User).filter(User.id == existing_phone_owner.user_id).first()
+        if existing_email_owner:
+            owner_user = db.query(User).filter(User.id == existing_email_owner.user_id).first()
             if owner_user and owner_user.username != user_data.username:
                 from fastapi import HTTPException
-                raise HTTPException(status_code=400, detail="This phone number belongs to another user ID.")
+                raise HTTPException(status_code=400, detail="This email belongs to another user.")
 
-        # 1b. Check if username or phone already exists in User table
+        # 1b. Check if username or email already exists in User table
         if db.query(User).filter(User.username == user_data.username).first():
             from fastapi import HTTPException
             raise HTTPException(status_code=400, detail="Username already exists")
             
-        if db.query(User).filter(User.phone == user_data.phone).first():
+        if db.query(User).filter(User.email == user_data.email).first():
             from fastapi import HTTPException
-            raise HTTPException(status_code=400, detail="Phone number already registered")
+            raise HTTPException(status_code=400, detail="Email already registered")
 
         hashed_password = AuthService.get_password_hash(user_data.password)
         
@@ -119,13 +118,13 @@ class AuthService:
         db_user = User(
             username=user_data.username,
             hashed_password=hashed_password,
+            email=user_data.email,
             phone=user_data.phone,
             full_name=user_data.full_name,
             city=user_data.city,
             category=user_data.category,
             user_type=user_data.user_type,
             referral_code=unique_code,
-            referred_by=user_data.referral_code_applied,
             subscription_expiry=datetime.utcnow() + timedelta(days=14) # Default trial
         )
         db.add(db_user)
@@ -133,14 +132,29 @@ class AuthService:
         db.refresh(db_user)
 
         # 3. Register Identity Ownership
-        if not existing_phone_owner:
+        if not existing_email_owner:
             new_ownership = IdentityOwnership(
                 user_id=db_user.id,
-                identity_type="phone",
-                identity_value=user_data.phone
+                identity_type="email",
+                identity_value=user_data.email
             )
             db.add(new_ownership)
             db.commit()
+
+        # Register phone identity as well if provided and not already owned
+        if user_data.phone:
+            existing_phone_owner = db.query(IdentityOwnership).filter(
+                IdentityOwnership.identity_type == "phone",
+                IdentityOwnership.identity_value == user_data.phone
+            ).first()
+            if not existing_phone_owner:
+                phone_ownership = IdentityOwnership(
+                    user_id=db_user.id,
+                    identity_type="phone",
+                    identity_value=user_data.phone
+                )
+                db.add(phone_ownership)
+                db.commit()
 
         return db_user
 

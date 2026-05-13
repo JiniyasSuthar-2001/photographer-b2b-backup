@@ -11,8 +11,10 @@ This file contains all requests related to Priya Patel, including account creati
 ```json
 {
   "username": "priya_patel",
-  "password": "Password123!",
+  "email": "priya.patel@example.com",
   "phone": "+919876543212",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Priya Patel",
   "city": "Pune",
   "category": "Cinematographer",

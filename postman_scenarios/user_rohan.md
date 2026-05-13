@@ -11,8 +11,10 @@ This file contains all requests related to Rohan Mehra, including account creati
 ```json
 {
   "username": "rohan_mehra",
-  "password": "Password123!",
+  "email": "rohan.mehra@example.com",
   "phone": "+919876543217",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Rohan Mehra",
   "city": "Mumbai",
   "category": "Creative Director",

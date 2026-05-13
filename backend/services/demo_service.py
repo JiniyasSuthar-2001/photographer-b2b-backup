@@ -12,14 +12,14 @@ class DemoService:
         """
         # 1. CORE PHOTOGRAPHERS (Showcase Team)
         photographers_data = [
-            {"username": "aarav_s",   "full_name": "Aarav Sharma",   "category": "Lead",             "phone": "9876500001", "city": "Ahmedabad"},
-            {"username": "ishani_p",  "full_name": "Ishani Patel",   "category": "Candid",           "phone": "9876500002", "city": "Mumbai"},
-            {"username": "rohan_m",   "full_name": "Rohan Mehta",    "category": "Drone",            "phone": "9876500003", "city": "Surat"},
-            {"username": "sana_k",    "full_name": "Sana Khan",      "category": "Reel",             "phone": "9876500004", "city": "Ahmedabad"},
-            {"username": "vikram_s",  "full_name": "Vikram Singh",   "category": "Traditional",      "phone": "9876500005", "city": "Rajkot"},
-            {"username": "priya_d",   "full_name": "Priya Das",      "category": "Cinematographer",  "phone": "9876500006", "city": "Baroda"},
-            {"username": "karan_m",   "full_name": "Karan Malhotra", "category": "Assistant",        "phone": "9876500007", "city": "Ahmedabad"},
-            {"username": "ananya_i",  "full_name": "Ananya Iyer",    "category": "Creative Director","phone": "9876500008", "city": "Mumbai"},
+            {"username": "aarav_s",   "full_name": "Aarav Sharma",   "category": "Lead",             "phone": "9876500001", "city": "Ahmedabad", "email": "aarav@example.com"},
+            {"username": "ishani_p",  "full_name": "Ishani Patel",   "category": "Candid",           "phone": "9876500002", "city": "Mumbai", "email": "ishani@example.com"},
+            {"username": "rohan_m",   "full_name": "Rohan Mehta",    "category": "Drone",            "phone": "9876500003", "city": "Surat", "email": "rohan@example.com"},
+            {"username": "sana_k",    "full_name": "Sana Khan",      "category": "Reel",             "phone": "9876500004", "city": "Ahmedabad", "email": "sana@example.com"},
+            {"username": "vikram_s",  "full_name": "Vikram Singh",   "category": "Traditional",      "phone": "9876500005", "city": "Rajkot", "email": "vikram@example.com"},
+            {"username": "priya_d",   "full_name": "Priya Das",      "category": "Cinematographer",  "phone": "9876500006", "city": "Baroda", "email": "priya@example.com"},
+            {"username": "karan_m",   "full_name": "Karan Malhotra", "category": "Assistant",        "phone": "9876500007", "city": "Ahmedabad", "email": "karan@example.com"},
+            {"username": "ananya_i",  "full_name": "Ananya Iyer",    "category": "Creative Director","phone": "9876500008", "city": "Mumbai", "email": "ananya@example.com"},
         ]
 
         photographer_users = []
@@ -36,6 +36,7 @@ class DemoService:
                     full_name=p_data["full_name"],
                     category=p_data["category"],
                     phone=p_data["phone"],
+                    email=p_data.get("email", f"{p_data['username']}@example.com"),
                     city=p_data["city"],
                     user_type="photographer"
                 )
@@ -169,7 +170,8 @@ class DemoService:
                 hashed_password="hashed_password",
                 full_name="Vogue France",
                 user_type="studio_owner",
-                phone="0123456789"
+                phone="0123456789",
+                email="vogue@example.com"
             )
             db.add(ext_studio)
             db.commit()

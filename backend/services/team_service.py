@@ -51,6 +51,7 @@ class TeamService:
                 "name": entry.display_name,
                 "city": entry.display_city,
                 "phone": entry.phone,
+                "email": db.query(models.User).filter(models.User.id == entry.member_id).first().email,
                 "category": entry.display_category,
                 "jobsCompleted": jobs_together,
                 "specialties": [entry.display_category] if entry.display_category else [],

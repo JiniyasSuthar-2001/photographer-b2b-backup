@@ -24,7 +24,7 @@ export default function Team() {
   const { team } = state;
   const [isLoadingTeam, setIsLoadingTeam] = useState(false);
   const [foundUser, setFoundUser] = useState(null);
-  const [isCheckingPhone, setIsCheckingPhone] = useState(false);
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   
   // --- STATE: COLLABORATION HISTORY ---
   const [selectedPhotographer, setSelectedPhotographer] = useState(null);
@@ -35,7 +35,7 @@ export default function Team() {
 
   // --- STATE: MEMBER MANAGEMENT ---
   const [showAddModal, setShowAddModal] = useState(false);
-  const [addForm, setAddForm] = useState({ name: '', role: 'Candid', city: '', phone: '' });
+  const [addForm, setAddForm] = useState({ name: '', role: 'Candid', city: '', email: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [memberToEdit, setMemberToEdit] = useState(null);
@@ -118,42 +118,42 @@ export default function Team() {
   }, [location]);
 
   // --- API: ADD TEAMMATE (SEND REQUEST) ---
-  const handlePhoneCheck = async (phone) => {
-    const cleanPhone = phone.trim();
-    if (cleanPhone.length < 10) return;
-    setIsCheckingPhone(true);
+  const handleEmailCheck = async (email) => {
+    const cleanEmail = email.trim();
+    if (!cleanEmail.includes('@')) return;
+    setIsCheckingEmail(true);
     try {
-      const response = await apiClient.get(`/team/users/search?phone=${cleanPhone}`);
+      const response = await apiClient.get(`/team/users/search?email=${cleanEmail}`);
       setFoundUser(response.data);
       setAddForm({
-        name: response.data.full_name,
+        name: response.data.full_name || response.data.username,
         role: response.data.category || 'Candid',
         city: response.data.city || '',
-        phone: response.data.phone
+        email: response.data.email
       });
     } catch (err) {
       console.error('Search error:', err.response?.data || err.message);
       setFoundUser(null);
     } finally {
-      setIsCheckingPhone(false);
+      setIsCheckingEmail(false);
     }
   };
 
   const handleAddMember = async (e) => {
     e.preventDefault();
-    if (!addForm.phone) return;
+    if (!addForm.email) return;
     setIsSubmitting(true);
     try {
       const payload = {
-        phone: addForm.phone,
-        display_name: addForm.name || `User ${addForm.phone.slice(-4)}`,
+        email: addForm.email,
+        display_name: addForm.name || `User ${addForm.email.split('@')[0]}`,
         display_category: addForm.role || 'Other',
         display_city: addForm.city || 'Unknown'
       };
       await teamService.sendTeamRequest(payload);
       addToast('Team request sent successfully');
       setShowAddModal(false);
-      setAddForm({ name: '', role: 'Candid', city: '', phone: '' });
+      setAddForm({ name: '', role: 'Candid', city: '', email: '' });
       setFoundUser(null);
       fetchTeam();
     } catch (error) {
@@ -292,6 +292,7 @@ export default function Team() {
               <th>Roles</th>
               <th>City</th>
               <th>Phone</th>
+              <th>Email</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -319,6 +320,7 @@ export default function Team() {
                     </td>
                     <td>{m.city}</td>
                     <td>{m.phone}</td>
+                    <td>{m.email}</td>
                     <td>
                       <div className="team-action-cell">
                         {!m.is_locked && (
@@ -363,6 +365,7 @@ export default function Team() {
                     </td>
                     <td>{jt.display_city}</td>
                     <td>{jt.owner_phone}</td>
+                    <td>{jt.owner_email}</td>
                     <td>
                       <div className="team-action-cell">
                         <span style={{fontSize:11, color:'var(--text-muted)'}}>Manage in Profile</span>
@@ -443,25 +446,25 @@ export default function Team() {
 
           
           <div className="form-group">
-            <label>Email or Phone Number</label>
+            <label>Email Address</label>
             <div style={{display:'flex', gap: 8}}>
               <input 
-                type="text" 
+                type="email" 
                 className="input-field" 
                 required
-                value={addForm.phone}
+                value={addForm.email}
                 onChange={(e) => {
-                  setAddForm({...addForm, phone: e.target.value});
-                  if (e.target.value.length >= 10) handlePhoneCheck(e.target.value);
+                  setAddForm({...addForm, email: e.target.value});
+                  if (e.target.value.includes('@')) handleEmailCheck(e.target.value);
                 }}
-                placeholder="e.g. name@example.com or 9876543210"
+                placeholder="e.g. name@example.com"
                 autoFocus
               />
             </div>
           </div>
 
-          {isCheckingPhone && (
-            <div style={{fontSize:12, color:'var(--accent-blue)', marginTop:-8, marginBottom:16}}>Searching for photographer...</div>
+          {isCheckingEmail && (
+            <div style={{fontSize:12, color:'var(--accent-blue)', marginTop:-8, marginBottom:16}}>Searching for freelancer...</div>
           )}
 
           {foundUser ? (
@@ -475,15 +478,15 @@ export default function Team() {
               gap: '12px',
               border: '1px solid var(--accent-blue)'
             }}>
-              <Avatar name={foundUser.full_name} size="sm" />
+              <Avatar name={foundUser.full_name || foundUser.email} size="sm" />
               <div>
-                <div style={{fontWeight:600, fontSize:14}}>{foundUser.full_name}</div>
+                <div style={{fontWeight:600, fontSize:14}}>{foundUser.full_name || foundUser.email}</div>
                 <div style={{fontSize:12, color:'var(--text-secondary)'}}>{foundUser.category} · {foundUser.city}</div>
               </div>
             </div>
-          ) : addForm.phone.length >= 10 && !isCheckingPhone && (
+          ) : addForm.email.includes('@') && !isCheckingEmail && (
             <div style={{fontSize:12, color:'var(--accent-rose)', marginTop:-8, marginBottom:16}}>
-              No registered user found with this number.
+              No registered user found with this email.
             </div>
           )}
 
@@ -507,7 +510,7 @@ export default function Team() {
         size="md"
       >
         <form onSubmit={handleUpdateMember} className="add-teammate-form">
-          <p className="modal-desc">Update how this freelancer appears in your team. Phone number cannot be changed.</p>
+          <p className="modal-desc">Update how this freelancer appears in your team. Email cannot be changed.</p>
 
           
           <div className="form-group">

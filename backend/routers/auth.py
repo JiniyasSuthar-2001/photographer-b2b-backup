@@ -7,7 +7,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from db.database import get_db
-from models.schemas import UserLogin, UserSignUp, Token, ForgotPassword
+from models.schemas import UserLogin, UserSignUp, Token, ForgotPassword, UserProfile
 from models import models
 from services.auth_service import auth_service
 from fastapi.security import OAuth2PasswordBearer
@@ -39,18 +39,29 @@ async def signup(user_data: UserSignUp, db: Session = Depends(get_db)):
     Frontend Impact: Triggered by the form in Signup.jsx.
     """
     try:
+        # Validate confirm_password if provided
+        if user_data.confirm_password is not None and user_data.password != user_data.confirm_password:
+            raise HTTPException(status_code=400, detail="Password and confirm_password do not match")
+
         # Check if username exists directly
         existing_user = db.query(models.User).filter(models.User.username == user_data.username).first()
         if existing_user:
             raise HTTPException(status_code=400, detail="Username already exists")
         
-        # Check if phone exists directly
-        existing_phone = db.query(models.User).filter(models.User.phone == user_data.phone).first()
-        if existing_phone:
-            raise HTTPException(status_code=400, detail="Phone number already registered")
-        
+        # Check if email exists directly
+        existing_email = db.query(models.User).filter(models.User.email == user_data.email).first()
+        if existing_email:
+            raise HTTPException(status_code=400, detail="Email address already registered")
+
+        # Check if phone exists and reject if owned by another user
+        if user_data.phone:
+            existing_phone = db.query(models.User).filter(models.User.phone == user_data.phone).first()
+            if existing_phone:
+                raise HTTPException(status_code=400, detail="Phone number already registered")
+
         user = auth_service.create_user(db, user_data)
-        return {"message": "User created successfully", "user": {"username": user.username}}
+        # Build response with profile info so frontend can redirect to Profile
+        return {"message": "User created successfully", "user": {"username": user.username, "email": user.email, "phone": user.phone, "full_name": user.full_name}}
     except HTTPException as e:
         raise e
     except Exception as e:
@@ -90,3 +101,20 @@ async def forgot_password(data: ForgotPassword):
     Frontend Impact: Connected to the 'Forgot Password' link in Login.jsx.
     """
     return {"message": f"Password reset instructions sent to user {data.username}"}
+
+@router.put("/profile", response_model=UserProfile)
+async def update_profile(
+    profile_data: dict, 
+    db: Session = Depends(get_db), 
+    current_user: models.User = Depends(get_current_user)
+):
+    """
+    Updates current user's profile information.
+    """
+    for key, value in profile_data.items():
+        if hasattr(current_user, key):
+            setattr(current_user, key, value)
+    
+    db.commit()
+    db.refresh(current_user)
+    return current_user

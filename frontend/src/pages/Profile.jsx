@@ -134,7 +134,7 @@ export default function Profile() {
               <div className="profile-fields">
                 <ProfileField label="Display Name" icon={<User size={14}/>} value={name} onChange={setName}/>
                 <ProfileField label="Email Address" icon={<Mail size={14}/>} value={email} onChange={setEmail} type="email"/>
-                <ProfileField label="Phone Number" icon={<Phone size={14}/>} value={phone} onChange={setPhone}/>
+                {/* Phone removed as per user request */}
               </div>
             </div>
 

@@ -5,8 +5,10 @@
 ```json
 {
   "username": "photographer_ravi",
-  "password": "Password123!",
+  "email": "ravi.mehta@example.com",
   "phone": "+919876500001",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Ravi Mehta",
   "city": "Ahmedabad",
   "category": "Candid",

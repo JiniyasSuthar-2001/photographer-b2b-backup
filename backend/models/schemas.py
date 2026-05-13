@@ -9,16 +9,18 @@ class UserLogin(BaseModel):
 class UserSignUp(BaseModel):
     username: str
     password: str
-    phone: str
-    full_name: str
+    email: str
+    phone: Optional[str] = None
+    confirm_password: Optional[str] = None
+    full_name: Optional[str] = None
     city: Optional[str] = None
     category: Optional[str] = None
     user_type: Optional[str] = "photographer"
-    referral_code_applied: Optional[str] = None
 
 class UserProfile(BaseModel):
     id: int # The unique ID of the user
     username: str
+    email: Optional[str] = None
     phone: Optional[str] = None
     full_name: Optional[str] = None
     city: Optional[str] = None
@@ -27,8 +29,8 @@ class UserProfile(BaseModel):
     
     # Subscription and Referral Data
     is_pro: bool = False
-    plan: str
-    trial_days_left: int
+    plan: Optional[str] = "Starter"
+    trial_days_left: Optional[int] = 14
     subscription_expiry: Optional[datetime] = None
     referral_code: Optional[str] = None
     referred_by: Optional[str] = None
@@ -80,9 +82,10 @@ class TeamMemberUpdate(BaseModel):
 
 class UserSearchResponse(BaseModel):
     id: int
-    full_name: str
+    full_name: Optional[str] = None
     city: Optional[str] = None
-    phone: str
+    email: str
+    phone: Optional[str] = None
     category: Optional[str] = None
 
 class NotificationResponse(BaseModel):

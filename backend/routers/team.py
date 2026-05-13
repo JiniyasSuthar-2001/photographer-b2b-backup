@@ -79,8 +79,9 @@ async def search_user(phone: str, db: Session = Depends(get_db)):
     
     return {
         "id": user.id,
-        "full_name": user.full_name,
+        "full_name": user.full_name or user.username or user.email,
         "city": user.city,
+        "email": user.email,
         "phone": user.phone,
         "category": user.category
     }
@@ -96,10 +97,10 @@ async def send_team_request(
     Frontend Impact: Updates the UI state in Team.jsx after successfully adding a member.
     Notification Impact: Alerts the Photographer via the NotificationBell.
     """
-    # Find receiver by phone number
+    # Find receiver by phone
     receiver = db.query(models.User).filter(models.User.phone == request.phone).first()
     if not receiver:
-        raise HTTPException(status_code=404, detail="Photographer with this phone number not found")
+        raise HTTPException(status_code=404, detail="Photographer with this phone not found")
 
     # Check if request already exists
     existing = db.query(models.TeamRequest).filter(
@@ -112,6 +113,13 @@ async def send_team_request(
     
     if existing:
         raise HTTPException(status_code=400, detail="Request already pending")
+
+    # Check if already in team
+    in_team = db.query(models.Team).filter(
+        and_(models.Team.owner_id == current_user.id, models.Team.member_id == receiver.id)
+    ).first()
+    if in_team:
+        raise HTTPException(status_code=400, detail="This user is already in your team")
 
     new_request = models.TeamRequest(
         sender_id=current_user.id,
@@ -130,7 +138,7 @@ async def send_team_request(
         db=db,
         user_id=receiver.id,
         title="Team Invitation",
-        message=f"{current_user.full_name} has invited you to join their team.",
+        message=f"{current_user.full_name or current_user.username} has invited you to join their team.",
         notif_type="team_request",
         reference_id=new_request.id,
         redirect_to="/team" # Handled by Bell
@@ -191,14 +199,14 @@ async def respond_to_request(
         db=db,
         user_id=team_request.sender_id,
         title=f"Team Request {status.capitalize()}",
-        message=f"{current_user.full_name} has {status} your invitation to join the team.",
+        message=f"{current_user.full_name or current_user.username} has {status} your invitation to join the team.",
         notif_type="team_request_response",
         reference_id=team_request.id,
         redirect_to="/team"
     )
 
     # Notify Photographer (Confirmation)
-    sender_name = db.query(models.User).filter(models.User.id == team_request.sender_id).first().full_name
+    sender_name = (db.query(models.User).filter(models.User.id == team_request.sender_id).first().full_name) or "Photographer"
     await NotificationService.create_notification(
         db=db,
         user_id=current_user.id,
@@ -235,8 +243,9 @@ async def get_pending_team_requests(
         data.append({
             "request_id": r.id,
             "sender_user_id": r.sender_id,
-            "sender_name": sender.full_name,
+            "sender_name": sender.full_name or sender.username,
             "sender_phone": sender.phone,
+            "sender_email": sender.email,
             "display_name": r.display_name,
             "display_category": r.display_category,
             "display_city": r.display_city,
@@ -260,8 +269,9 @@ async def get_joined_teams(
         data.append({
             "team_entry_id": entry.id,
             "owner_user_id": owner.id,
-            "owner_name": owner.full_name,
+            "owner_name": owner.full_name or owner.username,
             "owner_phone": owner.phone,
+            "owner_email": owner.email,
             "display_name": entry.display_name,
             "display_category": entry.display_category,
             "display_city": entry.display_city
@@ -356,7 +366,7 @@ async def discover_photographers(
     
     return [{
         "user_id": p.id, # id is user_id here
-        "name": p.full_name,
+        "name": p.full_name or p.username or p.email,
         "city": p.city,
         "category": p.category,
         "phone": p.phone,

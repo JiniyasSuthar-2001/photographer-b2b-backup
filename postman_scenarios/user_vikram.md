@@ -11,8 +11,10 @@ This file contains all requests related to Vikram Singh, including account creat
 ```json
 {
   "username": "vikram_singh",
-  "password": "Password123!",
+  "email": "vikram.singh@example.com",
   "phone": "+919876543215",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Vikram Singh",
   "city": "Jaipur",
   "category": "Candid",

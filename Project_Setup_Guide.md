@@ -54,8 +54,8 @@ python backend/seed_db.py
 ```bash
 python backend/main.py
 ```
-The API will be available at: `http://localhost:8000`
-Swagger Documentation: `http://localhost:8000/docs`
+The API will be available at: `http://localhost:8000` (or on your LAN at `http://192.168.1.13:8000` if the backend is bound to 0.0.0.0).
+Swagger Documentation: `http://localhost:8000/docs` (or `http://192.168.1.13:8000/docs` for LAN access)
 
 ---
 

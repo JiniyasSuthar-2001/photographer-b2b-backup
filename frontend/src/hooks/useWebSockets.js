@@ -17,8 +17,8 @@ export function useWebSockets() {
     if (!token || !state.user) return;
 
     // Connect to backend WebSocket
-    //const wsUrl = `ws://[IP_ADDRESS]/ws?token=${token}`;
-    const wsUrl = `ws://localhost:8000/ws?token=${token}`;
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws?token=${token}`;
 
     const socket = new WebSocket(wsUrl);
     socketRef.current = socket;

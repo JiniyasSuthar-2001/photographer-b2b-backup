@@ -11,8 +11,10 @@ This file contains all requests related to Ishita Das, including account creatio
 ```json
 {
   "username": "ishita_das",
-  "password": "Password123!",
+  "email": "ishita.das@example.com",
   "phone": "+919876543218",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Ishita Das",
   "city": "Hyderabad",
   "category": "Assistant",

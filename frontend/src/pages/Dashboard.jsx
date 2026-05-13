@@ -69,10 +69,14 @@ export default function Dashboard() {
     addToast(`Switched to ${role === 'photographer' ? 'Photographer' : 'Freelancer'} view`);
   };
 
-  const navigateToProjects = (mainTab, subTab = 'accepted') => {
-    dispatch({ type: 'SET_MAIN_TAB', payload: mainTab });
-    dispatch({ type: 'SET_SUB_TAB', payload: subTab });
-    navigate('/projects');
+  const navigateToProjects = (roleMode) => {
+    if (roleMode === 'photographer') {
+      dispatch({ type: 'SET_MAIN_TAB', payload: 'my-jobs' });
+      navigate('/projects');
+    } else {
+      dispatch({ type: 'SET_MAIN_TAB', payload: 'accepted-jobs' });
+      navigate('/other-projects');
+    }
   };
 
   const handleDismissTrial = () => {
@@ -84,6 +88,8 @@ export default function Dashboard() {
       await requestService.respondToRequest(req.id, 'accepted');
       dispatch({ type: 'RESPOND_JOB_REQUEST', payload: { id: req.id, status: 'accepted' } });
       addToast(`✅ Accepted: ${req.jobTitle}`, 'success');
+      // Redirect to Other Projects after acceptance
+      navigate('/other-projects');
     } catch (err) {
       addToast('Failed to accept request', 'error');
     }
@@ -116,7 +122,7 @@ export default function Dashboard() {
 
       <div className="grid-3 dashboard-stats-row">
         <div 
-          onClick={() => navigateToProjects(isPhotographerMode ? 'my-jobs' : 'accepted-jobs', isPhotographerMode ? 'assigned' : 'invites')} 
+          onClick={() => navigateToProjects(isPhotographerMode ? 'photographer' : 'freelancer')} 
           className="clickable-stat"
         >
           <StatCard 
@@ -127,7 +133,7 @@ export default function Dashboard() {
           />
         </div>
         <div 
-          onClick={() => navigateToProjects(isPhotographerMode ? 'my-jobs' : 'accepted-jobs', 'accepted')} 
+          onClick={() => navigate(isPhotographerMode ? '/projects' : '/other-projects')} 
           className="clickable-stat"
         >
           <StatCard 
@@ -157,7 +163,7 @@ export default function Dashboard() {
                 {isPhotographerMode ? 'My Jobs (Photography)' : 'My Requests (Freelance)'}
               </h2>
               <button 
-                onClick={() => navigateToProjects(isPhotographerMode ? 'my-jobs' : 'accepted-jobs')} 
+                onClick={() => navigateToProjects(isPhotographerMode ? 'photographer' : 'freelancer')} 
                 className="view-all-link-btn"
               >
                 View Hub <ArrowRight size={14} />
@@ -200,7 +206,7 @@ export default function Dashboard() {
                     </div>
                     <div className="redesigned-card-footer">
                       <button className="btn-mini btn-primary" onClick={() => handleAccept(req)}>Accept</button>
-                      <button className="btn-mini btn-outline" onClick={() => navigateToProjects('accepted-jobs', 'invites')}>View</button>
+                      <button className="btn-mini btn-outline" onClick={() => navigate('/other-projects')}>View</button>
                     </div>
                   </div>
                 ))

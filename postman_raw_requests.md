@@ -17,7 +17,9 @@ This file contains ready-to-copy JSON bodies and example URLs for Postman testin
 ```json
 {
   "username": "test_user_1",
+  "email": "test_user_1@example.com",
   "password": "Password123!",
+  "confirm_password": "Password123!",
   "phone": "+919999988888",
   "full_name": "Test User One",
   "city": "Mumbai",
@@ -102,7 +104,7 @@ This file contains ready-to-copy JSON bodies and example URLs for Postman testin
 
 ## 4. Team
 
-### GET /api/team/
+### GET /api/team/?page=1&limit=10
 **URL:** `http://192.168.1.13:8000/api/team/`
 *(No body — returns all team members)*
 
@@ -212,7 +214,7 @@ This file contains ready-to-copy JSON bodies and example URLs for Postman testin
 }
 ```
 
-### GET /api/requests/ (Invites received)
+### GET /api/requests/?role=receiver&status=pending (Invites received)
 **URL:** `http://192.168.1.13:8000/api/requests/?role=receiver&status=pending`
 *(No body)*
 
@@ -237,7 +239,7 @@ This file contains ready-to-copy JSON bodies and example URLs for Postman testin
 
 ## 7. Dashboard
 
-### GET /api/dashboard/summary
+### GET /api/dashboard/summary?role=studio_owner
 **URL:** `http://192.168.1.13:8000/api/dashboard/summary?role=photographer`
 *(No body)*
 
@@ -273,15 +275,15 @@ This file contains ready-to-copy JSON bodies and example URLs for Postman testin
 
 ## 9. Analytics
 
-### GET /api/analytics/stats
+### GET /api/analytics/stats?role=studio_owner&timeframe=1M
 **URL:** `http://192.168.1.13:8000/api/analytics/stats`
 *(No body)*
 
-### GET /api/analytics/trends
+### GET /api/analytics/trends?role=studio_owner&timeframe=1M
 **URL:** `http://192.168.1.13:8000/api/analytics/trends?timeframe=1M`
 *(timeframe options: `1M`, `3M`, `6M`, `1Y`)*
 
-### GET /api/analytics/categories
+### GET /api/analytics/categories?role=studio_owner&timeframe=1M
 **URL:** `http://192.168.1.13:8000/api/analytics/categories`
 *(No body)*
 
@@ -289,7 +291,7 @@ This file contains ready-to-copy JSON bodies and example URLs for Postman testin
 
 ## 10. Notifications
 
-### GET /api/notifications/
+### GET /api/notifications/?page=1&limit=20
 **URL:** `http://192.168.1.13:8000/api/notifications/?page=1&limit=20`
 *(No body)*
 

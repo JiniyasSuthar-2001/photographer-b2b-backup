@@ -185,3 +185,329 @@ a:hover { color: var(--primary-end); }
   background: rgba(59,130,246,0.15);
   color: var(--text-primary);
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   fc-* Design Classes (from frontend-change template)
+   Applied on top of the existing design system — all current styles preserved.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── Auth ── */
+.fc-auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  background: var(--bg-base);
+}
+
+.fc-card {
+  background: var(--bg-card);
+  padding: var(--space-8);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  width: 360px;
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+.fc-card h2 {
+  margin: 0 0 var(--space-5);
+  font-size: 18px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.fc-card label {
+  display: block;
+  margin: var(--space-5) 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.fc-card input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-xs);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--bg-base);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.fc-card input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+  outline: none;
+}
+
+.fc-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-5);
+}
+
+.fc-btn {
+  background: var(--gradient);
+  color: #fff;
+  border: none;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-xs);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+}
+
+.fc-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(124,58,237,0.45);
+}
+
+.fc-error {
+  color: var(--accent-rose);
+  font-size: 12px;
+  padding: var(--space-3) 0;
+  font-weight: 500;
+}
+
+.fc-success {
+  color: var(--accent-green);
+  font-size: 12px;
+  padding: var(--space-3) 0;
+  font-weight: 500;
+}
+
+/* ── Dashboard ── */
+.fc-dashboard {
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.fc-dashboard-header {
+  margin-bottom: var(--space-4);
+}
+
+.fc-dashboard-header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-primary);
+  letter-spacing: -0.04em;
+}
+
+.fc-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: var(--space-2);
+}
+
+.fc-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+
+/* ── Boards ── */
+.fc-boards-page {
+  padding: var(--space-8);
+}
+
+.fc-boards-page h2 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-5);
+}
+
+.board-list {
+  display: flex;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.board-card {
+  background: var(--bg-card);
+  padding: var(--space-5);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  min-width: 240px;
+  transition: all var(--transition);
+}
+
+.board-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+  border-color: rgba(124,58,237,0.3);
+}
+
+.board-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+
+.board-card .list {
+  background: var(--bg-base);
+  padding: var(--space-3);
+  border-radius: var(--radius-xs);
+  margin-top: var(--space-3);
+}
+
+.board-card .list h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.board-card .list ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.board-card .list ul li {
+  font-size: 12.5px;
+  color: var(--text-primary);
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-card);
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-light);
+}
+
+/* ── Calendar ── */
+.fc-calendar-page {
+  padding: var(--space-8);
+}
+
+.fc-calendar-page h2 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+}
+
+.fc-calendar-page p {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-bottom: var(--space-5);
+}
+
+.fc-calendar-placeholder {
+  height: 360px;
+  border-radius: var(--radius);
+  border: 1.5px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+/* ── To-Do ── */
+.fc-todo-page {
+  padding: var(--space-8);
+}
+
+.fc-todo-page h2 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-5);
+}
+
+.fc-todo-input {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.fc-todo-input input {
+  flex: 1;
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-xs);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  transition: border-color var(--transition);
+}
+
+.fc-todo-input input:focus {
+  border-color: var(--accent-blue);
+  outline: none;
+}
+
+.fc-todo-input button {
+  padding: var(--space-3) var(--space-5);
+  background: var(--gradient);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-xs);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+}
+
+.fc-todo-input button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(124,58,237,0.4);
+}
+
+.fc-todo-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.fc-todo-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) var(--space-5);
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xs);
+  transition: all var(--transition);
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.fc-todo-list li:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateX(4px);
+}
+
+.fc-todo-list li button {
+  padding: 4px 10px;
+  background: rgba(244,63,94,0.08);
+  color: var(--accent-rose);
+  border: 1px solid rgba(244,63,94,0.2);
+  border-radius: var(--radius-xs);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.fc-todo-list li button:hover {
+  background: rgba(244,63,94,0.15);
+}
+

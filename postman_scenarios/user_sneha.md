@@ -11,8 +11,10 @@ This file contains all requests related to Sneha Gupta, including account creati
 ```json
 {
   "username": "sneha_gupta",
-  "password": "Password123!",
+  "email": "sneha.gupta@example.com",
   "phone": "+919876543214",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Sneha Gupta",
   "city": "Delhi",
   "category": "Traditional",

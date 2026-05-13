@@ -8,6 +8,17 @@ This document outlines the current project organization and the planned strategy
 /Lumière-Project
 ├── venv/               # Virtual environment (Python 3.14)
 ├── backend/            # FastAPI Backend
+
+# Project Structure & API Integration Strategy
+
+This document outlines the current project organization and the planned strategy for connecting the frontend to a future backend.
+
+# Current Project Structure
+
+
+/Lumière-Project
+├── venv/               # Virtual environment (Python 3.14)
+├── backend/            # FastAPI Backend
 └── frontend/           # React Frontend (Vite)
     ├── src/            # UI logic & components
     ├── public/         # Static assets
@@ -40,7 +51,6 @@ graph LR
     Server -->|JSON Response| API
     API -->|Dispatch| Context
     Context -->|Update State| UI
-
 
 
 
@@ -77,7 +87,6 @@ The backend follows a fully layered architecture, separating routing, business l
 
    
 
-
 /API Endpoints (Planned)
 
 Jobs (`/api/jobs`)
@@ -111,13 +120,11 @@ To utilize the existing `venv`, the future backend will require:
 -CORS Middleware : To allow communication between the Vite frontend (`port 5173`) and the Python API (`port 8000`).
 
 
-
  Next Steps
 1. Define precise API endpoint requirements based on `mockData.js`.
 2. Implement the Backend logic using the existing root-level `venv`.
 3. Create the `src/services/api.js` utility in the frontend.
 4. Replace mock data initializers with real API calls.
-
 
 
 # How It Will Work When Implemented
@@ -184,7 +191,7 @@ This is the complete picture of the Lumière-Project once the backend is fully i
 │   │   ├── components/             # Reusable UI components
 │   │   ├── context/                # Global state (AppContext, reducer)
 │   │   ├── pages/                  # Route views
-│   │   └── services/               # API clients
+│   │   │   └── services/               # API clients
 │   ├── public/                     # Static assets
 │   ├── index.html                  # HTML entry point
 │   ├── package.json                # Frontend dependencies

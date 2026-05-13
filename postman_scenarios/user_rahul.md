@@ -11,8 +11,10 @@ This file contains all requests related to Rahul Verma, including account creati
 ```json
 {
   "username": "rahul_verma",
-  "password": "Password123!",
+  "email": "rahul.verma@example.com",
   "phone": "+919876543213",
+  "password": "Password123!",
+  "confirm_password": "Password123!",
   "full_name": "Rahul Verma",
   "city": "Bangalore",
   "category": "Drone",
