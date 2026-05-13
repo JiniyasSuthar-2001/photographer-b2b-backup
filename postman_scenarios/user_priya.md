@@ -14,12 +14,7 @@ This file contains all requests related to Priya Patel, including account creati
   "email": "priya.patel@example.com",
   "phone": "+919876543212",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Priya Patel",
-  "city": "Pune",
-  "category": "Cinematographer",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 > Optionally fill `referral_code_applied` with a friend's code to register the referral relationship.

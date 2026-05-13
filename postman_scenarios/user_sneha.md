@@ -14,12 +14,7 @@ This file contains all requests related to Sneha Gupta, including account creati
   "email": "sneha.gupta@example.com",
   "phone": "+919876543214",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Sneha Gupta",
-  "city": "Delhi",
-  "category": "Traditional",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 > Optionally fill `referral_code_applied` with a friend's code to register the referral relationship.

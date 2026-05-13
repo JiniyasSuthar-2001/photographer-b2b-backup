@@ -67,13 +67,25 @@ async def get_collaborations(
         "total_pages": total_pages
     }
 
-@router.get("/users/search", response_model=UserSearchResponse)
-async def search_user(phone: str, db: Session = Depends(get_db)):
+@router.get("/search", response_model=UserSearchResponse)
+async def search_photographer(
+    phone: Optional[str] = None, 
+    email: Optional[str] = None, 
+    db: Session = Depends(get_db)
+):
     """
-    Search for a registered photographer by phone number.
+    Search for a registered photographer by phone number or email.
     Frontend Impact: Triggered in Team.jsx when adding a 'Connected' member.
     """
-    user = db.query(models.User).filter(models.User.phone == phone).first()
+    if not phone and not email:
+        raise HTTPException(status_code=400, detail="Must provide either phone or email")
+    
+    query = db.query(models.User)
+    if phone:
+        user = query.filter(models.User.phone == phone).first()
+    else:
+        user = query.filter(models.User.email == email).first()
+
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
@@ -100,7 +112,7 @@ async def send_team_request(
     # Find receiver by phone
     receiver = db.query(models.User).filter(models.User.phone == request.phone).first()
     if not receiver:
-        raise HTTPException(status_code=404, detail="Photographer with this phone not found")
+        raise HTTPException(status_code=404, detail="Photographer with this phone number not found")
 
     # Check if request already exists
     existing = db.query(models.TeamRequest).filter(
@@ -335,6 +347,10 @@ async def remove_team_member(
 
     db.delete(entry)
     db.commit()
+    
+    # WebSocket Refresh for the member to update their 'Joined Teams' list
+    await manager.send_personal_message({"type": "REFRESH_PAGE", "page": "team"}, member_id)
+    
     return {"message": "Removed successfully"}
 
 @router.get("/discover")

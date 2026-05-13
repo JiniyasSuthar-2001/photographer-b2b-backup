@@ -12,13 +12,7 @@
                     "name": "Signup",
                     "request": {
                         "method": "POST",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}",
-                                "type": "text"
-                            }
-                        ],
+                        "header": [],
                         "url": {
                             "raw": "{{baseUrl}}/api/auth/signup",
                             "host": [
@@ -28,11 +22,12 @@
                                 "api",
                                 "auth",
                                 "signup"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"username\": \"new_user\",\n    \"email\": \"new@example.com\",\n    \"password\": \"Password123!\",\n    \"confirm_password\": \"Password123!\",\n    \"phone\": \"+919876543210\",\n    \"full_name\": \"Test User\",\n    \"city\": \"Mumbai\",\n    \"category\": \"Wedding\",\n    \"user_type\": \"photographer\",\n    \"referral_code_applied\": \"\"\n}",
+                            "raw": "{\n    \"username\": \"studio_demo\",\n    \"email\": \"demo@lumiere.com\",\n    \"phone\": \"+919988776655\",\n    \"password\": \"Password@123\",\n    \"confirm_password\": \"Password@123\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -47,13 +42,7 @@
                     "name": "Login",
                     "request": {
                         "method": "POST",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}",
-                                "type": "text"
-                            }
-                        ],
+                        "header": [],
                         "url": {
                             "raw": "{{baseUrl}}/api/auth/login",
                             "host": [
@@ -63,7 +52,8 @@
                                 "api",
                                 "auth",
                                 "login"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
@@ -86,14 +76,7 @@
                                     "",
                                     "if (response.access_token) {",
                                     "    pm.collectionVariables.set(\"token\", response.access_token);",
-                                    "",
-                                    "    if (response.refresh_token) {",
-                                    "        pm.collectionVariables.set(\"refresh_token\", response.refresh_token);",
-                                    "    }",
-                                    "",
-                                    "    console.log(\"Tokens saved successfully!\");",
-                                    "} else {",
-                                    "    console.log(\"No access token found in response\");",
+                                    "    console.log(\"Token saved successfully!\");",
                                     "}"
                                 ],
                                 "type": "text/javascript"
@@ -121,11 +104,12 @@
                                 "api",
                                 "auth",
                                 "logout"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{}",
+                            "raw": "{\n    \n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -140,13 +124,7 @@
                     "name": "Forgot Password",
                     "request": {
                         "method": "POST",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}",
-                                "type": "text"
-                            }
-                        ],
+                        "header": [],
                         "url": {
                             "raw": "{{baseUrl}}/api/auth/forgot-password",
                             "host": [
@@ -156,11 +134,12 @@
                                 "api",
                                 "auth",
                                 "forgot-password"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"username\": \"admin\"\n}",
+                            "raw": "{\n    \"username\": \"test_user_1\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -168,6 +147,33 @@
                             }
                         },
                         "description": "Simulates a password reset request.\nFrontend Impact: Connected to the 'Forgot Password' link in Login.jsx."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Profile",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/profile",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "profile"
+                            ],
+                            "query": []
+                        },
+                        "description": "Returns the profile of the current authenticated user."
                     },
                     "response": []
                 },
@@ -191,11 +197,12 @@
                                 "api",
                                 "auth",
                                 "profile"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"full_name\": \"Updated Name\",\n    \"city\": \"Pune\",\n    \"category\": \"Pre-Wedding\"\n}",
+                            "raw": "{\n    \"full_name\": \"Arjun Mehta (Lumiere)\",\n    \"city\": \"Mumbai\",\n    \"category\": \"Lead Photographer\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -223,7 +230,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/team/collaborations/{member_id}?page=1&limit=10",
+                            "raw": "{{baseUrl}}/api/team/collaborations/{member_id}",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -236,21 +243,13 @@
                             "query": [
                                 {
                                     "key": "page",
-                                    "value": "1"
+                                    "value": "1",
+                                    "description": ""
                                 },
                                 {
                                     "key": "limit",
-                                    "value": "10"
-                                },
-                                {
-                                    "key": "category",
-                                    "value": "",
-                                    "disabled": true
-                                },
-                                {
-                                    "key": "city",
-                                    "value": "",
-                                    "disabled": true
+                                    "value": "1",
+                                    "description": ""
                                 }
                             ]
                         },
@@ -259,7 +258,7 @@
                     "response": []
                 },
                 {
-                    "name": "Search User",
+                    "name": "Search Photographer",
                     "request": {
                         "method": "GET",
                         "header": [
@@ -270,25 +269,29 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/team/users/search?phone={{phone}}",
+                            "raw": "{{baseUrl}}/api/team/search",
                             "host": [
                                 "{{baseUrl}}"
                             ],
                             "path": [
                                 "api",
                                 "team",
-                                "users",
                                 "search"
                             ],
                             "query": [
                                 {
                                     "key": "phone",
-                                    "value": "{{phone}}",
-                                    "description": "Phone number"
+                                    "value": "test_phone",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "email",
+                                    "value": "test_email",
+                                    "description": ""
                                 }
                             ]
                         },
-                        "description": "Search for a registered photographer by phone number.\nFrontend Impact: Triggered in Team.jsx when adding a 'Connected' member."
+                        "description": "Search for a registered photographer by phone number or email.\nFrontend Impact: Triggered in Team.jsx when adding a 'Connected' member."
                     },
                     "response": []
                 },
@@ -312,11 +315,12 @@
                                 "api",
                                 "team",
                                 "request"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"phone\": \"+919876543211\",\n    \"display_name\": \"Rohan Shah\",\n    \"display_category\": \"Candid\",\n    \"display_city\": \"Surat\"\n}",
+                            "raw": "{\n    \"phone\": \"+919876543211\",\n    \"display_name\": \"Vikram Singh\",\n    \"display_category\": \"Cinematographer\",\n    \"display_city\": \"Delhi\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -348,11 +352,18 @@
                                 "team",
                                 "request",
                                 "{id}"
+                            ],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "test_status",
+                                    "description": ""
+                                }
                             ]
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"status\": \"accepted\"\n}",
+                            "raw": "{\n    \n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -375,7 +386,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/team/requests/pending?page=1&limit=10",
+                            "raw": "{{baseUrl}}/api/team/requests/pending",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -385,26 +396,7 @@
                                 "requests",
                                 "pending"
                             ],
-                            "query": [
-                                {
-                                    "key": "page",
-                                    "value": "1"
-                                },
-                                {
-                                    "key": "limit",
-                                    "value": "10"
-                                },
-                                {
-                                    "key": "category",
-                                    "value": "",
-                                    "disabled": true
-                                },
-                                {
-                                    "key": "city",
-                                    "value": "",
-                                    "disabled": true
-                                }
-                            ]
+                            "query": []
                         },
                         "description": "Fetches team invitations sent TO the current user."
                     },
@@ -422,7 +414,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/team/joined?page=1&limit=10",
+                            "raw": "{{baseUrl}}/api/team/joined",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -431,26 +423,7 @@
                                 "team",
                                 "joined"
                             ],
-                            "query": [
-                                {
-                                    "key": "page",
-                                    "value": "1"
-                                },
-                                {
-                                    "key": "limit",
-                                    "value": "10"
-                                },
-                                {
-                                    "key": "category",
-                                    "value": "",
-                                    "disabled": true
-                                },
-                                {
-                                    "key": "city",
-                                    "value": "",
-                                    "disabled": true
-                                }
-                            ]
+                            "query": []
                         },
                         "description": "Fetches teams that the current user is a member of."
                     },
@@ -468,7 +441,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/team/?page=1&limit=10",
+                            "raw": "{{baseUrl}}/api/team/",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -476,26 +449,7 @@
                                 "api",
                                 "team"
                             ],
-                            "query": [
-                                {
-                                    "key": "page",
-                                    "value": "1"
-                                },
-                                {
-                                    "key": "limit",
-                                    "value": "10"
-                                },
-                                {
-                                    "key": "category",
-                                    "value": "",
-                                    "disabled": true
-                                },
-                                {
-                                    "key": "city",
-                                    "value": "",
-                                    "disabled": true
-                                }
-                            ]
+                            "query": []
                         },
                         "description": "Fetches the full team directory for a Studio Owner.\nFrontend Impact: Populates the table in Team.jsx."
                     },
@@ -521,11 +475,12 @@
                                 "api",
                                 "team",
                                 "{member_id}"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"display_name\": \"Updated Alias\",\n    \"display_category\": \"Wedding\",\n    \"display_city\": \"Ahmedabad\"\n}",
+                            "raw": "{\n    \"display_name\": \"Vikram Singh (Senior)\",\n    \"display_category\": \"Lead Cinematographer\",\n    \"display_city\": \"NCR\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -556,7 +511,8 @@
                                 "api",
                                 "team",
                                 "{member_id}"
-                            ]
+                            ],
+                            "query": []
                         },
                         "description": "Removes a photographer from the Studio Owner's local directory.\nFrontend Impact: Triggered by 'Delete' action in Team.jsx."
                     },
@@ -574,7 +530,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/team/discover?page=1&limit=10",
+                            "raw": "{{baseUrl}}/api/team/discover",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -585,22 +541,14 @@
                             ],
                             "query": [
                                 {
-                                    "key": "page",
-                                    "value": "1"
-                                },
-                                {
-                                    "key": "limit",
-                                    "value": "10"
-                                },
-                                {
                                     "key": "category",
-                                    "value": "",
-                                    "disabled": true
+                                    "value": "test_category",
+                                    "description": ""
                                 },
                                 {
                                     "key": "city",
-                                    "value": "",
-                                    "disabled": true
+                                    "value": "test_city",
+                                    "description": ""
                                 }
                             ]
                         },
@@ -625,7 +573,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/notifications/?page=1&limit=20",
+                            "raw": "{{baseUrl}}/api/notifications/",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -636,11 +584,13 @@
                             "query": [
                                 {
                                     "key": "page",
-                                    "value": "1"
+                                    "value": "1",
+                                    "description": ""
                                 },
                                 {
                                     "key": "limit",
-                                    "value": "20"
+                                    "value": "1",
+                                    "description": ""
                                 }
                             ]
                         },
@@ -669,11 +619,12 @@
                                 "notifications",
                                 "{id}",
                                 "read"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{}",
+                            "raw": "{\n    \n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -704,11 +655,12 @@
                                 "api",
                                 "notifications",
                                 "read-all"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{}",
+                            "raw": "{\n    \n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -743,11 +695,12 @@
                             "path": [
                                 "api",
                                 "requests"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"job_id\": 1,\n    \"receiver_id\": 2,\n    \"role\": \"Candid Photographer\",\n    \"budget\": 5000\n}",
+                            "raw": "{\n    \"job_id\": 1,\n    \"receiver_id\": 2,\n    \"role\": \"Lead Photographer\",\n    \"budget\": 25000\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -770,7 +723,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/requests/?role=receiver",
+                            "raw": "{{baseUrl}}/api/requests/",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -782,12 +735,12 @@
                                 {
                                     "key": "role",
                                     "value": "receiver",
-                                    "description": "sender or receiver"
+                                    "description": ""
                                 },
                                 {
                                     "key": "status",
-                                    "value": "pending",
-                                    "disabled": true
+                                    "value": "test_status",
+                                    "description": ""
                                 }
                             ]
                         },
@@ -815,11 +768,18 @@
                                 "api",
                                 "requests",
                                 "{id}"
+                            ],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "test_status",
+                                    "description": ""
+                                }
                             ]
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"status\": \"accepted\"\n}",
+                            "raw": "{\n    \n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -850,7 +810,8 @@
                                 "api",
                                 "requests",
                                 "{id}"
-                            ]
+                            ],
+                            "query": []
                         },
                         "description": "Studio Owner cancels a pending job request."
                     },
@@ -868,7 +829,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/requests/eligible-jobs/{photographer_id}?role=receiver",
+                            "raw": "{{baseUrl}}/api/requests/eligible-jobs/{photographer_id}",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -878,18 +839,7 @@
                                 "eligible-jobs",
                                 "{photographer_id}"
                             ],
-                            "query": [
-                                {
-                                    "key": "role",
-                                    "value": "receiver",
-                                    "description": "sender or receiver"
-                                },
-                                {
-                                    "key": "status",
-                                    "value": "pending",
-                                    "disabled": true
-                                }
-                            ]
+                            "query": []
                         },
                         "description": "Lists jobs matching photographer's category that aren't already requested.\nFrontend Impact: Populates the dropdown in the 'Send Request' modal."
                     },
@@ -907,7 +857,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/requests/job/{job_id}?role=receiver",
+                            "raw": "{{baseUrl}}/api/requests/job/{job_id}",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -917,18 +867,7 @@
                                 "job",
                                 "{job_id}"
                             ],
-                            "query": [
-                                {
-                                    "key": "role",
-                                    "value": "receiver",
-                                    "description": "sender or receiver"
-                                },
-                                {
-                                    "key": "status",
-                                    "value": "pending",
-                                    "disabled": true
-                                }
-                            ]
+                            "query": []
                         },
                         "description": "Fetches all invitations/requests for a specific job.\nFrontend Impact: Populates the 'Request Status' popup in Projects.jsx."
                     },
@@ -946,7 +885,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/requests/accepted-jobs?role=receiver",
+                            "raw": "{{baseUrl}}/api/requests/accepted-jobs",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -955,18 +894,7 @@
                                 "requests",
                                 "accepted-jobs"
                             ],
-                            "query": [
-                                {
-                                    "key": "role",
-                                    "value": "receiver",
-                                    "description": "sender or receiver"
-                                },
-                                {
-                                    "key": "status",
-                                    "value": "pending",
-                                    "disabled": true
-                                }
-                            ]
+                            "query": []
                         },
                         "description": "Returns jobs assigned to the current Photographer.\nFrontend Impact: Populates the 'Accepted Projects' sub-tab in Projects.jsx."
                     },
@@ -996,7 +924,8 @@
                             "path": [
                                 "api",
                                 "projects"
-                            ]
+                            ],
+                            "query": []
                         },
                         "description": "Fetches all jobs created by the logged-in Studio Owner.\nFrontend Impact: Populates the 'My Jobs' grid in Projects.jsx.\n\nSORTING: Returns jobs in chronological order (Current/Future first, Past last)."
                     },
@@ -1021,11 +950,12 @@
                             "path": [
                                 "api",
                                 "projects"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"title\": \"Grand Indian Wedding\",\n    \"client\": \"Sharma Family\",\n    \"venue\": \"Taj Hotel, Mumbai\",\n    \"budget\": 100000,\n    \"category\": \"Wedding\",\n    \"date\": \"2026-12-01T10:00:00\",\n    \"roles\": [\n        \"Candid Photographer\",\n        \"Cinematographer\"\n    ]\n}",
+                            "raw": "{\n    \"title\": \"Royal Wedding - Taj Palace\",\n    \"client\": \"Malhotra Family\",\n    \"venue\": \"Grand Ballroom\",\n    \"budget\": 75000,\n    \"category\": \"Wedding\",\n    \"date\": \"2026-12-15T18:00:00Z\",\n    \"roles\": [\n        \"Lead\",\n        \"Drone\",\n        \"Candid\"\n    ]\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1056,7 +986,8 @@
                                 "api",
                                 "projects",
                                 "{job_id}"
-                            ]
+                            ],
+                            "query": []
                         }
                     },
                     "response": []
@@ -1081,11 +1012,12 @@
                                 "api",
                                 "projects",
                                 "{job_id}"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"status\": \"completed\",\n    \"budget\": 120000\n}",
+                            "raw": "{\n    \"title\": \"Royal Wedding - Taj Palace (Updated)\",\n    \"budget\": 80000,\n    \"venue\": \"Seaside Deck\",\n    \"client\": \"Malhotra & Sons\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1115,7 +1047,8 @@
                                 "api",
                                 "projects",
                                 "{job_id}"
-                            ]
+                            ],
+                            "query": []
                         }
                     },
                     "response": []
@@ -1145,11 +1078,12 @@
                                 "api",
                                 "webhooks",
                                 "external-event"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{}",
+                            "raw": "{\n    \n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1180,11 +1114,23 @@
                                 "api",
                                 "webhooks",
                                 "trigger-refresh"
+                            ],
+                            "query": [
+                                {
+                                    "key": "user_id",
+                                    "value": "1",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "test_page",
+                                    "description": ""
+                                }
                             ]
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{}",
+                            "raw": "{\n    \n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1219,9 +1165,81 @@
                             "path": [
                                 "api",
                                 "analytics"
+                            ],
+                            "query": [
+                                {
+                                    "key": "role",
+                                    "value": "studio_owner",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "timeframe",
+                                    "value": "1M",
+                                    "description": ""
+                                }
                             ]
                         },
-                        "description": "Returns aggregated data based on the selected role (photographer/studio_owner) \nand timeframe (1W, 1M, etc.)."
+                        "description": "Returns aggregated KPI data."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Analytics Trends",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/analytics/trends",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "analytics",
+                                "trends"
+                            ],
+                            "query": [
+                                {
+                                    "key": "timeframe",
+                                    "value": "1M",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "description": "Returns revenue/job trends over time."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Category Distribution",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/analytics/categories",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "analytics",
+                                "categories"
+                            ],
+                            "query": []
+                        },
+                        "description": "Returns job category distribution for the user."
                     },
                     "response": []
                 },
@@ -1237,7 +1255,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/analytics/rankings?role=studio_owner",
+                            "raw": "{{baseUrl}}/api/analytics/rankings",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -1246,14 +1264,9 @@
                                 "analytics",
                                 "rankings"
                             ],
-                            "query": [
-                                {
-                                    "key": "role",
-                                    "value": "studio_owner"
-                                }
-                            ]
+                            "query": []
                         },
-                        "description": "Returns the top collaborators (photographers) for the current user."
+                        "description": "Returns top collaborators."
                     },
                     "response": []
                 }
@@ -1274,7 +1287,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/api/dashboard/summary?role=studio_owner",
+                            "raw": "{{baseUrl}}/api/dashboard/summary",
                             "host": [
                                 "{{baseUrl}}"
                             ],
@@ -1286,8 +1299,8 @@
                             "query": [
                                 {
                                     "key": "role",
-                                    "value": "studio_owner",
-                                    "description": "studio_owner or photographer"
+                                    "value": "photographer",
+                                    "description": ""
                                 }
                             ]
                         },
@@ -1319,7 +1332,8 @@
                             "path": [
                                 "api",
                                 "tasks"
-                            ]
+                            ],
+                            "query": []
                         }
                     },
                     "response": []
@@ -1343,11 +1357,12 @@
                             "path": [
                                 "api",
                                 "tasks"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"title\": \"Edit wedding highlights\",\n    \"job_id\": 1\n}",
+                            "raw": "{\n    \"job_id\": 1,\n    \"text\": \"Check all SD cards and battery backups\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1377,11 +1392,12 @@
                                 "api",
                                 "tasks",
                                 "{task_id}"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"is_completed\": true\n}",
+                            "raw": "{\n    \"text\": \"Check all SD cards and battery backups - VERIFIED\",\n    \"completed\": true\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1411,7 +1427,8 @@
                                 "api",
                                 "tasks",
                                 "{task_id}"
-                            ]
+                            ],
+                            "query": []
                         }
                     },
                     "response": []
@@ -1441,7 +1458,8 @@
                                 "api",
                                 "subscription",
                                 "status"
-                            ]
+                            ],
+                            "query": []
                         },
                         "description": "Returns the current user's subscription details."
                     },
@@ -1467,11 +1485,12 @@
                                 "api",
                                 "subscription",
                                 "purchase"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"plan\": \"Pro\",\n    \"duration_months\": 12\n}",
+                            "raw": "{\n    \"plan_name\": \"Pro\",\n    \"amount\": 1499,\n    \"currency\": \"INR\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1507,7 +1526,8 @@
                                 "api",
                                 "referral",
                                 "info"
-                            ]
+                            ],
+                            "query": []
                         },
                         "description": "Returns the user's referral stats and history."
                     },
@@ -1533,11 +1553,12 @@
                                 "api",
                                 "referral",
                                 "apply"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"referral_code\": \"REF12345\"\n}",
+                            "raw": "{\n    \"referral_code\": \"LUM12345\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1573,9 +1594,16 @@
                                 "api",
                                 "calendar",
                                 "roster"
+                            ],
+                            "query": [
+                                {
+                                    "key": "date",
+                                    "value": "test_date",
+                                    "description": ""
+                                }
                             ]
                         },
-                        "description": "Get the daily roster (assignments and pending invites) for a specific date."
+                        "description": "Get the daily roster (assignments and owned jobs) for a specific date."
                     },
                     "response": []
                 },
@@ -1599,11 +1627,12 @@
                                 "api",
                                 "calendar",
                                 "availability"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{}",
+                            "raw": "{\n    \"date\": \"2026-05-20\",\n    \"status\": \"Blocked\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1620,9 +1649,9 @@
             "name": "System",
             "item": [
                 {
-                    "name": "Reset Database",
+                    "name": "Get System Status",
                     "request": {
-                        "method": "POST",
+                        "method": "GET",
                         "header": [
                             {
                                 "key": "Authorization",
@@ -1630,6 +1659,54 @@
                                 "type": "text"
                             }
                         ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/system/status",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "system",
+                                "status"
+                            ],
+                            "query": []
+                        },
+                        "description": "Returns the current operational status of the API."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get System Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/system/stats",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "system",
+                                "stats"
+                            ],
+                            "query": []
+                        },
+                        "description": "Returns high-level platform statistics."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Reset Database",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
                         "url": {
                             "raw": "{{baseUrl}}/api/system/reset-db",
                             "host": [
@@ -1639,11 +1716,12 @@
                                 "api",
                                 "system",
                                 "reset-db"
-                            ]
+                            ],
+                            "query": []
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{}",
+                            "raw": "{\n    \n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1672,7 +1750,8 @@
                     "host": [
                         "{{baseUrl}}"
                     ],
-                    "path": []
+                    "path": [],
+                    "query": []
                 }
             },
             "response": []
@@ -1686,7 +1765,12 @@
         },
         {
             "key": "token",
-            "value": "",
+            "value": "run_login_to_generate",
+            "type": "string"
+        },
+        {
+            "key": "job_id",
+            "value": "1",
             "type": "string"
         }
     ]

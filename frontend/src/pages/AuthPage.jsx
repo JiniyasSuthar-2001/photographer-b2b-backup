@@ -13,7 +13,8 @@ const AuthPage = () => {
         username: '',
         password: '',
         confirmPassword: '',
-        email: ''
+        email: '',
+        phone: ''
     });
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
@@ -28,7 +29,8 @@ const AuthPage = () => {
             username: '', 
             password: '', 
             confirmPassword: '',
-            email: ''
+            email: '',
+            phone: ''
         });
     };
 
@@ -179,6 +181,16 @@ const AuthPage = () => {
                                         value={formData.username} 
                                         onChange={handleChange} 
                                         placeholder="Choose a username"
+                                    />
+                                </label>
+                                <label>
+                                    <span>Phone Number</span>
+                                    <input 
+                                        type="text" 
+                                        name="phone" 
+                                        value={formData.phone} 
+                                        onChange={handleChange} 
+                                        placeholder="Enter your phone number"
                                     />
                                 </label>
                                 <label>

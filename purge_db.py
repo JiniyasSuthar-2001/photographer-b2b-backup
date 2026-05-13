@@ -11,14 +11,20 @@ def purge_database():
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
 
-        # Tables to clear
+        # Tables to clear entirely
         tables = [
             "jobs", 
             "job_requests", 
             "assignments", 
             "team", 
             "notifications", 
-            "team_requests"
+            "team_requests",
+            "tasks",
+            "payments",
+            "subscription_history",
+            "referral_history",
+            "identity_ownership",
+            "websocket_sessions"
         ]
 
         for table in tables:
@@ -28,7 +34,7 @@ def purge_database():
             except sqlite3.OperationalError as e:
                 print(f"Skip table {table}: {e}")
 
-        # Delete all users EXCEPT the admin
+        # Delete all users EXCEPT the admin accounts
         cursor.execute("DELETE FROM users WHERE username NOT IN ('admin', 'admin01', 'admin02')")
         print("Cleared non-admin users.")
 

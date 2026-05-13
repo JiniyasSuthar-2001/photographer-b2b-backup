@@ -123,7 +123,7 @@ export default function Team() {
     if (!cleanEmail.includes('@')) return;
     setIsCheckingEmail(true);
     try {
-      const response = await apiClient.get(`/team/users/search?email=${cleanEmail}`);
+      const response = await apiClient.get(`/team/search?email=${cleanEmail}`);
       setFoundUser(response.data);
       setAddForm({
         name: response.data.full_name || response.data.username,

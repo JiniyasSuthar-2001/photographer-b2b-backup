@@ -16,12 +16,7 @@ This file contains Signup and Login requests for all users in the system. Use th
   "email": "elite_studio@example.com",
   "phone": "+919999900000",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Elite Photography Studio",
-  "city": "Mumbai",
-  "category": "Wedding",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 
@@ -42,12 +37,7 @@ This file contains Signup and Login requests for all users in the system. Use th
   "email": "aman.sharma@example.com",
   "phone": "+919876543211",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Aman Sharma",
-  "city": "Mumbai",
-  "category": "Lead",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 
@@ -68,12 +58,7 @@ This file contains Signup and Login requests for all users in the system. Use th
   "email": "priya.patel@example.com",
   "phone": "+919876543212",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Priya Patel",
-  "city": "Pune",
-  "category": "Cinematographer",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 
@@ -94,12 +79,7 @@ This file contains Signup and Login requests for all users in the system. Use th
   "email": "rahul.verma@example.com",
   "phone": "+919876543213",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Rahul Verma",
-  "city": "Bangalore",
-  "category": "Drone",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 
@@ -120,12 +100,7 @@ This file contains Signup and Login requests for all users in the system. Use th
   "email": "sneha.gupta@example.com",
   "phone": "+919876543214",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Sneha Gupta",
-  "city": "Delhi",
-  "category": "Traditional",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 
@@ -146,12 +121,7 @@ This file contains Signup and Login requests for all users in the system. Use th
   "email": "vikram.singh@example.com",
   "phone": "+919876543215",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Vikram Singh",
-  "city": "Jaipur",
-  "category": "Candid",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 
@@ -172,12 +142,7 @@ This file contains Signup and Login requests for all users in the system. Use th
   "email": "ananya.iyer@example.com",
   "phone": "+919876543216",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Ananya Iyer",
-  "city": "Chennai",
-  "category": "Reel",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 
@@ -198,12 +163,7 @@ This file contains Signup and Login requests for all users in the system. Use th
   "email": "rohan.mehra@example.com",
   "phone": "+919876543217",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Rohan Mehra",
-  "city": "Mumbai",
-  "category": "Creative Director",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 
@@ -224,12 +184,7 @@ This file contains Signup and Login requests for all users in the system. Use th
   "email": "ishita.das@example.com",
   "phone": "+919876543218",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Ishita Das",
-  "city": "Hyderabad",
-  "category": "Assistant",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 
@@ -250,12 +205,7 @@ This file contains Signup and Login requests for all users in the system. Use th
   "email": "arjun.kapoor@example.com",
   "phone": "+919876543219",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Arjun Kapoor",
-  "city": "Pune",
-  "category": "Helper",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 

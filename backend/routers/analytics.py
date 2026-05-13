@@ -14,24 +14,31 @@ async def get_analytics(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    """
-    Returns aggregated data based on the selected role (photographer/studio_owner) 
-    and timeframe (1W, 1M, etc.).
-    """
-    # Map 'photographer' to 'freelancer' role in analytics logic if needed
-    # But internal logic uses 'photographer' as Studio and 'freelancer' as External
-    # Wait, the user said: Photographer = Studio Owner, Freelancer = External
-    # Let's standardize
+    """Returns aggregated KPI data."""
     internal_role = 'photographer' if role == 'photographer' else 'freelancer'
-    
     return analytics_service.get_role_analytics(db, current_user.id, internal_role, timeframe)
+
+@router.get("/trends")
+async def get_analytics_trends(
+    timeframe: str = Query("1M"),
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """Returns revenue/job trends over time."""
+    return analytics_service.get_revenue_trends(db, current_user.id, timeframe)
+
+@router.get("/categories")
+async def get_category_distribution(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """Returns job category distribution for the user."""
+    return analytics_service.get_category_stats(db, current_user.id)
 
 @router.get("/rankings")
 async def get_photographer_rankings(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    """
-    Returns the top collaborators (photographers) for the current user.
-    """
+    """Returns top collaborators."""
     return analytics_service.get_top_photographers(db, current_user.id)

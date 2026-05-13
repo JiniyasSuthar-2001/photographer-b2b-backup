@@ -120,10 +120,6 @@ class AuthService:
             hashed_password=hashed_password,
             email=user_data.email,
             phone=user_data.phone,
-            full_name=user_data.full_name,
-            city=user_data.city,
-            category=user_data.category,
-            user_type=user_data.user_type,
             referral_code=unique_code,
             subscription_expiry=datetime.utcnow() + timedelta(days=14) # Default trial
         )

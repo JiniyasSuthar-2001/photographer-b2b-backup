@@ -7,7 +7,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from db.database import get_db
-from models.schemas import UserLogin, UserSignUp, Token, ForgotPassword, UserProfile
+from models.schemas import UserLogin, UserSignUp, Token, ForgotPassword, UserProfile, UserProfileUpdate
 from models import models
 from services.auth_service import auth_service
 from fastapi.security import OAuth2PasswordBearer
@@ -102,18 +102,28 @@ async def forgot_password(data: ForgotPassword):
     """
     return {"message": f"Password reset instructions sent to user {data.username}"}
 
+@router.get("/profile", response_model=UserProfile)
+async def get_profile(current_user: models.User = Depends(get_current_user)):
+    """
+    Returns the profile of the current authenticated user.
+    """
+    return current_user
+
 @router.put("/profile", response_model=UserProfile)
 async def update_profile(
-    profile_data: dict, 
+    profile_data: UserProfileUpdate, 
     db: Session = Depends(get_db), 
     current_user: models.User = Depends(get_current_user)
 ):
     """
     Updates current user's profile information.
     """
-    for key, value in profile_data.items():
-        if hasattr(current_user, key):
-            setattr(current_user, key, value)
+    if profile_data.full_name is not None:
+        current_user.full_name = profile_data.full_name
+    if profile_data.city is not None:
+        current_user.city = profile_data.city
+    if profile_data.category is not None:
+        current_user.category = profile_data.category
     
     db.commit()
     db.refresh(current_user)

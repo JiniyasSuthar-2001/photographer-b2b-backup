@@ -30,7 +30,12 @@ def generate_postman_collection(app, output_path: str = "../postman.json"):
             },
             {
                 "key": "token",
-                "value": "",
+                "value": "run_login_to_generate",
+                "type": "string"
+            },
+            {
+                "key": "job_id",
+                "value": "1",
                 "type": "string"
             }
         ]    }
@@ -50,43 +55,72 @@ def generate_postman_collection(app, output_path: str = "../postman.json"):
     # Specific overrides for known schema names
     SCHEMA_OVERRIDES = {
         "UserSignUp": {
-            "username": "photographer_test",
-            "password": "SecurePass@123",
-            "phone": "+919876543210",
-            "full_name": "Arjun Mehta",
-            "city": "Ahmedabad",
-            "category": "Wedding",
-            "user_type": "photographer",
-            "referral_code_applied": ""
+            "username": "studio_demo",
+            "email": "demo@lumiere.com",
+            "phone": "+919988776655",
+            "password": "Password@123",
+            "confirm_password": "Password@123"
         },
         "UserLogin": {
             "username": "admin",
             "password": "admin@001"
         },
-        "PaymentCreate": {
-            "amount": 1499,
-            "currency": "INR",
-            "plan_name": "Pro"
+        "UserProfileUpdate": {
+            "full_name": "Arjun Mehta (Lumiere)",
+            "city": "Mumbai",
+            "category": "Lead Photographer"
         },
-        "ReferralApply": {
-            "referral_code": "ABCD1234"
+        "JobCreate": {
+            "title": "Royal Wedding - Taj Palace",
+            "client": "Malhotra Family",
+            "venue": "Grand Ballroom",
+            "budget": 75000,
+            "category": "Wedding",
+            "date": "2026-12-15T18:00:00Z",
+            "roles": ["Lead", "Drone", "Candid"]
         },
-        "ForgotPassword": {
-            "username": "photographer_test"
+        "JobUpdate": {
+            "title": "Royal Wedding - Taj Palace (Updated)",
+            "budget": 80000,
+            "venue": "Seaside Deck",
+            "client": "Malhotra & Sons"
+        },
+        "JobRequestCreate": {
+            "job_id": 1,
+            "receiver_id": 2,
+            "role": "Lead Photographer",
+            "budget": 25000
+        },
+        "TaskCreate": {
+            "job_id": 1,
+            "text": "Check all SD cards and battery backups"
+        },
+        "TaskUpdate": {
+            "text": "Check all SD cards and battery backups - VERIFIED",
+            "completed": True
         },
         "TeamRequestCreate": {
             "phone": "+919876543211",
-            "display_name": "Rohan Shah",
-            "display_category": "Candid",
-            "display_city": "Surat"
+            "display_name": "Vikram Singh",
+            "display_category": "Cinematographer",
+            "display_city": "Delhi"
         },
         "TeamMemberUpdate": {
-            "display_name": "Rohan Shah Updated",
-            "display_category": "Wedding",
-            "display_city": "Ahmedabad"
+            "display_name": "Vikram Singh (Senior)",
+            "display_category": "Lead Cinematographer",
+            "display_city": "NCR"
         },
-        "NotificationUpdate": {
-            "is_read": True
+        "PaymentCreate": {
+            "plan_name": "Pro",
+            "amount": 1499,
+            "currency": "INR"
+        },
+        "ReferralApply": {
+            "referral_code": "LUM12345"
+        },
+        "AvailabilityToggle": {
+            "date": "2026-05-20",
+            "status": "Blocked"
         }
     }
 
@@ -141,7 +175,30 @@ def generate_postman_collection(app, output_path: str = "../postman.json"):
             if method.lower() not in ["get", "post", "put", "delete", "patch"]:
                 continue
 
+            # Extract parameters from OpenAPI spec
+            query_params = []
+            path_params = []
+            
+            for param in details.get("parameters", []):
+                p_in = param.get("in")
+                p_name = param.get("name")
+                p_schema = resolve_schema(param.get("schema", {}))
+                p_type = p_schema.get("type", "string")
+                
+                p_item = {
+                    "key": p_name,
+                    "value": "1" if p_type == "integer" else (p_schema.get("default") or f"test_{p_name}"),
+                    "description": param.get("description", "")
+                }
+                
+                if p_in == "query":
+                    query_params.append(p_item)
+                elif p_in == "path":
+                    path_params.append(p_item)
+
             # Build request entry
+            is_public = any(p in path.lower() for p in ["login", "signup", "forgot-password", "reset-db"])
+            
             request = {
                 "name": details.get("summary") or details.get("operationId") or f"{method.upper()} {path}",
                 "request": {
@@ -152,13 +209,12 @@ def generate_postman_collection(app, output_path: str = "../postman.json"):
                             "value": "Bearer {{token}}",
                             "type": "text"
                         }
-                    ],
+                    ] if not is_public else [],
                     "url": {
                         "raw": "{{baseUrl}}" + path,
-                        "host": [
-                            "{{baseUrl}}"
-                        ],
-                        "path": [p for p in path.split("/") if p]
+                        "host": ["{{baseUrl}}"],
+                        "path": [p for p in path.split("/") if p],
+                        "query": query_params
                     }
                 },
                 "response": []
@@ -175,14 +231,25 @@ def generate_postman_collection(app, output_path: str = "../postman.json"):
                                 "",
                                 "if (response.access_token) {",
                                 "    pm.collectionVariables.set(\"token\", response.access_token);",
-                                "",
-                                "    if (response.refresh_token) {",
-                                "        pm.collectionVariables.set(\"refresh_token\", response.refresh_token);",
-                                "    }",
-                                "",
-                                "    console.log(\"Tokens saved successfully!\");",
-                                "} else {",
-                                "    console.log(\"No access token found in response\");",
+                                "    console.log(\"Token saved successfully!\");",
+                                "}"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }
+                ]
+            
+            # INJECT AUTOMATION SCRIPT FOR PROJECT CREATION
+            elif path == "/projects/" and method.lower() == "post":
+                request["event"] = [
+                    {
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "const response = pm.response.json();",
+                                "if (response.id) {",
+                                "    pm.collectionVariables.set(\"job_id\", response.id);",
+                                "    console.log(\"Job ID saved: \" + response.id);",
                                 "}"
                             ],
                             "type": "text/javascript"

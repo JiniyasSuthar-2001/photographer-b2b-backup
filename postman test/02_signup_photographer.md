@@ -8,13 +8,8 @@
   "email": "ravi.mehta@example.com",
   "phone": "+919876500001",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Ravi Mehta",
-  "city": "Ahmedabad",
-  "category": "Candid",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 
-> **Note:** All users use `"user_type": "photographer"`. Role differentiation is handled by platform logic (team owners vs. members), not the `user_type` field itself.
+> **Note:** The system now only requires core identity and security fields at signup. Additional profile details (City, Category, Full Name) can be updated later in the Profile page.

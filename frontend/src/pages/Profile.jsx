@@ -63,10 +63,16 @@ export default function Profile() {
     dispatch({ type: 'DISMISS_TRIAL_MODAL' });
   };
 
-  const handleSaveAll = () => {
-    dispatch({ type:'UPDATE_USER', payload:{ full_name: name, email, phone, studioName:studio, studioLocation:location }});
-    dispatch({type:'UPDATE_PHOTOGRAPHER_PROFILE', payload:{ bio, skills, specialties, yearsExperience:yearsExp, instagramHandle:insta, portfolioUrl:portfolio }});
-    addToast('✅ Profile saved', 'success');
+  const handleSaveAll = async () => {
+    try {
+      await authService.updateProfile({ full_name: name, email, phone, studioName: studio, studioLocation: location });
+      dispatch({ type: 'UPDATE_USER', payload: { full_name: name, email, phone, studioName: studio, studioLocation: location } });
+      dispatch({ type: 'UPDATE_PHOTOGRAPHER_PROFILE', payload: { bio, skills, specialties, yearsExperience: yearsExp, instagramHandle: insta, portfolioUrl: portfolio } });
+      addToast('✅ Profile saved and updated in database', 'success');
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      addToast('Failed to save profile', 'error');
+    }
   };
 
   const toggleSkill = (s) => setSkills(prev=>prev.includes(s)?prev.filter(x=>x!==s):[...prev,s]);
@@ -134,7 +140,7 @@ export default function Profile() {
               <div className="profile-fields">
                 <ProfileField label="Display Name" icon={<User size={14}/>} value={name} onChange={setName}/>
                 <ProfileField label="Email Address" icon={<Mail size={14}/>} value={email} onChange={setEmail} type="email"/>
-                {/* Phone removed as per user request */}
+                <ProfileField label="Phone Number" icon={<Phone size={14}/>} value={phone} onChange={setPhone} type="tel"/>
               </div>
             </div>
 

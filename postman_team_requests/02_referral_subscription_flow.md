@@ -22,7 +22,7 @@ This file demonstrates how the referral reward system integrates with team build
 
 ---
 
-### Step 2: Aman Signs Up Using the Referral Code
+### Step 2: Aman Signs Up
 **POST** `http://192.168.1.13:8000/api/auth/signup`
 ```json
 {
@@ -30,12 +30,18 @@ This file demonstrates how the referral reward system integrates with team build
   "email": "aman.sharma@example.com",
   "phone": "+919876543211",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Aman Sharma",
-  "city": "Mumbai",
-  "category": "Lead",
-  "user_type": "photographer",
-  "referral_code_applied": "ZTAB23MK"
+  "confirm_password": "Password123!"
+}
+```
+
+---
+
+### Step 2.5: Aman Applies Elite Studio's Referral Code
+**POST** `http://192.168.1.13:8000/api/referral/apply`
+**Auth:** Bearer Token (Aman)
+```json
+{
+  "referral_code": "ZTAB23MK"
 }
 ```
 > This registers `referred_by = "ZTAB23MK"` on Aman's profile. No reward is given yet.

@@ -10,23 +10,14 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from db.database import get_db
 from models import models
-from models.schemas import NotificationResponse
 from routers.auth import get_current_user
-from pydantic import BaseModel
 from typing import Optional
 from core.websocket import manager
 from services.notification_service import NotificationService
 from services.job_service import job_service
-
+from models.schemas import NotificationResponse, JobRequestCreate
 
 router = APIRouter(prefix="/requests", tags=["Job Requests"])
-
-# --- SCHEMAS ---
-class JobRequestCreate(BaseModel):
-    job_id: int
-    receiver_id: int
-    role: str
-    budget: int
 
 # --- ENDPOINTS ---
 

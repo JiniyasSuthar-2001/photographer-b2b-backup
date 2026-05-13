@@ -14,12 +14,7 @@ This file contains all requests related to Arjun Kapoor, including account creat
   "email": "arjun.kapoor@example.com",
   "phone": "+919876543219",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Arjun Kapoor",
-  "city": "Pune",
-  "category": "Helper",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 > Optionally fill `referral_code_applied` with a friend's code to register the referral relationship.

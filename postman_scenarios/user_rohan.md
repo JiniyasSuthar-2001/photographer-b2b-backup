@@ -14,12 +14,7 @@ This file contains all requests related to Rohan Mehra, including account creati
   "email": "rohan.mehra@example.com",
   "phone": "+919876543217",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Rohan Mehra",
-  "city": "Mumbai",
-  "category": "Creative Director",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 > Optionally fill `referral_code_applied` with a friend's code to register the referral relationship.

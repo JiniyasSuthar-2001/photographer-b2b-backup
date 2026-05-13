@@ -9,57 +9,13 @@ from sqlalchemy.orm import Session
 from db.database import get_db
 from models import models
 from routers.auth import get_current_user
-from pydantic import BaseModel
 from datetime import datetime
 from core.websocket import manager
 from typing import List, Optional
 from services.job_service import job_service
+from models.schemas import JobCreate, JobUpdate, JobResponse
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
-
-
-# --- SCHEMAS ---
-# NOTE: Changing these schemas will break the frontend's ability to parse data.
-# Projects.jsx depends on 'pending_count', 'accepted_count', and 'declined_count' 
-# to decide which tab a job appears in (e.g., 'Yet to Assign' vs 'Current').
-
-class JobCreate(BaseModel):
-    title: str
-    client: Optional[str] = None
-    venue: Optional[str] = None
-    budget: Optional[int] = 0
-    category: str
-    date: Optional[datetime] = None
-    roles: Optional[List[str]] = []
-
-class JobUpdate(BaseModel):
-    title: Optional[str] = None
-    client: Optional[str] = None
-    venue: Optional[str] = None
-    budget: Optional[int] = None
-    category: Optional[str] = None
-    date: Optional[datetime] = None
-    status: Optional[str] = None
-    roles: Optional[List[str]] = None
-
-class JobResponse(BaseModel):
-    id: int # The unique ID of the job
-    user_id: int # The ID of the user who created it
-    title: str
-    client: Optional[str] = None
-    venue: Optional[str] = None
-    budget: Optional[int] = 0
-    category: Optional[str] = None
-    date: Optional[datetime] = None
-    status: str = "open"
-    roles: List[str] = []
-    pending_count: int = 0
-    accepted_count: int = 0
-    declined_count: int = 0
-    is_completed: bool = False # Computed on backend based on date vs today
-
-    class Config:
-        from_attributes = True
 
 
 # --- ENDPOINTS ---
@@ -189,12 +145,11 @@ async def update_job(
     db.commit()
     db.refresh(job)
 
-    # Real-time refresh for Studio Owner
-    await manager.send_personal_message({
-        "type": "REFRESH_PAGE",
-        "page": "projects"
-
-    }, current_user.id)
+    # Real-time refresh for Studio Owner and Assigned Members
+    await manager.send_personal_message({"type": "REFRESH_PAGE", "page": "projects"}, current_user.id)
+    assignments = db.query(models.Assignment).filter(models.Assignment.job_id == job.id).all()
+    for assign in assignments:
+        await manager.send_personal_message({"type": "REFRESH_PAGE", "page": "projects"}, assign.member_id)
 
     pending, accepted, declined = job_service.get_job_counts(db, job.id)
     return job_service.format_job_response(job, pending, accepted, declined)
@@ -213,10 +168,6 @@ async def delete_job(
     db.commit()
     
     # Real-time refresh for Studio Owner
-    await manager.send_personal_message({
-        "type": "REFRESH_PAGE",
-        "page": "projects"
-
-    }, current_user.id)
+    await manager.send_personal_message({"type": "REFRESH_PAGE", "page": "projects"}, current_user.id)
     
     return {"message": "Job deleted successfully"}

@@ -14,12 +14,7 @@ This file contains all requests related to Ananya Iyer, including account creati
   "email": "ananya.iyer@example.com",
   "phone": "+919876543216",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Ananya Iyer",
-  "city": "Chennai",
-  "category": "Reel",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 > Optionally fill `referral_code_applied` with a friend's code to register the referral relationship.

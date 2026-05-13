@@ -59,6 +59,46 @@ class AnalyticsService:
         }
 
     @staticmethod
+    def get_revenue_trends(db: Session, user_id: int, timeframe: str):
+        """Calculates revenue and job count trends over the given timeframe."""
+        start_date = AnalyticsService.get_timeframe_range(timeframe)
+        
+        # We'll group by date
+        jobs = db.query(
+            func.date(Job.date).label('day'),
+            func.sum(Job.budget).label('revenue'),
+            func.count(Job.id).label('count')
+        ).filter(and_(Job.user_id == user_id, Job.date >= start_date))\
+         .group_by(func.date(Job.date))\
+         .order_by(func.date(Job.date)).all()
+
+        return [
+            {
+                "date": str(j.day),
+                "revenue": j.revenue or 0,
+                "jobs": j.count
+            }
+            for j in jobs
+        ]
+
+    @staticmethod
+    def get_category_stats(db: Session, user_id: int):
+        """Calculates job count distribution across categories."""
+        stats = db.query(
+            Job.category,
+            func.count(Job.id).label('count')
+        ).filter(Job.user_id == user_id)\
+         .group_by(Job.category).all()
+
+        return [
+            {
+                "category": s.category or "Other",
+                "count": s.count
+            }
+            for s in stats
+        ]
+
+    @staticmethod
     def get_top_photographers(db: Session, user_id: int):
         """
         Calculates rankings for photographers who have collaborated most with the current user.

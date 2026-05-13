@@ -14,12 +14,7 @@ This file contains all requests related to Ishita Das, including account creatio
   "email": "ishita.das@example.com",
   "phone": "+919876543218",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Ishita Das",
-  "city": "Hyderabad",
-  "category": "Assistant",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 > Optionally fill `referral_code_applied` with a friend's code to register the referral relationship.

@@ -8,13 +8,8 @@
   "email": "studio@vision.example",
   "phone": "+919811122233",
   "password": "StudioPassword!2026",
-  "confirm_password": "StudioPassword!2026",
-  "full_name": "Vision Studios Mumbai",
-  "city": "Mumbai",
-  "category": "Wedding",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "StudioPassword!2026"
 }
 ```
 
-> **Note:** `user_type` must be `"photographer"` (not `"studio_owner"`). The `referral_code_applied` field is optional — leave blank or omit.
+> **Note:** The system now only requires core identity and security fields at signup. Additional profile details (City, Category, Full Name) can be updated later in the Profile page.

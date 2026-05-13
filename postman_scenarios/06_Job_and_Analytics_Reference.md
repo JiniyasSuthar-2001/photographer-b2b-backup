@@ -138,10 +138,6 @@ Complete master reference for Job/Project management, invitations, analytics, su
 **GET** `{{baseUrl}}/api/analytics/trends?timeframe=1M`
 *(timeframe options: `1M`, `3M`, `6M`, `1Y`)*
 
-### D. Category Distribution
-**GET** `{{baseUrl}}/api/analytics/categories`
-*(No body)*
-
 ---
 
 ## 7. Tasks
@@ -153,7 +149,7 @@ Complete master reference for Job/Project management, invitations, analytics, su
 **POST** `{{baseUrl}}/api/tasks/`
 ```json
 {
-  "jobId": 1,
+  "job_id": 1,
   "text": "Confirm battery levels before event"
 }
 ```
@@ -169,3 +165,33 @@ Complete master reference for Job/Project management, invitations, analytics, su
 
 ### D. Delete Task
 **DELETE** `{{baseUrl}}/api/tasks/{{task_id}}`
+
+---
+
+## 8. Team Management (Studio Owner)
+
+### A. Search Photographer (By Phone or Email)
+**GET** `{{baseUrl}}/api/team/search?phone=+919876543211`
+*(Optional query params: `phone`, `email`)*
+
+### B. Discover All Photographers
+**GET** `{{baseUrl}}/api/team/discover?city=Mumbai`
+*(Optional filters: `category`, `city`)*
+
+### C. Send Team Request
+**POST** `{{baseUrl}}/api/team/request`
+```json
+{
+  "phone": "+919876543211",
+  "display_name": "Aman Sharma",
+  "display_category": "Lead",
+  "display_city": "Mumbai"
+}
+```
+
+### D. Get My Team Directory
+**GET** `{{baseUrl}}/api/team/`
+
+### E. Respond to Team Request (Photographer)
+**PATCH** `{{baseUrl}}/api/team/request/{{request_id}}?status=accepted`
+*(status: `accepted` or `declined`)*

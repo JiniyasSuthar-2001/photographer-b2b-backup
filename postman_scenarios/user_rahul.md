@@ -14,12 +14,7 @@ This file contains all requests related to Rahul Verma, including account creati
   "email": "rahul.verma@example.com",
   "phone": "+919876543213",
   "password": "Password123!",
-  "confirm_password": "Password123!",
-  "full_name": "Rahul Verma",
-  "city": "Bangalore",
-  "category": "Drone",
-  "user_type": "photographer",
-  "referral_code_applied": ""
+  "confirm_password": "Password123!"
 }
 ```
 > Optionally fill `referral_code_applied` with a friend's code to register the referral relationship.

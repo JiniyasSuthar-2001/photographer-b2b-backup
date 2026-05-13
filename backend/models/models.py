@@ -277,3 +277,16 @@ class WebSocketSession(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", backref="ws_sessions")
+
+class Availability(Base):
+    """
+    Tracks a user's manual availability overrides (Blocked, Booked, etc.).
+    """
+    __tablename__ = "availability"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    date = Column(String, index=True) # Format: YYYY-MM-DD
+    status = Column(String) # Booked, Partial, Blocked
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", backref="availability_records")
